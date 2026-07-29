@@ -1,37 +1,61 @@
-/*** Formular ***/
+/*** Funnel Display ***/
+// Self-hosted from Google Fonts (OFL). Google does not publish a distinct
+// Bold static instance yet — FunnelDisplay-Bold.woff2 currently ships the
+// same bytes as Regular. No Cyrillic glyphs are available for this family;
+// swap in real files (e.g. exported from Figma) if the design needs true
+// Bold weight or Cyrillic display text.
 
 @font-face {
-    font-family: 'Formular';
-    src: url('../../fonts/formular/Formular-Bold.woff2') format('woff2'),
-         url('../../fonts/formular/Formular-Bold.woff') format('woff');
-    font-weight: bold;
+    font-family: 'Funnel Display';
+    src: url('../../fonts/funnel-display/FunnelDisplay-Regular.woff2') format('woff2');
+    font-weight: 400;
     font-style: normal;
     font-display: swap;
 }
 
 @font-face {
-    font-family: 'Formular';
-    src: url('../../fonts/formular/Formular-Black.woff2') format('woff2'),
-         url('../../fonts/formular/Formular-Black.woff') format('woff');
-    font-weight: 900;
+    font-family: 'Funnel Display';
+    src: url('../../fonts/funnel-display/FunnelDisplay-Bold.woff2') format('woff2');
+    font-weight: 700;
     font-style: normal;
     font-display: swap;
 }
 
+/*** Inter ***/
+// Self-hosted from Google Fonts (OFL), split by script via unicode-range.
+
 @font-face {
-    font-family: 'Formular';
-    src: url('../../fonts/formular/Formular-Medium.woff2') format('woff2'),
-         url('../../fonts/formular/Formular-Medium.woff') format('woff');
-    font-weight: 500;
+    font-family: 'Inter';
+    src: url('../../fonts/inter/Inter-Regular.woff2') format('woff2');
+    font-weight: 400;
     font-style: normal;
     font-display: swap;
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
 @font-face {
-    font-family: 'Formular';
-    src: url('../../fonts/formular/Formular-Light.woff2') format('woff2'),
-         url('../../fonts/formular/Formular-Light.woff') format('woff');
-    font-weight: 300;
+    font-family: 'Inter';
+    src: url('../../fonts/inter/Inter-Regular-Cyrillic.woff2') format('woff2');
+    font-weight: 400;
     font-style: normal;
     font-display: swap;
+    unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+
+@font-face {
+    font-family: 'Inter';
+    src: url('../../fonts/inter/Inter-SemiBold.woff2') format('woff2');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+    font-family: 'Inter';
+    src: url('../../fonts/inter/Inter-SemiBold-Cyrillic.woff2') format('woff2');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+    unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
 }

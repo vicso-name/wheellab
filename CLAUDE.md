@@ -248,8 +248,9 @@ Block `name` in `acf_register_block_type` matches the `$blocks` array value exac
 ### Import order in `src/scss/style.scss`
 
 ```scss
-@use 'partials/tokens';   // ← CSS custom properties on :root (ALWAYS FIRST)
+@use 'partials/tokens';     // ← CSS custom properties on :root (ALWAYS FIRST)
 @use 'partials/fonts';
+@use 'partials/typography';
 @use 'partials/general';
 @use 'partials/header';
 @use 'partials/footer';
@@ -264,11 +265,32 @@ Section SCSS files (`src/scss/sections/*.scss`) are **not imported** into `style
 |---|---|---|
 | `_tokens.scss` | **Has content** | CSS custom properties — single source of truth for all design values |
 | `_variables.scss` | Has content | SCSS variables (now reference `_tokens.scss` custom properties) |
-| `_general.scss` | Has content | CSS reset, layout utilities, typography scale, grid helpers |
-| `_fonts.scss` | Has content | Manual `@font-face` declarations for Formular typeface |
+| `_typography.scss` | Has content | Type scale (Display/Heading/Paragraph/Other/System) sourced from Figma — see below |
+| `_general.scss` | Has content | CSS reset, layout utilities, grid helpers |
+| `_fonts.scss` | Has content | `@font-face` declarations for Funnel Display + Inter (self-hosted from Google Fonts) |
 | `_header.scss` | **EMPTY** | Header styles (not yet written) |
 | `_footer.scss` | **EMPTY** | Footer styles (not yet written) |
 | `_errors.scss` | **EMPTY** | Error page styles (not yet written) |
+
+### Type Scale
+
+`_typography.scss` implements the project's type scale from a Figma "Type Styles" reference sheet (Display / Heading / Paragraph / Other / System groups). Sizes, line-heights (unitless), and letter-spacing live as `--text-{name}-*` tokens in `_tokens.scss`; `_typography.scss` only maps them onto selectors. Base (desktop) sizes only — no responsive spec was provided, so add breakpoint overrides in `_typography.scss` if/when one is.
+
+| Figma style | Selector | Font |
+|---|---|---|
+| Display 1/2/3 | `.display-1` / `.display-2` / `.display-3` | Funnel Display |
+| H1–H4 | `h1`/`.h1` … `h4`/`.h4` | Funnel Display |
+| Subhead | `.subhead` | Inter |
+| Body M / Body M - Bold | `.body-m` / `.body-m.body-m--bold` | Inter |
+| Body S / Body S - Bold | `.body-s` / `.body-s.body-s--bold` | Inter |
+| Footnote | `.footnote` | Inter |
+| Header item | `.header-item` | Inter |
+| Button text M/S | `.button-text-m` / `.button-text-s` | Inter |
+| Table content | `.table-content` | Inter |
+
+Two font families are self-hosted from Google Fonts in `_fonts.scss` (OFL-licensed): **Funnel Display** (headings/display — weights 400/700) and **Inter** (body/system — weights 400/600, split into latin + cyrillic files via `unicode-range`). Two caveats to know about:
+- Google does not currently publish a distinct static Bold instance for Funnel Display — `FunnelDisplay-Bold.woff2` ships the same bytes as Regular. Replace it with a real Bold file (e.g. exported from Figma) if true Bold weight is needed.
+- Funnel Display has **no Cyrillic glyphs** on Google Fonts. If headings need Cyrillic text, source a proper file for that language and swap it into `fonts/funnel-display/`.
 
 ### Variable naming and status
 
@@ -517,6 +539,8 @@ When `generate-sections.js` creates a new SCSS file or JS file, lint will run ag
 
 14. ~~**`str_replace('investments_', '', $block_name)`**~~ — **FIXED 2026-05-26.** Legacy no-op removed from block title generation. Title now uses `ucwords(str_replace('_', ' ', $block_name))` directly.
 
+15. **Funnel Display has no Bold static file / no Cyrillic glyphs on Google Fonts** — `fonts/funnel-display/FunnelDisplay-Bold.woff2` currently ships the same bytes as Regular (Google doesn't publish a distinct Bold instance), and the family has no Cyrillic coverage at all. Swap in real files (e.g. exported from Figma) if the design needs true Bold weight or Cyrillic display text. See [Type Scale](#type-scale).
+
 ---
 
 ## File Map
@@ -536,11 +560,12 @@ inc/acf_blocks.php               Registers ACF blocks; detects page blocks and c
 inc/enqueue.php                  Enqueues global CSS/JS (Swiper, main styles, main scripts, admin, editor)
 inc/theme_function.php           Misc helpers: nav active class, SVG upload, OG meta tags, login logo, ACF-driven feature flags
 
-src/scss/style.scss                    Main SCSS entry; imports partials in order: tokens → fonts → general → header → footer → errors
+src/scss/style.scss                    Main SCSS entry; imports partials in order: tokens → fonts → typography → general → header → footer → errors
 src/scss/partials/_tokens.scss         CSS custom properties on :root — single source of truth for all design values
 src/scss/partials/_variables.scss      SCSS variables (now reference _tokens.scss custom properties; kept for backward compat)
-src/scss/partials/_general.scss        CSS reset, typography, layout grid, utility classes
-src/scss/partials/_fonts.scss          @font-face declarations for Formular typeface
+src/scss/partials/_typography.scss     Type scale (Display/Heading/Paragraph/Other/System) sourced from Figma
+src/scss/partials/_general.scss        CSS reset, layout grid, utility classes
+src/scss/partials/_fonts.scss          @font-face declarations for Funnel Display + Inter (self-hosted from Google Fonts)
 src/scss/partials/_header.scss         Header styles — EMPTY
 src/scss/partials/_footer.scss         Footer styles — EMPTY
 src/scss/partials/_errors.scss         Error page styles — EMPTY

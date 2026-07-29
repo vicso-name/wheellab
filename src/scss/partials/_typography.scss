@@ -1,0 +1,150 @@
+// Type scale sourced from Figma "Type Styles" (Display / Heading / Paragraph /
+// Other / System). Base (desktop) sizes only — add breakpoint overrides here
+// if/when a responsive type spec is provided. Values live in _tokens.scss.
+
+// ---------------------------------------------------------------------------
+// Display
+// ---------------------------------------------------------------------------
+
+.display-1 {
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--text-display-1-size);
+  line-height: var(--text-display-1-line-height);
+  letter-spacing: var(--text-display-1-letter-spacing);
+  text-transform: uppercase;
+}
+
+.display-2 {
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--text-display-2-size);
+  line-height: var(--text-display-2-line-height);
+  letter-spacing: var(--text-display-2-letter-spacing);
+}
+
+.display-3 {
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--text-display-3-size);
+  line-height: var(--text-display-3-line-height);
+  letter-spacing: var(--text-display-3-letter-spacing);
+  text-transform: uppercase;
+}
+
+// ---------------------------------------------------------------------------
+// Heading
+// ---------------------------------------------------------------------------
+
+h1, .h1 {
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--text-h1-size);
+  line-height: var(--text-h1-line-height);
+  margin: 0;
+}
+
+h2, .h2 {
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--text-h2-size);
+  line-height: var(--text-h2-line-height);
+  letter-spacing: var(--text-h2-letter-spacing);
+  text-transform: uppercase;
+  margin: 0;
+}
+
+h3, .h3 {
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--text-h3-size);
+  line-height: var(--text-h3-line-height);
+  margin: 0;
+}
+
+h4, .h4 {
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--text-h4-size);
+  line-height: var(--text-h4-line-height);
+  margin: 0;
+}
+
+// ---------------------------------------------------------------------------
+// Paragraph
+// ---------------------------------------------------------------------------
+
+.subhead {
+  font-family: var(--font-family-body);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--text-subhead-size);
+  line-height: var(--text-subhead-line-height);
+}
+
+.body-m {
+  font-family: var(--font-family-body);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--text-body-m-size);
+  line-height: var(--text-body-m-line-height);
+
+  &--bold {
+    font-weight: var(--font-weight-semibold);
+  }
+}
+
+.body-s {
+  font-family: var(--font-family-body);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--text-body-s-size);
+  line-height: var(--text-body-s-line-height);
+
+  &--bold {
+    font-weight: var(--font-weight-semibold);
+  }
+}
+
+.footnote {
+  font-family: var(--font-family-body);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--text-footnote-size);
+  line-height: var(--text-footnote-line-height);
+}
+
+// ---------------------------------------------------------------------------
+// Other
+// ---------------------------------------------------------------------------
+
+.header-item {
+  font-family: var(--font-family-body);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--text-header-item-size);
+  line-height: var(--text-header-item-line-height);
+  text-transform: uppercase;
+}
+
+// ---------------------------------------------------------------------------
+// System
+// ---------------------------------------------------------------------------
+
+.button-text-m {
+  font-family: var(--font-family-body);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--text-button-m-size);
+  line-height: var(--text-button-m-line-height);
+  text-transform: uppercase;
+}
+
+.button-text-s {
+  font-family: var(--font-family-body);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--text-button-s-size);
+  line-height: var(--text-button-s-line-height);
+  text-transform: uppercase;
+}
+
+.table-content {
+  font-family: var(--font-family-body);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--text-table-content-size);
+  line-height: var(--text-table-content-line-height);
+}
