@@ -1,0 +1,30 @@
+// Source: WheelLab Website (Figma) — node 527:28114 ("Header Container").
+// Used only by template-blog.php (see inc/enqueue.php for the conditional
+// enqueue — this isn't an ACF block, so the usual block-detection enqueue
+// doesn't pick it up).
+
+.blog-hero {
+  // Overrides .section-first's own 140px/120px top and 60px bottom padding.
+  padding-top: 80px;
+  padding-bottom: 20px;
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 1000px;
+  }
+
+  &__title {
+    margin: 0;
+    // Overrides the global `h1,h2,h3,h4 { color: var(--c-text); }` rule in
+    // _general.scss — that's the boilerplate's leftover dark placeholder
+    // color (#333333), not usable on this dark theme.
+    color: var(--content-main-primary);
+  }
+
+  &__description {
+    margin: 0;
+    color: var(--content-main-secondary);
+  }
+}

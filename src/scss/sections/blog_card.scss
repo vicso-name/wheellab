@@ -1,0 +1,113 @@
+// Source: WheelLab Website (Figma) — node 235:4331 / 527:24965 ("CardsBlog").
+//
+// This is a shared partial (template-parts/sections/blog_card.php), not a
+// section of its own — it's reused by the blog page grid (blog_filter.php,
+// template-blog.php) and by the Featured Posts Section block. Its own file
+// so its CSS can be enqueued independently of either caller — see
+// inc/enqueue.php (blog template) and inc/acf_blocks.php (block-detection
+// enqueue, keyed off acf/featured-posts-section) for where it's loaded from.
+
+// Same two-layer bezel as .header__cta / .btn-gradient — outer glass frame
+// (accent-tinted here, not neutral) around a solid inner card.
+.blog-card {
+  display: flex;
+  color: inherit;
+  text-decoration: none;
+}
+
+.blog-card__bezel {
+  display: flex;
+  flex: 1 0 0;
+  width: 100%;
+  min-width: 0;
+  padding: 8px;
+  background: var(--bg-ghost-accent-1);
+  border: 1px solid var(--outline-accent-1);
+  border-radius: 20px;
+  box-shadow: 0 2px 24px 0 rgb(105 56 239 / 12%), 0 1px 2px 0 rgb(0 0 0 / 8%);
+}
+
+.blog-card__inner {
+  position: relative;
+  display: flex;
+  flex: 1 0 0;
+  flex-direction: column;
+  gap: 32px;
+  min-width: 0;
+  padding: 32px;
+  overflow: hidden;
+  background: var(--bg-main-surface-1);
+  border-radius: 16px;
+}
+
+// Decorative ambient glow bleeding from the bottom-right corner (node
+// 235:4319) — same nebula asset/recipe as .contact-section__form-glow,
+// simplified from Figma's rotated-blob math to a plain corner anchor.
+.blog-card__glow {
+  position: absolute;
+  right: -160px;
+  bottom: -160px;
+  width: 420px;
+  max-width: none;
+  height: auto;
+  opacity: 0.35;
+  mix-blend-mode: lighten;
+  filter: blur(35px);
+  pointer-events: none;
+}
+
+.blog-card__image {
+  position: relative;
+  aspect-ratio: 506 / 342;
+  background: var(--bg-main-surface-2);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.blog-card__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.blog-card__tag {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  display: inline-flex;
+  align-items: center;
+  height: 40px;
+  padding: 0 12px;
+  color: var(--content-main-primary);
+  background: var(--bg-main-surface-2);
+  border-radius: 8px;
+}
+
+.blog-card__text {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.blog-card__title {
+  // .h4 already sets family/weight/size/line-height/margin — only the
+  // color needs overriding here (see blog_hero.scss for why: the global
+  // h1-h4 color rule in _general.scss is a stale boilerplate placeholder).
+  color: var(--content-main-primary);
+}
+
+.blog-card__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  color: var(--content-main-tertiary);
+}
+
+.blog-card__author,
+.blog-card__date {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

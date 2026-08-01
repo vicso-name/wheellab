@@ -1,0 +1,105 @@
+@use "../partials/variables";
+
+// Source: WheelLab Website (Figma) — chips: node 527:28120, count: node
+// 527:28132, "View more" button: node 527:28151. Card styles are in
+// blog_card.scss, not here.
+// Used only by template-blog.php (see inc/enqueue.php for the conditional
+// enqueue — this isn't an ACF block).
+
+.blog-filter {
+  padding: 0 0 60px;
+
+  @media screen and (max-width: variables.$small) {
+    padding-bottom: 30px;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Category chips
+// ---------------------------------------------------------------------------
+
+.blog-filter__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 20px 0 40px;
+
+  @media screen and (max-width: variables.$small) {
+    padding: 20px 0 24px;
+  }
+}
+
+.blog-filter__chip {
+  display: inline-flex;
+  align-items: center;
+  height: 40px;
+  padding: 0 16px;
+  color: var(--content-main-primary);
+  background: var(--bg-main-surface-2);
+  border: 0;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+
+  &:hover {
+    background: var(--bg-main-surface-2-light);
+  }
+
+  // Not specified in Figma (the chips row only shows the resting state) —
+  // reuses the project's existing "solid accent pill" language.
+  &.is-active {
+    color: var(--label-main);
+    background: var(--bg-solid-accent);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// "N articles shown"
+// ---------------------------------------------------------------------------
+
+.blog-filter__count {
+  margin: 0 0 24px;
+  color: var(--content-main-tertiary);
+}
+
+.blog-filter__count-number {
+  font-weight: var(--font-weight-semibold);
+  color: var(--content-main-secondary);
+}
+
+// ---------------------------------------------------------------------------
+// Grid
+// ---------------------------------------------------------------------------
+
+.blog-filter__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  transition: opacity var(--transition-fast);
+
+  &.is-loading {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  @media screen and (max-width: variables.$large) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media screen and (max-width: variables.$small) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.blog-filter__load-more {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+
+  &[hidden] {
+    display: none;
+  }
+}
+
+// Card styles (.blog-card*) live in blog_card.scss, not here — it's a
+// shared partial enqueued independently (see that file's header comment).
