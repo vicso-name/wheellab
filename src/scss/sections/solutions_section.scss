@@ -1,0 +1,249 @@
+@use "../partials/variables";
+
+// Source: WheelLab Website (Figma) — node 527:24748 (desktop only so far —
+// no mobile/tablet frame was provided; the slide-width/card-height step-
+// downs below are a reasonable fallback, mirroring the pattern already
+// used for .featured-posts-section__slide).
+
+.solutions-section {
+    position: relative;
+    overflow: hidden;
+    padding: 100px 0;
+
+    @media screen and (max-width: variables.$medium) {
+        padding: 60px 0;
+    }
+}
+
+.solutions-section__header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 64px;
+
+    @media screen and (max-width: variables.$medium) {
+        flex-wrap: wrap;
+        margin-bottom: 40px;
+    }
+}
+
+.solutions-section__text {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 1000px;
+}
+
+.solutions-section__title {
+    color: var(--content-main-primary);
+}
+
+.solutions-section__description {
+    margin: 0;
+    color: var(--content-main-secondary);
+}
+
+.solutions-section__nav-group {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 12px;
+}
+
+.solutions-section__nav {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 4px;
+    color: var(--content-main-secondary);
+    background: none;
+    border: 0;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: color var(--transition-fast), background var(--transition-fast);
+
+    &:hover {
+        background: var(--bg-main-surface-2);
+    }
+
+    &.swiper-button-disabled {
+        color: var(--content-main-disabled);
+        cursor: default;
+        pointer-events: none;
+        background: none;
+    }
+
+    img {
+        display: block;
+        width: 100%;
+        height: 100%;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Slider
+// ---------------------------------------------------------------------------
+
+.solutions-section__swiper {
+    // Full-bleed so the peeking next card clips at the section's own edge —
+    // same technique as .featured-posts-section__swiper.
+    $inset: max(var(--container-padding), calc((100% - var(--container-max-width)) / 2 + var(--container-padding)));
+
+    padding: 0 $inset;
+}
+
+.solutions-section__slide {
+    display: flex;
+    width: 640px;
+
+    @media screen and (max-width: variables.$large) {
+        width: 480px;
+    }
+
+    @media screen and (max-width: variables.$small) {
+        width: calc(100vw - 88px);
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Card
+// ---------------------------------------------------------------------------
+
+.solutions-section__card {
+    display: flex;
+    width: 100%;
+    color: inherit;
+    text-decoration: none;
+}
+
+.solutions-section__card-bezel {
+    display: flex;
+    flex: 1 0 0;
+    width: 100%;
+    height: 720px;
+    padding: 8px;
+    background: var(--bg-ghost-accent-2);
+    border: 1px solid var(--outline-accent-2);
+    border-radius: 20px;
+    box-shadow: 0 2px 24px 0 rgb(105 56 239 / 12%), 0 1px 2px 0 rgb(0 0 0 / 8%);
+
+    @media screen and (max-width: variables.$large) {
+        height: 560px;
+    }
+
+    @media screen and (max-width: variables.$small) {
+        height: 480px;
+    }
+}
+
+.solutions-section__card-inner {
+    position: relative;
+    display: flex;
+    flex: 1 0 0;
+    flex-direction: column;
+    min-width: 0;
+    padding: 32px;
+    overflow: hidden;
+    background: var(--bg-main-surface-1);
+    border-radius: 16px;
+}
+
+// Decorative ambient glow (node 164:9204 / 164:9264) — simplified from
+// Figma's rotated-blob math to two corner/top anchors, same recipe as
+// .blog-card__glow.
+.solutions-section__card-glow {
+    position: absolute;
+    max-width: none;
+    height: auto;
+    mix-blend-mode: lighten;
+    pointer-events: none;
+
+    &--a {
+        bottom: -200px;
+        left: -200px;
+        width: 520px;
+        opacity: 0.35;
+        filter: blur(32px);
+    }
+
+    &--b {
+        top: -150px;
+        left: 50%;
+        width: 720px;
+        opacity: 0.45;
+        filter: blur(50px);
+        transform: translateX(-50%);
+    }
+}
+
+.solutions-section__card-image {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 396px;
+    pointer-events: none;
+
+    @media screen and (max-width: variables.$large) {
+        height: 300px;
+    }
+
+    @media screen and (max-width: variables.$small) {
+        height: 260px;
+    }
+
+    // The illustration bleeds off the bottom edge of the card (node
+    // 133:7477), clipped away by .card-inner's overflow: hidden. height and
+    // bottom move together (height = 100% + |bottom|) so the top of the
+    // image stays flush with the top of this box with no gap — only the
+    // bottom keeps sliding further out of frame.
+    img {
+        position: absolute;
+        bottom: -45%;
+        left: 0;
+        display: block;
+        width: 100%;
+        height: 145%;
+        // contain, not cover — Figma hand-crops each illustration
+        // individually, which can't generalize to arbitrary admin-uploaded
+        // images, so this just centers whatever aspect ratio is uploaded.
+        object-fit: contain;
+        object-position: bottom center;
+    }
+}
+
+.solutions-section__card-text {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+    width: 100%;
+}
+
+.solutions-section__card-info {
+    display: flex;
+    flex: 1 0 0;
+    flex-direction: column;
+    gap: 20px;
+    min-width: 0;
+}
+
+.solutions-section__card-title {
+    color: var(--content-solid-accent-2);
+}
+
+.solutions-section__card-description {
+    margin: 0;
+    color: var(--content-main-secondary);
+}
+
+.solutions-section__card-arrow {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    color: var(--content-solid-accent-2);
+}

@@ -27,6 +27,7 @@ function wheellab_register_acf_blocks() {
         'reviews_section',
         'contact_section',
         'featured_posts_section',
+        'solutions_section',
     ];
 
     foreach ($blocks as $block_name) {
