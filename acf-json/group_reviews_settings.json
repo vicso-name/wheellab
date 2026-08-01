@@ -1,0 +1,63 @@
+{
+    "key": "group_reviews_settings",
+    "title": "Reviews Settings",
+    "fields": [
+        {
+            "key": "field_reviews_items",
+            "label": "Reviews",
+            "name": "reviews",
+            "type": "repeater",
+            "layout": "block",
+            "button_label": "Add Review",
+            "min": 1,
+            "instructions": "Default reviews shown by the Reviews Section block. A block can override these with its own custom reviews.",
+            "sub_fields": [
+                {
+                    "key": "field_reviews_item_quote",
+                    "label": "Quote",
+                    "name": "quote",
+                    "type": "textarea",
+                    "rows": 3,
+                    "required": 1,
+                    "wrapper": {
+                        "width": "100"
+                    }
+                },
+                {
+                    "key": "field_reviews_item_author_name",
+                    "label": "Author Name",
+                    "name": "author_name",
+                    "type": "text",
+                    "required": 1,
+                    "wrapper": {
+                        "width": "50"
+                    }
+                },
+                {
+                    "key": "field_reviews_item_author_role",
+                    "label": "Author Role",
+                    "name": "author_role",
+                    "type": "text",
+                    "wrapper": {
+                        "width": "50"
+                    }
+                }
+            ]
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "options_page",
+                "operator": "==",
+                "value": "acf-options-reviews"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "active": true
+}
