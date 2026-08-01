@@ -16,6 +16,9 @@ module.exports = [
                 fetch: 'readonly',
                 MutationObserver: 'readonly',
                 DOMParser: 'readonly',
+                URLSearchParams: 'readonly',
+                Swiper: 'readonly',
+                setTimeout: 'readonly',
             },
         },
         rules: {

@@ -24,6 +24,9 @@ function wheellab_register_acf_blocks() {
         // 'core_benefits',
         // 'call_to_action',
         // ...
+        'reviews_section',
+        'contact_section',
+        'featured_posts_section',
     ];
 
     foreach ($blocks as $block_name) {
@@ -120,5 +123,18 @@ function wheellab_enqueue_detected_block_assets() {
                 wp_enqueue_style($css_handle, "{$theme_uri}/{$css_rel}", [], $ver);
             }
         }
+    }
+
+    // template-parts/sections/blog_card.php is a shared partial, not a
+    // block of its own, so it's never in $map above — Featured Posts
+    // Section is its only ACF-block consumer, so piggyback its enqueue on
+    // that block's detection (or on the no-blocks-detected fallback, same
+    // as everything else above).
+    $blog_card_css = 'build/css/sections/blog_card.min.css';
+    if ((isset($used['acf/featured-posts-section']) || !$found_any)
+        && file_exists(get_template_directory() . '/' . $blog_card_css)
+        && !wp_style_is('block-blog-card-css', 'enqueued')
+    ) {
+        wp_enqueue_style('block-blog-card-css', "{$theme_uri}/{$blog_card_css}", [], $ver);
     }
 }

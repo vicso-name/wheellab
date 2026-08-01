@@ -98,6 +98,33 @@ add_action('wp_enqueue_scripts', function () {
         wheellab_asset_ver('build/css/style.min.css')
     );
 
+    // 2b) Page-template-specific CSS. These sections aren't ACF blocks
+    // (parse_blocks() won't find them), so they're not covered by
+    // wheellab_enqueue_detected_block_assets() — enqueue per template here.
+    if (is_page_template('template-blog.php')) {
+        wp_enqueue_style(
+            'btf-blog-hero-styles',
+            wheellab_asset_url('build/css/sections/blog_hero.min.css'),
+            ['btf-main-styles'],
+            wheellab_asset_ver('build/css/sections/blog_hero.min.css')
+        );
+        // blog_card.min.css is shared with the Featured Posts Section block
+        // (enqueued there via block-detection instead — see
+        // wheellab_enqueue_detected_block_assets() in inc/acf_blocks.php).
+        wp_enqueue_style(
+            'btf-blog-card-styles',
+            wheellab_asset_url('build/css/sections/blog_card.min.css'),
+            ['btf-main-styles'],
+            wheellab_asset_ver('build/css/sections/blog_card.min.css')
+        );
+        wp_enqueue_style(
+            'btf-blog-filter-styles',
+            wheellab_asset_url('build/css/sections/blog_filter.min.css'),
+            ['btf-main-styles', 'btf-blog-card-styles'],
+            wheellab_asset_ver('build/css/sections/blog_filter.min.css')
+        );
+    }
+
     // 3) Scripts
     // Swiper JS (conditionally)
     $script_deps = [];
@@ -119,6 +146,21 @@ add_action('wp_enqueue_scripts', function () {
         wheellab_asset_ver('build/js/general.min.js'),
         true
     );
+
+    // Blog page: category filter + "load more", both AJAX-driven.
+    if (is_page_template('template-blog.php')) {
+        wp_enqueue_script(
+            'btf-blog-filter-script',
+            wheellab_asset_url('build/js/sections/blog_filter.min.js'),
+            [],
+            wheellab_asset_ver('build/js/sections/blog_filter.min.js'),
+            true
+        );
+        wp_localize_script('btf-blog-filter-script', 'wheellabBlog', [
+            'ajaxUrl' => admin_url('admin-ajax.php'),
+            'nonce'   => wp_create_nonce('wheellab_blog_query'),
+        ]);
+    }
 
 }, 5);
 
