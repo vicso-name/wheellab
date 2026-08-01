@@ -59,6 +59,14 @@ function wheellab_remove_unneeded_image_sizes(array $sizes): array {
 }
 add_filter('intermediate_image_sizes_advanced', 'wheellab_remove_unneeded_image_sizes');
 
+// Small square crop used as the ACF "preview_size" for icon upload fields
+// (mega menu cards, etc.) — keeps the admin field compact regardless of the
+// source SVG/image's own dimensions.
+function wheellab_register_admin_image_sizes(): void {
+    add_image_size('acf-icon-preview', 80, 80, true);
+}
+add_action('after_setup_theme', 'wheellab_register_admin_image_sizes');
+
 // =============================================================================
 // 2. Theme support
 // =============================================================================

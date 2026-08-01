@@ -15,6 +15,8 @@
 //   3. Reference var(--token-name) in component SCSS files
 // =============================================================
 
+@use "variables";
+
 :root {
 
   // ---------------------------------------------------------------------------
@@ -36,6 +38,333 @@
   // They bridge the existing CSS custom property references to the named tokens above.
   --c-text:  var(--color-text);
   --c-color: var(--color-primary);
+
+  // ---------------------------------------------------------------------------
+  // Colors — Figma brand palette
+  // ---------------------------------------------------------------------------
+  // Source: WheelLab Website (Figma) — "UI Kit" canvas > Colors, node 783:35639.
+  // Primitive scales (50–950) + alpha ramps (5–95), then semantic tokens aliased
+  // to the primitives below them. Not yet wired into components — the legacy
+  // tokens above remain the active palette until components are migrated.
+
+  // Primary
+  --color-primary-50:  #faf6fe;
+  --color-primary-100: #f3eafd;
+  --color-primary-200: #ead9fb;
+  --color-primary-300: #d9baf8;
+  --color-primary-400: #c28ef2;
+  --color-primary-500: #aa63e9;
+  --color-primary-600: #9543da;
+  --color-primary-700: #8936cc;
+  --color-primary-800: #6c2c9d;
+  --color-primary-900: #1a0e3e;
+  --color-primary-950: #040524;
+  --color-primary-alpha-5:  #aa63e90d;
+  --color-primary-alpha-10: #9543da1a;
+  --color-primary-alpha-15: #9543da26;
+  --color-primary-alpha-20: #9543da33;
+  --color-primary-alpha-25: #9543da40;
+  --color-primary-alpha-30: #9543da4d;
+  --color-primary-alpha-35: #9543da59;
+  --color-primary-alpha-40: #9543da66;
+  --color-primary-alpha-45: #9543da73;
+  --color-primary-alpha-50: #9543da80;
+  --color-primary-alpha-55: #9543da8c;
+  --color-primary-alpha-60: #9543da99;
+  --color-primary-alpha-65: #9543daa6;
+  --color-primary-alpha-70: #9543dab2;
+  --color-primary-alpha-75: #9543dabf;
+  --color-primary-alpha-80: #9543dacc;
+  --color-primary-alpha-85: #9543dad9;
+  --color-primary-alpha-90: #9543dae5;
+  --color-primary-alpha-95: #9543daf2;
+
+  // Secondary
+  --color-secondary-50:  #f5feff;
+  --color-secondary-100: #ebfdff;
+  --color-secondary-200: #c8f9ff;
+  --color-secondary-300: #aef7ff;
+  --color-secondary-400: #7bf4ff;
+  --color-secondary-500: #31f2ff;
+  --color-secondary-600: #00bdc8;
+  --color-secondary-700: #008c95;
+  --color-secondary-800: #005c61;
+  --color-secondary-900: #003235;
+  --color-secondary-950: #001d20;
+  --color-secondary-alpha-5:  #31f2ff0d;
+  --color-secondary-alpha-10: #31f2ff1a;
+  --color-secondary-alpha-15: #31f2ff26;
+  --color-secondary-alpha-20: #31f2ff33;
+  --color-secondary-alpha-25: #31f2ff40;
+  --color-secondary-alpha-30: #31f2ff4d;
+  --color-secondary-alpha-35: #31f2ff59;
+  --color-secondary-alpha-40: #31f2ff66;
+  --color-secondary-alpha-45: #31f2ff73;
+  --color-secondary-alpha-50: #31f2ff80;
+  --color-secondary-alpha-55: #31f2ff8c;
+  --color-secondary-alpha-60: #31f2ff99;
+  --color-secondary-alpha-65: #31f2ffa6;
+  --color-secondary-alpha-70: #31f2ffb2;
+  --color-secondary-alpha-75: #31f2ffbf;
+  --color-secondary-alpha-80: #31f2ffcc;
+  --color-secondary-alpha-85: #31f2ffd9;
+  --color-secondary-alpha-90: #31f2ffe5;
+  --color-secondary-alpha-95: #31f2fff2;
+
+  // Positive
+  --color-positive-50:  #f0fdfa;
+  --color-positive-100: #cbfbf1;
+  --color-positive-200: #96f7e4;
+  --color-positive-300: #46ecd5;
+  --color-positive-400: #00d5be;
+  --color-positive-500: #00bba7;
+  --color-positive-600: #009689;
+  --color-positive-700: #00786f;
+  --color-positive-800: #005f5a;
+  --color-positive-900: #0b4f4a;
+  --color-positive-950: #022f2e;
+  --color-positive-alpha-5:  #00bba70d;
+  --color-positive-alpha-10: #00bba71a;
+  --color-positive-alpha-15: #00bba726;
+  --color-positive-alpha-20: #00bba733;
+  --color-positive-alpha-25: #00bba740;
+  --color-positive-alpha-30: #00bba74d;
+  --color-positive-alpha-35: #00bba759;
+  --color-positive-alpha-40: #00bba766;
+  --color-positive-alpha-45: #00bba773;
+  --color-positive-alpha-50: #00bba780;
+  --color-positive-alpha-55: #00bba78c;
+  --color-positive-alpha-60: #00bba799;
+  --color-positive-alpha-65: #00bba7a6;
+  --color-positive-alpha-70: #00bba7b2;
+  --color-positive-alpha-75: #00bba7bf;
+  --color-positive-alpha-80: #00bba7cc;
+  --color-positive-alpha-85: #00bba7d9;
+  --color-positive-alpha-90: #00bba7e5;
+  --color-positive-alpha-95: #00bba7f2;
+
+  // Negative
+  --color-negative-50:  #fff1f2;
+  --color-negative-100: #ffe4e6;
+  --color-negative-200: #ffccd3;
+  --color-negative-300: #ffa1ad;
+  --color-negative-400: #ff637e;
+  --color-negative-500: #ff2056;
+  --color-negative-600: #ec003f;
+  --color-negative-700: #c70036;
+  --color-negative-800: #a50036;
+  --color-negative-900: #8b0836;
+  --color-negative-950: #4d0218;
+  --color-negative-alpha-5:  #ff637e0d;
+  --color-negative-alpha-10: #ff637e1a;
+  --color-negative-alpha-15: #ff637e26;
+  --color-negative-alpha-20: #ff637e33;
+  --color-negative-alpha-25: #ff637e40;
+  --color-negative-alpha-30: #ff637e4d;
+  --color-negative-alpha-35: #ff637e59;
+  --color-negative-alpha-40: #ff637e66;
+  --color-negative-alpha-45: #ff637e73;
+  --color-negative-alpha-50: #ff637e80;
+  --color-negative-alpha-55: #ff637e8c;
+  --color-negative-alpha-60: #ff637e99;
+  --color-negative-alpha-65: #ff637ea6;
+  --color-negative-alpha-70: #ff637eb2;
+  --color-negative-alpha-75: #ff637ebf;
+  --color-negative-alpha-80: #ff637ecc;
+  --color-negative-alpha-85: #ff637ed9;
+  --color-negative-alpha-90: #ff637ee5;
+  --color-negative-alpha-95: #ff637ef2;
+
+  // Warning
+  --color-warning-50:  #fffbeb;
+  --color-warning-100: #ffedd4;
+  --color-warning-200: #ffd6a7;
+  --color-warning-300: #ffb86a;
+  --color-warning-400: #ff8904;
+  --color-warning-500: #ff6900;
+  --color-warning-600: #f54900;
+  --color-warning-700: #ca3500;
+  --color-warning-800: #9f2d00;
+  --color-warning-900: #7e2a0c;
+  --color-warning-950: #441306;
+  --color-warning-alpha-5:  #fe9a000d;
+  --color-warning-alpha-10: #ff69001a;
+  --color-warning-alpha-15: #ff690026;
+  --color-warning-alpha-20: #ff690033;
+  --color-warning-alpha-25: #ff690040;
+  --color-warning-alpha-30: #ff69004d;
+  --color-warning-alpha-35: #ff690059;
+  --color-warning-alpha-40: #ff690066;
+  --color-warning-alpha-45: #ff690073;
+  --color-warning-alpha-50: #ff690080;
+  --color-warning-alpha-55: #ff69008c;
+  --color-warning-alpha-60: #ff690099;
+  --color-warning-alpha-65: #ff6900a6;
+  --color-warning-alpha-70: #ff6900b2;
+  --color-warning-alpha-75: #ff6900bf;
+  --color-warning-alpha-80: #ff6900cc;
+  --color-warning-alpha-85: #ff6900d9;
+  --color-warning-alpha-90: #ff6900e5;
+  --color-warning-alpha-95: #ff6900f2;
+
+  // Pink
+  --color-pink-50:  #fdf2f8;
+  --color-pink-100: #fce7f3;
+  --color-pink-200: #fccee8;
+  --color-pink-300: #fda5d5;
+  --color-pink-400: #fb64b6;
+  --color-pink-500: #f6339a;
+  --color-pink-600: #e60076;
+  --color-pink-700: #c6005c;
+  --color-pink-800: #a3004c;
+  --color-pink-900: #861043;
+  --color-pink-950: #510424;
+  --color-pink-alpha-5:  #f6339a0d;
+  --color-pink-alpha-10: #f6339a1a;
+  --color-pink-alpha-15: #f6339a26;
+  --color-pink-alpha-20: #f6339a33;
+  --color-pink-alpha-25: #f6339a40;
+  --color-pink-alpha-30: #f6339a4d;
+  --color-pink-alpha-35: #f6339a59;
+  --color-pink-alpha-40: #f6339a66;
+  --color-pink-alpha-45: #f6339a73;
+  --color-pink-alpha-50: #f6339a80;
+  --color-pink-alpha-55: #f6339a8c;
+  --color-pink-alpha-60: #f6339a99;
+  --color-pink-alpha-65: #f6339aa6;
+  --color-pink-alpha-70: #f6339ab2;
+  --color-pink-alpha-75: #f6339abf;
+  --color-pink-alpha-80: #f6339acc;
+  --color-pink-alpha-85: #f6339ad9;
+  --color-pink-alpha-90: #f6339ae5;
+  --color-pink-alpha-95: #f6339af2;
+
+  // Yellow
+  --color-yellow-50:  #fefce8;
+  --color-yellow-100: #fef9c2;
+  --color-yellow-200: #fff085;
+  --color-yellow-300: #ffdf20;
+  --color-yellow-400: #fdc700;
+  --color-yellow-500: #f0b100;
+  --color-yellow-600: #d08700;
+  --color-yellow-700: #a65f00;
+  --color-yellow-800: #894b00;
+  --color-yellow-900: #733e0a;
+  --color-yellow-950: #432004;
+  --color-yellow-alpha-5:  #f0b1000d;
+  --color-yellow-alpha-10: #f0b1001a;
+  --color-yellow-alpha-15: #f0b10026;
+  --color-yellow-alpha-20: #f0b10033;
+  --color-yellow-alpha-25: #f0b10040;
+  --color-yellow-alpha-30: #f0b1004d;
+  --color-yellow-alpha-35: #f0b10059;
+  --color-yellow-alpha-40: #f0b10066;
+  --color-yellow-alpha-45: #f0b10073;
+  --color-yellow-alpha-50: #f0b10080;
+  --color-yellow-alpha-55: #f0b1008c;
+  --color-yellow-alpha-60: #f0b10099;
+  --color-yellow-alpha-65: #f0b100a6;
+  --color-yellow-alpha-70: #f0b100b2;
+  --color-yellow-alpha-75: #f0b100bf;
+  --color-yellow-alpha-80: #f0b100cc;
+  --color-yellow-alpha-85: #f0b100d9;
+  --color-yellow-alpha-90: #f0b100e5;
+  --color-yellow-alpha-95: #f0b100f2;
+
+  // White (scale has no shades — alpha ramp only)
+  --color-white-alpha-5:  #ffffff0d;
+  --color-white-alpha-10: #ffffff1a;
+  --color-white-alpha-15: #ffffff26;
+  --color-white-alpha-20: #ffffff33;
+  --color-white-alpha-25: #ffffff40;
+  --color-white-alpha-30: #ffffff4d;
+  --color-white-alpha-35: #ffffff59;
+  --color-white-alpha-40: #ffffff66;
+  --color-white-alpha-45: #ffffff73;
+  --color-white-alpha-50: #ffffff80;
+  --color-white-alpha-55: #ffffff8c;
+  --color-white-alpha-60: #ffffff99;
+  --color-white-alpha-65: #ffffffa6;
+  --color-white-alpha-70: #ffffffb2;
+  --color-white-alpha-75: #ffffffbf;
+  --color-white-alpha-80: #ffffffcc;
+  --color-white-alpha-85: #ffffffd9;
+  --color-white-alpha-90: #ffffffe5;
+  --color-white-alpha-95: #fffffff2;
+
+  // Alpha Dark — near-black (#040524) opacity ramp, used for dark overlays/masks
+  --color-alpha-dark-5:  #0405240d;
+  --color-alpha-dark-10: #0405241a;
+  --color-alpha-dark-15: #04052426;
+  --color-alpha-dark-20: #04052433;
+  --color-alpha-dark-25: #04052440;
+  --color-alpha-dark-30: #0405244d;
+  --color-alpha-dark-35: #04052459;
+  --color-alpha-dark-40: #04052466;
+  --color-alpha-dark-45: #04052473;
+  --color-alpha-dark-50: #04052480;
+  --color-alpha-dark-55: #0405248c;
+  --color-alpha-dark-60: #04052499;
+  --color-alpha-dark-65: #040524a6;
+  --color-alpha-dark-70: #040524b2;
+  --color-alpha-dark-75: #040524bf;
+  --color-alpha-dark-80: #040524cc;
+  --color-alpha-dark-85: #040524d9;
+  --color-alpha-dark-90: #040524e5;
+  --color-alpha-dark-95: #040524f2;
+
+  // Semantic tokens — aliased to the primitives above (Figma group names in comments)
+  --bg-ghost-accent-1:      var(--color-primary-alpha-20);    // BG/Ghost/Accent 1
+  --bg-ghost-accent-2:      var(--color-secondary-alpha-15);  // BG/Ghost/Accent 2
+  --bg-ghost-negative:      var(--color-negative-alpha-40);   // BG/Ghost/Negative
+  --bg-ghost-pink:          var(--color-pink-alpha-20);       // BG/Ghost/Pink
+  --bg-ghost-positive:      var(--color-positive-alpha-20);   // BG/Ghost/Positive
+  --bg-ghost-warning:       var(--color-warning-alpha-20);    // BG/Ghost/Warning
+  --bg-ghost-yellow:        var(--color-yellow-alpha-20);     // BG/Ghost/Yellow
+  --bg-inv-surface-2:       var(--color-alpha-dark-20);       // BG/Inv/Surface 2
+  --bg-inv-surface-2-light: var(--color-alpha-dark-10);       // BG/Inv/Surface 2 - Light
+  --bg-main-background:     var(--color-primary-950);         // BG/Main/Background
+  --bg-main-disabled:       var(--color-white-alpha-5);       // BG/Main/Disabled
+  --bg-main-surface-1:      var(--color-primary-900);         // BG/Main/Surface 1
+  --bg-main-surface-2:      var(--color-white-alpha-10);      // BG/Main/Surface 2
+  --bg-main-surface-2-light: var(--color-white-alpha-5);      // BG/Main/Surface 2 - Light
+  --bg-header-mega-open:    #2B2B31;                          // Not in Figma — explicit request: .header__bar background while a mega menu is open
+  --bg-solid-accent:        var(--color-primary-600);         // BG/Solid/Accent
+  --bg-solid-accent-2:      var(--color-secondary-600);       // BG/Solid/Accent2
+  --bg-solid-negative:      var(--color-negative-600);        // BG/Solid/Negative
+  --bg-solid-positive:      var(--color-positive-600);        // BG/Solid/Positive
+  --bg-solid-warning:       var(--color-warning-600);         // BG/Solid/Warning
+  --card-blue:   var(--color-secondary-alpha-15);  // Cards/Blue
+  --card-green:  var(--color-positive-alpha-15);   // Cards/Green
+  --card-orange: var(--color-warning-alpha-15);    // Cards/Orange
+  --card-pink:   var(--color-negative-alpha-15);   // Cards/Pink
+  --card-purple: var(--color-primary-alpha-15);    // Cards/Purple
+  --card-yellow: var(--color-yellow-alpha-15);     // Cards/Yellow
+  --content-inv-disabled:    var(--color-alpha-dark-40);    // Content/Inv/Disabled
+  --content-inv-primary:     var(--color-primary-950);      // Content/Inv/Primary
+  --content-inv-secondary:   var(--color-alpha-dark-80);    // Content/Inv/Secondary
+  --content-inv-tertiary:    var(--color-alpha-dark-50);    // Content/Inv/Teritary
+  --content-main-primary:    var(--color-white);            // Content/Main/Primary
+  --content-main-disabled:   var(--color-white-alpha-40);   // Content/Main/Disabled
+  --content-main-secondary:  var(--color-white-alpha-80);   // Content/Main/Secondary
+  --content-main-tertiary:   var(--color-white-alpha-50);   // Content/Main/Teritary
+  --content-solid-accent:    var(--color-primary-500);      // Content/Solid/Accent
+  --content-solid-accent-2:  var(--color-secondary-500);    // Content/Solid/Accent2
+  --content-solid-negative:  var(--color-negative-500);     // Content/Solid/Negative
+  --content-solid-pink:      var(--color-pink-400);         // Content/Solid/Pink
+  --content-solid-positive:  var(--color-positive-500);     // Content/Solid/Positive
+  --content-solid-warning:   var(--color-warning-500);      // Content/Solid/Warning
+  --content-solid-yellow:    var(--color-yellow-500);       // Content/Solid/Yellow
+  --divider-main: var(--color-white-alpha-20);   // Divider/Main
+  --label-accent: var(--color-primary-800);      // Label/Accent
+  --label-main:   var(--color-white);            // Label/Main
+  --mask-hover:   var(--color-white-alpha-25);   // Mask/Hover
+  --mask-pressed: var(--color-alpha-dark-25);    // Mask/Pressed
+  --outline-accent-1: var(--color-primary-alpha-80);    // Outline/Accent 1
+  --outline-accent-2: var(--color-secondary-alpha-25);  // Outline/Accent 2
+  --outline-disabled: var(--color-white-alpha-5);       // Outline/Disabled
+  --outline-neutral:  var(--color-white-alpha-10);      // Outline/Neutral
+  --overlay-primary: var(--color-alpha-dark-50);   // Overlay/Primary
 
   // ---------------------------------------------------------------------------
   // Typography
@@ -82,6 +411,18 @@
   --text-body-m-line-height: 1.4;
   --text-body-s-size:        16px;
   --text-body-s-line-height: 1.5;
+
+  // Mobile overrides — sourced from the Figma "Mobile" footer frame
+  // (node 590:15857) and the Contact Section mobile frame (node 758:47732).
+  // Add more here as other mobile frames are checked against.
+  @media screen and (max-width: variables.$small) {
+    --text-h2-size:            24px;
+    --text-h2-line-height:     1.333;
+    --text-body-m-size:        16px;
+    --text-body-m-line-height: 1.5;
+    --text-body-s-line-height: 1.375;
+  }
+
   --text-footnote-size:        12px;
   --text-footnote-line-height: 1.333;
   --text-header-item-size:        16px;
@@ -92,6 +433,8 @@
   --text-button-s-line-height: 1.571;
   --text-table-content-size:        14px;
   --text-table-content-line-height: 1.429;
+  --text-mega-card-desc-size:        14px;   // Not in the Figma type scale — dedicated size for .header__mega-card-desc (smaller than body-s reads better at that spot)
+  --text-mega-card-desc-line-height: 1.429;
 
   // ---------------------------------------------------------------------------
   // Spacing (4px base scale)
@@ -111,7 +454,7 @@
   // ---------------------------------------------------------------------------
   // Sourced from .container and section rules in _general.scss
 
-  --container-max-width: 1288px;
+  --container-max-width: 1568px;
   --container-padding:    24px;   // reduced to 16px on mobile (hardcoded in _general.scss)
   --section-padding-y:    60px;   // reduced to 30px on mobile (hardcoded in _general.scss)
 

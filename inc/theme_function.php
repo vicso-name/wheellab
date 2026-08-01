@@ -209,6 +209,95 @@ function wheellab_is_blog() {
     return ( is_archive() || is_author() || is_category() || is_home() || is_tag() ) && get_post_type() === 'post';
 }
 
+/**
+ * Top-level items of the "primary" nav menu, in menu order.
+ * Sub-menus (Appearance > Menus parent/child) are ignored on purpose —
+ * the "Services" mega-menu is driven entirely by ACF fields on the menu
+ * item itself (see acf-json/group_menu_item_mega_menu.json), not by
+ * nested WP menu items.
+ *
+ * @return WP_Post[]
+ */
+function wheellab_get_primary_menu_items(): array {
+    $locations = get_nav_menu_locations();
+    if ( empty( $locations['primary'] ) ) {
+        return [];
+    }
+
+    $items = wp_get_nav_menu_items( $locations['primary'] );
+    if ( ! $items ) {
+        return [];
+    }
+
+    $items = array_filter( $items, static fn( $item ) => (int) $item->menu_item_parent === 0 );
+    usort( $items, static fn( $a, $b ) => (int) $a->menu_order <=> (int) $b->menu_order );
+
+    return array_values( $items );
+}
+
+/**
+ * Mega-menu categories/cards attached to a primary nav menu item via ACF
+ * (location: Menu Item). Returns [] if the toggle is off or no categories
+ * are configured.
+ *
+ * @return array<int, array{name: string, cards: array}>
+ */
+function wheellab_get_menu_item_mega_menu( int $menu_item_id ): array {
+    if ( ! function_exists( 'get_field' ) || ! get_field( 'has_mega_menu', $menu_item_id ) ) {
+        return [];
+    }
+
+    return get_field( 'mega_menu_categories', $menu_item_id ) ?: [];
+}
+
+/**
+ * Inline an uploaded SVG attachment as markup, with every fill/stroke
+ * normalized to `currentColor` so it always renders in a single,
+ * CSS-controllable color — regardless of what color the uploaded file
+ * itself was exported with (e.g. mega-menu card icons, which admins can
+ * upload in any color, but must always read as a plain white glyph on
+ * their category-tinted chip).
+ *
+ * SVG uploads are already gated to `manage_options` users in
+ * wheellab_allow_svg_upload_mimes(), but a light strip of <script> tags
+ * and inline event handlers is applied anyway as defense in depth before
+ * this unescaped markup is echoed.
+ *
+ * Returns '' (and the caller should fall back to a plain <img>) when the
+ * attachment isn't an SVG, doesn't exist, or fails to parse — e.g. an
+ * admin uploaded a PNG/JPG icon instead.
+ */
+function wheellab_inline_svg( int $attachment_id, string $class = '' ): string {
+    if ( ! $attachment_id || get_post_mime_type( $attachment_id ) !== 'image/svg+xml' ) {
+        return '';
+    }
+
+    $path = get_attached_file( $attachment_id );
+    if ( ! $path || ! file_exists( $path ) ) {
+        return '';
+    }
+
+    $svg = file_get_contents( $path );
+    if ( ! $svg || stripos( $svg, '<svg' ) === false ) {
+        return '';
+    }
+
+    // Defense in depth: strip <script> blocks and on*="" event handlers.
+    $svg = (string) preg_replace( '#<script\b[^>]*>.*?</script>#is', '', $svg );
+    $svg = (string) preg_replace( '/\son\w+="[^"]*"/i', '', $svg );
+
+    // Force a single color so it always reads clearly on the icon chip,
+    // whatever color the source file happened to use.
+    $svg = (string) preg_replace( '/\bfill="(?!none")[^"]*"/i', 'fill="currentColor"', $svg );
+    $svg = (string) preg_replace( '/\bstroke="(?!none")[^"]*"/i', 'stroke="currentColor"', $svg );
+
+    if ( $class ) {
+        $svg = (string) preg_replace( '/<svg\s/', '<svg class="' . esc_attr( $class ) . '" ', $svg, 1 );
+    }
+
+    return $svg;
+}
+
 add_action('init', function(){
 
     // Disable Comments

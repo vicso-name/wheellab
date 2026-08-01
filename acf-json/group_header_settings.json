@@ -1,0 +1,53 @@
+{
+    "key": "group_header_settings",
+    "title": "Header Settings",
+    "fields": [
+        {
+            "key": "field_header_logo",
+            "label": "Logo",
+            "name": "logo",
+            "type": "image",
+            "return_format": "array",
+            "preview_size": "medium",
+            "instructions": "SVG or PNG, transparent background. Full logo (icon + wordmark) — shown on tablet/desktop.",
+            "wrapper": {
+                "width": "50"
+            }
+        },
+        {
+            "key": "field_header_logo_mobile",
+            "label": "Mobile Logo",
+            "name": "logo_mobile",
+            "type": "image",
+            "return_format": "array",
+            "preview_size": "acf-icon-preview",
+            "instructions": "Icon-only mark (no wordmark) — shown on mobile, where there isn't room for the full logo.",
+            "wrapper": {
+                "width": "50"
+            }
+        },
+        {
+            "key": "field_header_book_a_call",
+            "label": "Book a Call Button",
+            "name": "book_a_call",
+            "type": "link",
+            "return_format": "array",
+            "instructions": "Shown as the gradient CTA button in the header."
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "options_page",
+                "operator": "==",
+                "value": "acf-options-header"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "active": true
+}

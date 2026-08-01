@@ -17,6 +17,7 @@ body {
   margin: 0;
   position: relative;
   overflow-x: hidden;
+  background: var(--bg-main-background);
 }
 
 .admin-bar header{
@@ -53,8 +54,8 @@ fieldset {
   padding: 0;
 }
 
-textarea, input, select{
-  font-family: variables.$font;
+textarea, input, select, button{
+  font: inherit;
   outline: none;
   -moz-appearance: none;
   -webkit-appearance: none;
@@ -74,6 +75,34 @@ i{
 
 .hidden, [hidden] {
   display: none !important;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: var(--space-4);
+  z-index: 1000;
+  padding: var(--space-2) var(--space-4);
+  background: var(--bg-main-background, #040524);
+  color: var(--color-white);
+  border-radius: 8px;
+  transition: top var(--transition-fast);
+
+  &:focus {
+    top: var(--space-4);
+  }
 }
 
 .overflow-hidden{
@@ -183,7 +212,7 @@ section{
 }
   
 .container {
-  max-width: 1288px;
+  max-width: var(--container-max-width);
   width: 100%;
   padding: 0 24px;
   margin: 0 auto;
@@ -270,6 +299,60 @@ ul, ol{
     background-color: var(--c-color);
     border-color: var(--c-color);
   }
+}
+
+// Real gradient CTA pill — same two-layer "bezel" pattern as .header__cta
+// (glass frame + inner gradient fill + two thin shine lines), extracted
+// here because it's now used in two places (header Book a Call, blog
+// "View more") with identical Figma specs. .header__cta is left as its own
+// copy rather than refactored onto this, to avoid touching already-shipped
+// header code.
+.btn-gradient {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+  padding: 4px;
+  background: var(--bg-main-surface-2);
+  border: 1px solid var(--outline-neutral);
+  border-radius: 16px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px 0 rgb(105 56 239 / 12%), 0 1px 2px 0 rgb(0 0 0 / 8%);
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgb(255 255 255 / 60%), transparent);
+    pointer-events: none;
+  }
+
+  &::before {
+    top: 0;
+    left: 30px;
+  }
+
+  &::after {
+    bottom: 0;
+    right: 15px;
+  }
+
+  &:hover .btn-gradient__inner {
+    opacity: 0.9;
+  }
+}
+
+.btn-gradient__inner {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 32px;
+  color: var(--label-main);
+  white-space: nowrap;
+  background-image: linear-gradient(180deg, var(--color-primary-400) 0%, var(--color-primary-600) 100%);
+  border-radius: 12px;
+  transition: opacity var(--transition-fast);
 }
   
 .no-margin{
