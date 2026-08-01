@@ -1,0 +1,653 @@
+@use "../partials/variables";
+
+// Source: WheelLab Website (Figma) — node 743:10615 (desktop default state),
+// node 743:8062 (desktop post-submit "Request sent" state), node 581:15075
+// (mobile form card), node 758:47732 (full mobile section — title/subtitle
+// sizing, no divider, badges relocated below the form). All mobile nodes at
+// the $small breakpoint.
+//
+// The form fields themselves (input/textarea/radio/checkbox/submit) are
+// rendered by Contact Form 7, not by this template — see
+// docs/acf-block-patterns.md § Contact Section for the exact CF7 form
+// template (field names + wrapper markup) these rules target.
+
+.contact-section {
+    position: relative;
+    overflow: hidden;
+    padding: 100px 0;
+
+    @media screen and (max-width: variables.$medium) {
+        padding: 64px 0;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Decorative background glow — purely visual, not CMS-editable. Same
+// oversized-blurred-image recipe as .footer__bg, simplified from Figma's
+// two rotated-blob layers into two corner-anchored glows.
+// ---------------------------------------------------------------------------
+
+.contact-section__bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.contact-section__bg-image {
+    position: absolute;
+    width: 900px;
+    max-width: 70%;
+    height: auto;
+    opacity: 0.18;
+    mix-blend-mode: lighten;
+    filter: blur(60px);
+
+    &--tl {
+        top: -220px;
+        left: -220px;
+    }
+
+    &--br {
+        right: -220px;
+        bottom: -220px;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Layout
+// ---------------------------------------------------------------------------
+
+.contact-section__row {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    gap: 24px;
+
+    // Single-column mode starts here (node 758:47732's 40px stacked gap
+    // applies for the whole range, not just below $small, so the layout
+    // reads as one coherent "mobile" state rather than an in-between one).
+    @media screen and (max-width: variables.$large) {
+        flex-direction: column;
+        align-items: center;
+        gap: 40px;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Left column — title, description, trust badges
+// ---------------------------------------------------------------------------
+
+.contact-section__info {
+    display: flex;
+    flex: 1 0 0;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+    padding: 60px 180px 60px 0;
+
+    @media screen and (max-width: variables.$large) {
+        width: 100%;
+        padding: 0;
+        text-align: center;
+    }
+}
+
+.contact-section__header {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.contact-section__title {
+    color: var(--content-main-primary);
+}
+
+.contact-section__description {
+    margin: 0;
+    color: var(--content-main-primary);
+}
+
+.contact-section__divider {
+    height: 1px;
+    margin: 40px 0;
+    background: var(--outline-neutral);
+
+    // node 758:47732 drops the divider entirely once the columns stack —
+    // it separated two side-by-side columns, which no longer exist here.
+    @media screen and (max-width: variables.$large) {
+        display: none;
+    }
+}
+
+// Desktop: inline next to the title, logos beside the text (node 743:10615).
+.contact-section__badges {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    // Relocated to .contact-section__badges--mobile below the form on
+    // mobile (node 758:47732) — this variant just disappears there.
+    @media screen and (max-width: variables.$large) {
+        display: none;
+    }
+}
+
+// Mobile: its own block after the form card, logos stacked above the
+// centered text (node 758:47732).
+.contact-section__badges--mobile {
+    display: none;
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+
+    @media screen and (max-width: variables.$large) {
+        display: flex;
+    }
+
+    .contact-section__badge-logos {
+        justify-content: center;
+    }
+
+    .contact-section__badges-text {
+        max-width: 260px;
+        margin: 0 auto;
+    }
+}
+
+.contact-section__badge-logos {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+}
+
+.contact-section__badge-logo {
+    position: relative;
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    margin-right: -12px;
+    overflow: hidden;
+    background: var(--bg-main-surface-2);
+    border: 5px solid var(--bg-main-background);
+    border-radius: 50%;
+
+    &:last-child {
+        margin-right: 0;
+    }
+
+    // Left-most logo sits on top, matching the Figma stacking order.
+    &:nth-child(1) {
+        z-index: 3;
+    }
+
+    &:nth-child(2) {
+        z-index: 2;
+    }
+
+    &:nth-child(3) {
+        z-index: 1;
+    }
+
+    img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+}
+
+.contact-section__badges-text {
+    margin: 0;
+    font-family: var(--font-family-body);
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--text-header-item-size);
+    line-height: var(--text-header-item-line-height);
+    color: var(--content-main-secondary);
+}
+
+// ---------------------------------------------------------------------------
+// Right column — form card
+// ---------------------------------------------------------------------------
+
+.contact-section__form-card {
+    position: relative;
+    flex-shrink: 0;
+    width: 780px;
+    max-width: 100%;
+    padding: 8px;
+    background: var(--bg-ghost-accent-2);
+    border: 1px solid var(--outline-accent-2);
+    border-radius: 20px;
+    box-shadow: 0 2px 24px 0 rgb(105 56 239 / 12%), 0 1px 2px 0 rgb(0 0 0 / 8%);
+
+    // Card height is content-driven, not the fixed 784px from the Figma
+    // frame — a rigid height would clip validation messages / longer copy.
+
+    @media screen and (max-width: variables.$small) {
+        padding: 4px;
+    }
+}
+
+.contact-section__form-inner {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    width: 100%;
+    padding: 40px;
+    overflow: hidden;
+    background: var(--bg-main-surface-2-light);
+    border-radius: 16px;
+
+    @media screen and (max-width: variables.$small) {
+        gap: 32px;
+        padding: 16px;
+    }
+
+    // CF7 wraps everything in <form class="wpcf7-form">; let it just pass
+    // the column layout through instead of adding another box.
+    .wpcf7-form {
+        display: flex;
+        flex-direction: column;
+        gap: 40px;
+        width: 100%;
+
+        @media screen and (max-width: variables.$small) {
+            gap: 32px;
+        }
+    }
+
+    .wpcf7-form-control-wrap {
+        display: block;
+        width: 100%;
+    }
+}
+
+.contact-section__form-glow {
+    position: absolute;
+    width: 700px;
+    max-width: none;
+    height: auto;
+    opacity: 0.35;
+    mix-blend-mode: lighten;
+    filter: blur(35px);
+    pointer-events: none;
+
+    &--a {
+        right: -250px;
+        bottom: -250px;
+    }
+
+    &--b {
+        top: -250px;
+        left: -250px;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Form fields (rendered by Contact Form 7)
+// ---------------------------------------------------------------------------
+
+.contact-section__form-row {
+    display: flex;
+    gap: 40px;
+    width: 100%;
+
+    // node 581:15075 flattens paired fields into one uniform 32px stack —
+    // same rhythm as the .wpcf7-form / .contact-section__form-inner gap.
+    @media screen and (max-width: variables.$small) {
+        flex-direction: column;
+        gap: 32px;
+    }
+}
+
+.contact-section__field {
+    display: flex;
+    flex: 1 0 0;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+    margin: 0;
+
+    label {
+        display: flex;
+        align-items: flex-end;
+        font-family: var(--font-family-body);
+        font-weight: var(--font-weight-regular);
+        font-size: var(--text-header-item-size);
+        line-height: var(--text-body-s-line-height);
+        color: var(--content-main-primary);
+    }
+}
+
+.contact-section__required {
+    margin-left: 2px;
+    font-weight: var(--font-weight-semibold);
+    color: var(--content-solid-accent-2);
+}
+
+// Wraps the [acceptance] tag — a plain row, not a labeled column like
+// .contact-section__field.
+.contact-section__acceptance {
+    width: 100%;
+    margin: 0;
+}
+
+.contact-section__form-inner {
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    textarea {
+        width: 100%;
+        padding: 16px;
+        font-family: var(--font-family-body);
+        font-weight: var(--font-weight-regular);
+        font-size: var(--text-header-item-size);
+        line-height: var(--text-body-s-line-height);
+        color: var(--content-main-primary);
+        background: var(--bg-main-surface-2);
+        border: 1px solid var(--outline-neutral);
+        border-radius: 16px;
+        transition: border-color var(--transition-fast), background var(--transition-fast);
+
+        &::placeholder {
+            color: var(--content-main-tertiary);
+        }
+
+        &:focus {
+            background: var(--bg-main-surface-2-light);
+            border-color: var(--outline-accent-2);
+            outline: none;
+        }
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"] {
+        height: 56px;
+    }
+
+    textarea {
+        height: 106px;
+        resize: none;
+
+        @media screen and (max-width: variables.$small) {
+            height: 104px;
+        }
+    }
+
+    // ---- Preferred messenger (radio segmented control) --------------------
+
+    .wpcf7-radio {
+        display: flex;
+        width: 100%;
+        height: 56px;
+        padding: 4px;
+        background: var(--bg-main-surface-2);
+        border-radius: 16px;
+    }
+
+    .wpcf7-radio .wpcf7-list-item {
+        flex: 1 0 0;
+        margin: 0;
+    }
+
+    .wpcf7-radio .wpcf7-list-item label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        padding: 8px 16px;
+        font-family: var(--font-family-body);
+        font-weight: var(--font-weight-semibold);
+        font-size: var(--text-body-s-size);
+        line-height: var(--text-body-s-line-height);
+        color: var(--content-main-tertiary);
+        cursor: pointer;
+        border-radius: 12px;
+        transition: background var(--transition-fast), color var(--transition-fast);
+    }
+
+    .wpcf7-radio .wpcf7-list-item.is-active label {
+        color: var(--content-main-primary);
+        background: var(--bg-ghost-accent-2);
+    }
+
+    // Kept in the DOM (not display:none) so keyboard/screen-reader users can
+    // still reach and operate the real input — visually hidden only.
+    .wpcf7-radio input[type="radio"] {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+        border: 0;
+    }
+
+    // ---- Acceptance checkbox -----------------------------------------------
+
+    .wpcf7-acceptance label {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        cursor: pointer;
+    }
+
+    .wpcf7-acceptance input[type="checkbox"] {
+        position: relative;
+        flex-shrink: 0;
+        width: 24px;
+        height: 24px;
+        margin: 0;
+        appearance: none;
+        cursor: pointer;
+        background: transparent;
+        border: 1.5px solid var(--content-main-secondary);
+        border-radius: 6px;
+        transition: background var(--transition-fast), border-color var(--transition-fast);
+
+        &:checked {
+            background: var(--content-solid-accent-2);
+            border-color: var(--content-solid-accent-2);
+        }
+
+        &:checked::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 12px;
+            height: 9px;
+            background-color: var(--bg-main-background);
+            transform: translate(-50%, -58%);
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 17 12'%3E%3Cpath d='M6.36 9.19 15.56 0 17 1.41 6.36 12.02 0 5.66 1.41 4.24Z'/%3E%3C/svg%3E") no-repeat center / contain;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 17 12'%3E%3Cpath d='M6.36 9.19 15.56 0 17 1.41 6.36 12.02 0 5.66 1.41 4.24Z'/%3E%3C/svg%3E") no-repeat center / contain;
+        }
+    }
+
+    .wpcf7-acceptance .wpcf7-list-item-label {
+        font-family: var(--font-family-body);
+        font-size: var(--text-header-item-size);
+        line-height: var(--text-body-s-line-height);
+        color: var(--content-main-secondary);
+    }
+
+    // ---- Validation + response messaging -----------------------------------
+
+    .wpcf7-not-valid-tip {
+        display: block;
+        margin-top: 4px;
+        font-size: var(--text-footnote-size);
+        line-height: var(--text-footnote-line-height);
+        color: var(--content-solid-negative);
+    }
+
+    .wpcf7-response-output {
+        margin: 0;
+        padding: 12px 16px;
+        font-size: var(--text-footnote-size);
+        line-height: var(--text-footnote-line-height);
+        color: var(--content-main-secondary);
+        border: 1px solid var(--outline-neutral);
+        border-radius: 12px;
+    }
+
+    form.invalid .wpcf7-response-output,
+    form.failed .wpcf7-response-output,
+    form.spam .wpcf7-response-output {
+        color: var(--content-solid-negative);
+        border-color: var(--content-solid-negative);
+    }
+
+    // Success is already communicated by .contact-section__sent-overlay —
+    // CF7's own banner would just duplicate it, so hide it for that state
+    // only (still shown, styled above, for the error states).
+    form.sent .wpcf7-response-output {
+        display: none;
+    }
+}
+
+// ---- Submit button (reuses the .btn-gradient bezel recipe) ----------------
+
+.contact-section__button-wrap {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin: 0;
+}
+
+.contact-section__submit {
+    width: 280px;
+    max-width: 100%;
+
+    // Full-width on mobile (node 581:15075) instead of the fixed 280px
+    // desktop pill. Kept the "Send" label/16px sizing from the desktop
+    // button rather than the Figma instance's literal "book a Call" text —
+    // that's a stray copy-paste from the header CTA component, not an
+    // intentional redesign of this form's submit button.
+    @media screen and (max-width: variables.$small) {
+        width: 100%;
+    }
+}
+
+.contact-section__submit .wpcf7-submit {
+    // Without this, the browser's native button chrome (appearance: auto)
+    // renders underneath/around the custom background — it doesn't respect
+    // border-radius, so it shows up as a squared-off box peeking out past
+    // the purple pill. This was the "broken button" bug.
+    appearance: none;
+    position: relative;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 16px 32px;
+    font-family: var(--font-family-body);
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--text-button-m-size);
+    line-height: var(--text-button-m-line-height);
+    color: var(--label-main);
+    text-transform: uppercase;
+    cursor: pointer;
+    background: none;
+    background-image: linear-gradient(180deg, var(--color-primary-400) 0%, var(--color-primary-600) 100%);
+    border: 0;
+    border-radius: 12px;
+    transition: opacity var(--transition-fast);
+
+    &:hover {
+        opacity: 0.9;
+    }
+
+    // contact_section.js swaps the value to "Sending..." and disables the
+    // input while CF7's AJAX request is in flight.
+    &:disabled {
+        cursor: default;
+        opacity: 0.7;
+    }
+}
+
+// CF7 still inserts this element after the button during submission — the
+// JS-driven "Sending..." label replaces it, so just remove it from the
+// layout instead of styling it (this was the "button is shifted" bug: an
+// unstyled .wpcf7-spinner was sitting in flow next to the button).
+.contact-section__submit .wpcf7-spinner {
+    display: none;
+}
+
+// ---------------------------------------------------------------------------
+// Post-submit "Request sent" overlay (node 743:8062)
+// ---------------------------------------------------------------------------
+
+.contact-section__sent-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    visibility: hidden;
+    background: var(--bg-main-surface-2-light);
+    backdrop-filter: blur(20px);
+    opacity: 0;
+    transition: opacity var(--transition-base), visibility var(--transition-base);
+
+    .contact-section__form-card.is-sent & {
+        visibility: visible;
+        opacity: 1;
+    }
+}
+
+.contact-section__sent-icon {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    color: var(--content-solid-accent-2);
+    background: var(--bg-ghost-accent-2);
+    border-radius: 8px;
+}
+
+.contact-section__sent-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    text-align: center;
+}
+
+.contact-section__sent-title {
+    margin: 0;
+    font-family: var(--font-family-body);
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--text-body-m-size);
+    line-height: var(--text-body-m-line-height);
+    color: var(--content-main-primary);
+}
+
+.contact-section__sent-subtitle {
+    margin: 0;
+    font-family: var(--font-family-body);
+    font-size: var(--text-header-item-size);
+    line-height: var(--text-body-s-line-height);
+    color: var(--content-main-secondary);
+}
+
+// Dim + blur the real form once it's been submitted successfully — the
+// fields stay in the DOM (screen readers / back-nav) but read as inert.
+.contact-section__form-card.is-sent .contact-section__form-inner > *:not(.contact-section__sent-overlay) {
+    opacity: 0.3;
+    pointer-events: none;
+}

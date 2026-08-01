@@ -734,3 +734,68 @@ The footer is always global — it is never a Gutenberg block.
 - All `get_field()` calls must pass `'option'` as the second argument
 - The template lives in `footer.php` — never in `template-parts/sections/`
 - CSS and JS are enqueued unconditionally (not via block detection)
+
+---
+
+### Contact Section
+
+`acf/contact-section` (`acf-json/group_contact_section.json`, `template-parts/sections/contact_section.php`, `src/scss/sections/contact_section.scss`, `src/js/sections/contact_section.js`).
+
+The form itself is **Contact Form 7** — the block only holds the shortcode (`form_shortcode` field) plus the left-column title/description/trust-badges. `contact_section.scss` targets CF7's own generated class names (`.wpcf7-form`, `.wpcf7-radio`, `.wpcf7-acceptance`, `.wpcf7-submit`, …) directly, so the CF7 form template has to be authored to match. Paste this into the form's **Form** tab in Contact > Contact Forms, then put the resulting `[contact-form-7 id="…"]` shortcode into the block's "Contact Form 7 Shortcode" field:
+
+```html
+<div class="contact-section__form-row">
+    <p class="contact-section__field">
+        <label>First name<span class="contact-section__required">*</span></label>
+        [text* first-name placeholder "Enter your first name"]
+    </p>
+    <p class="contact-section__field">
+        <label>Last name<span class="contact-section__required">*</span></label>
+        [text* last-name placeholder "Enter your last name"]
+    </p>
+</div>
+
+<div class="contact-section__form-row">
+    <p class="contact-section__field">
+        <label>Email<span class="contact-section__required">*</span></label>
+        [email* your-email placeholder "Enter your email"]
+    </p>
+    <p class="contact-section__field">
+        <label>Phone<span class="contact-section__required">*</span></label>
+        [tel* your-phone placeholder "Enter your phone number"]
+    </p>
+</div>
+
+<div class="contact-section__form-row">
+    <p class="contact-section__field">
+        <label>Preferred messenger</label>
+        [radio preferred-messenger default:1 use_label_element "WhatsApp" "Telegram"]
+    </p>
+    <p class="contact-section__field">
+        <label>Messenger ID</label>
+        [text messenger-id placeholder "@example"]
+    </p>
+</div>
+
+<p class="contact-section__field">
+    <label>Message</label>
+    [textarea your-message placeholder "Write some details about the project you have in mind"]
+</p>
+
+<p class="contact-section__acceptance">
+    [acceptance acceptance-personal-data optional]
+        I agree that my personal information will be processed and stored by WheelLab.
+    [/acceptance]
+</p>
+
+<p class="contact-section__button-wrap">
+    <span class="btn-gradient contact-section__submit">[submit "Send"]</span>
+</p>
+```
+
+**Conventions this relies on:**
+- `.contact-section__field` / `.contact-section__form-row` are the theme's own wrapper classes, not CF7's — they must be typed into the CF7 admin editor exactly as shown, since CF7 shortcode tags don't emit surrounding layout markup themselves.
+- The `*` after a field name (`[text* first-name]`) is CF7's own required-field marker; the `<span class="contact-section__required">*</span>` next to the label is a separate, purely visual asterisk — add both or neither, they aren't linked.
+- `[radio … use_label_element]` and `[acceptance]` render as `<label><input>…</label>` — the checkbox/radio inputs are visually hidden (`position:absolute` clip-rect, not `display:none`) so they stay keyboard/screen-reader operable; the visible pill/box look is drawn by their sibling `<label>` via CSS.
+- The submit button reuses `.btn-gradient` (see `_general.scss`) — do not invent a new button style here.
+- **Post-submit state:** `contact_section.js` listens for CF7's `wpcf7mailsent` event and adds `.is-sent` to `.contact-section__form-card`, which dims/blurs the real fields and reveals `.contact-section__sent-overlay` ("Request sent" — node 743:8062). No CF7-side config needed; it's a plain DOM event CF7 fires on successful AJAX submission.
