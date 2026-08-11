@@ -2,7 +2,8 @@
 /**
  * Block: Solutions Section
  * Registered as: acf/solutions-section
- * Source: WheelLab Website (Figma) — node 527:24748 (desktop only so far).
+ * Source: WheelLab Website (Figma) — node 527:24748 (desktop), node
+ * 758:61068/758:61069/758:61077 (mobile — title, description, card).
  * Assets: build/css/sections/solutions_section.min.css
  *         build/js/sections/solutions_section.min.js
  *
@@ -76,24 +77,29 @@ $chevron_right_url = esc_url(wheellab_asset_url('assets/img/icons/chevron-right.
                                 <img class="solutions-section__card-glow solutions-section__card-glow--a" src="<?php echo $glow_url; ?>" alt="" aria-hidden="true">
                                 <img class="solutions-section__card-glow solutions-section__card-glow--b" src="<?php echo $glow_url; ?>" alt="" aria-hidden="true">
 
+                                <?php // Text before image in the DOM on purpose: desktop positions the
+                                // image absolutely so source order doesn't matter there, but mobile
+                                // renders it in normal flow (node 758:61077), where source order IS
+                                // the visual order — text first, image last. ?>
+                                <div class="solutions-section__card-info">
+                                    <div class="solutions-section__card-title-row">
+                                        <h3 class="solutions-section__card-title h1"><?php echo esc_html($card_title); ?></h3>
+
+                                        <svg class="solutions-section__card-arrow" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                            <path d="M26.674 15.6903L12.3297 30.0347L9.97266 27.6777L24.317 13.3333H11.674V10H30.0073V28.3333H26.674V15.6903Z" fill="currentColor"/>
+                                        </svg>
+                                    </div>
+
+                                    <?php if ($card_description) : ?>
+                                        <p class="solutions-section__card-description body-m"><?php echo nl2br(esc_html($card_description)); ?></p>
+                                    <?php endif; ?>
+                                </div>
+
                                 <?php if (!empty($card_image['url'])) : ?>
                                     <div class="solutions-section__card-image">
                                         <img src="<?php echo esc_url($card_image['url']); ?>" alt="<?php echo esc_attr($card_image['alt'] ?? ''); ?>" loading="lazy">
                                     </div>
                                 <?php endif; ?>
-
-                                <div class="solutions-section__card-text">
-                                    <div class="solutions-section__card-info">
-                                        <h3 class="solutions-section__card-title h1"><?php echo esc_html($card_title); ?></h3>
-                                        <?php if ($card_description) : ?>
-                                            <p class="solutions-section__card-description body-m"><?php echo nl2br(esc_html($card_description)); ?></p>
-                                        <?php endif; ?>
-                                    </div>
-
-                                    <svg class="solutions-section__card-arrow" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                        <path d="M26.674 15.6903L12.3297 30.0347L9.97266 27.6777L24.317 13.3333H11.674V10H30.0073V28.3333H26.674V15.6903Z" fill="currentColor"/>
-                                    </svg>
-                                </div>
                             </div>
                         </div>
                     </a>

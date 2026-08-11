@@ -47,6 +47,13 @@ $id     = !empty($block['anchor'])    ? ' id="' . esc_attr($block['anchor']) . '
 
 $arrow_left_url  = esc_url(wheellab_asset_url('assets/img/icons/arrow-left.svg'));
 $arrow_right_url = esc_url(wheellab_asset_url('assets/img/icons/arrow-right.svg'));
+
+// Mobile (node 758:62165) uses a different, smaller nav button — same
+// 44px/mask-icon recipe as .solutions-section__nav, not the desktop
+// bare-icon style — toggled via CSS like the header's logo-full/-mobile
+// swap (see src/scss/sections/featured_posts_section.scss).
+$chevron_left_url  = esc_url(wheellab_asset_url('assets/img/icons/chevron-left.svg'));
+$chevron_right_url = esc_url(wheellab_asset_url('assets/img/icons/chevron-right.svg'));
 ?>
 
 <?php if ($posts_query && $posts_query->have_posts()) : ?>
@@ -68,11 +75,13 @@ $arrow_right_url = esc_url(wheellab_asset_url('assets/img/icons/arrow-right.svg'
             <?php if ($posts_query->post_count > 1) : ?>
                 <div class="featured-posts-section__nav-group">
                     <button type="button" class="featured-posts-section__nav featured-posts-section__nav--prev">
-                        <img class="svg" src="<?php echo $arrow_left_url; ?>" alt="">
+                        <img class="svg featured-posts-section__nav-icon featured-posts-section__nav-icon--desktop" src="<?php echo $arrow_left_url; ?>" alt="">
+                        <img class="svg featured-posts-section__nav-icon featured-posts-section__nav-icon--mobile" src="<?php echo $chevron_left_url; ?>" alt="">
                         <span class="visually-hidden"><?php esc_html_e('Previous post', 'wheellab'); ?></span>
                     </button>
                     <button type="button" class="featured-posts-section__nav featured-posts-section__nav--next">
-                        <img class="svg" src="<?php echo $arrow_right_url; ?>" alt="">
+                        <img class="svg featured-posts-section__nav-icon featured-posts-section__nav-icon--desktop" src="<?php echo $arrow_right_url; ?>" alt="">
+                        <img class="svg featured-posts-section__nav-icon featured-posts-section__nav-icon--mobile" src="<?php echo $chevron_right_url; ?>" alt="">
                         <span class="visually-hidden"><?php esc_html_e('Next post', 'wheellab'); ?></span>
                     </button>
                 </div>

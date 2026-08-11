@@ -1,9 +1,10 @@
 @use "../partials/variables";
 
-// Source: WheelLab Website (Figma) — node 527:28152.
-// Not spec'd for mobile in Figma (only a 1728px desktop frame exists) — the
-// padding/gap step-downs and slide width breakpoints below are a reasonable
-// fallback, not a literal Figma value.
+// Source: WheelLab Website (Figma) — node 527:28152 (desktop), node
+// 758:47710 (mobile testimonial content — confirms the quote/meta
+// typography is identical to desktop at every size, only the slide width
+// changes). Section padding-y and the $large step aren't spec'd for
+// mobile/tablet — still a reasonable fallback, not a literal Figma value.
 
 .reviews-section {
     padding: 160px 0;
@@ -63,8 +64,11 @@
         width: 600px;
     }
 
+    // node 758:47710's testimonial content is 353px wide inside a 393px
+    // mobile frame — a 20px gutter each side, not the previously guessed
+    // 48px.
     @media screen and (max-width: variables.$small) {
-        width: calc(100vw - 96px);
+        width: calc(100vw - 40px);
     }
 }
 

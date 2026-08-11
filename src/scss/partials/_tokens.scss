@@ -413,11 +413,20 @@
   --text-body-s-line-height: 1.5;
 
   // Mobile overrides — sourced from the Figma "Mobile" footer frame
-  // (node 590:15857) and the Contact Section mobile frame (node 758:47732).
+  // (node 590:15857), the Contact Section mobile frame (node 758:47732),
+  // the Reviews Section mobile frame (node 758:47710/758:47713), and the
+  // blog/featured-posts card mobile frame (node 758:62169).
+  // --text-h1-* is NOT here — Solutions Section's mobile card title has its
+  // own 1024px breakpoint, scoped to .solutions-section only (see that
+  // file), not the site-wide $small(576px) used everywhere else.
   // Add more here as other mobile frames are checked against.
   @media screen and (max-width: variables.$small) {
     --text-h2-size:            24px;
     --text-h2-line-height:     1.333;
+    --text-h4-size:            18px;
+    --text-h4-line-height:     1.444;
+    --text-subhead-size:        16px;
+    --text-subhead-line-height: 1.5;
     --text-body-m-size:        16px;
     --text-body-m-line-height: 1.5;
     --text-body-s-line-height: 1.375;

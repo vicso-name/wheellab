@@ -1,4 +1,7 @@
-// Source: WheelLab Website (Figma) — node 235:4331 / 527:24965 ("CardsBlog").
+@use "../partials/variables";
+
+// Source: WheelLab Website (Figma) — node 235:4331 / 527:24965 ("CardsBlog",
+// desktop), node 758:62169 ("Cards - blog", mobile).
 //
 // This is a shared partial (template-parts/sections/blog_card.php), not a
 // section of its own — it's reused by the blog page grid (blog_filter.php,
@@ -25,6 +28,11 @@
   border: 1px solid var(--outline-accent-1);
   border-radius: 20px;
   box-shadow: 0 2px 24px 0 rgb(105 56 239 / 12%), 0 1px 2px 0 rgb(0 0 0 / 8%);
+  transition: background 0.3s ease-out, border-color 0.3s ease-out;
+
+  @media screen and (max-width: variables.$small) {
+    padding: 4px;
+  }
 }
 
 .blog-card__inner {
@@ -38,6 +46,12 @@
   overflow: hidden;
   background: var(--bg-main-surface-1);
   border-radius: 16px;
+  transition: background 0.3s ease-out;
+
+  @media screen and (max-width: variables.$small) {
+    gap: 16px;
+    padding: 16px;
+  }
 }
 
 // Decorative ambient glow bleeding from the bottom-right corner (node
@@ -82,12 +96,21 @@
   color: var(--content-main-primary);
   background: var(--bg-main-surface-2);
   border-radius: 8px;
+
+  @media screen and (max-width: variables.$small) {
+    height: 32px;
+    padding: 0 8px;
+  }
 }
 
 .blog-card__text {
   display: flex;
   flex-direction: column;
   gap: 24px;
+
+  @media screen and (max-width: variables.$small) {
+    gap: 16px;
+  }
 }
 
 .blog-card__title {
@@ -110,4 +133,26 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+// ---------------------------------------------------------------------------
+// Hover (crossfade, 300ms ease-out) — used both in the blog page grid and
+// the Featured Posts Section slider, since both share this same partial.
+// Only the two background layers + outer border change; title/meta/image/
+// glow all stay exactly as-is (no scale, no opacity shift), unlike
+// Solutions/Domains Section's card hover.
+// ---------------------------------------------------------------------------
+
+.blog-card:hover {
+  .blog-card__bezel {
+    background: var(--bg-main-surface-2);
+    border-color: var(--outline-neutral);
+  }
+
+  // Both layers land on the same white-10% token here — the inner card
+  // does NOT drop to the lighter/5% surface used by Solutions/Domains
+  // Section's hover, per spec.
+  .blog-card__inner {
+    background: var(--bg-main-surface-2);
+  }
 }
