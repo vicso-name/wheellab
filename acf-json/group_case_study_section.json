@@ -1,0 +1,122 @@
+{
+    "key": "group_case_study_section",
+    "title": "Case Study Section",
+    "fields": [
+        {
+            "key": "field_css_title",
+            "label": "Title",
+            "name": "title",
+            "type": "text",
+            "default_value": "Our clients have ambitious visions, we make people feel them.",
+            "wrapper": {
+                "width": "100"
+            }
+        },
+        {
+            "key": "field_css_description",
+            "label": "Description",
+            "name": "description",
+            "type": "textarea",
+            "rows": 3,
+            "default_value": "We engineer the systems operators rely on — from player-facing platforms to back-office tooling and the integrations that hold it all together.",
+            "wrapper": {
+                "width": "100"
+            }
+        },
+        {
+            "key": "field_css_cases_source",
+            "label": "Cases Source",
+            "name": "cases_source",
+            "type": "select",
+            "choices": {
+                "latest": "Latest Case Studies",
+                "manual": "Manual Selection"
+            },
+            "default_value": "latest",
+            "allow_null": 0,
+            "ui": 1,
+            "wrapper": {
+                "width": "50"
+            }
+        },
+        {
+            "key": "field_css_cases_count",
+            "label": "Number of Cases",
+            "name": "cases_count",
+            "type": "number",
+            "instructions": "How many of the latest published case studies to show.",
+            "default_value": 10,
+            "min": 1,
+            "max": 20,
+            "step": 1,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_css_cases_source",
+                        "operator": "==",
+                        "value": "latest"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50"
+            }
+        },
+        {
+            "key": "field_css_manual_cases",
+            "label": "Cases",
+            "name": "manual_cases",
+            "type": "relationship",
+            "instructions": "Search, pick, and order the case studies to feature in the slider.",
+            "post_type": [
+                "case_study"
+            ],
+            "filters": [
+                "search"
+            ],
+            "elements": [
+                "featured_image"
+            ],
+            "return_format": "id",
+            "min": 1,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_css_cases_source",
+                        "operator": "==",
+                        "value": "manual"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "100"
+            }
+        },
+        {
+            "key": "field_css_cta_button",
+            "label": "CTA Button",
+            "name": "cta_button",
+            "type": "link",
+            "return_format": "array",
+            "instructions": "\"View all cases\" — shown below the slider.",
+            "wrapper": {
+                "width": "100"
+            }
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "block",
+                "operator": "==",
+                "value": "acf/case-study-section"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "active": true
+}

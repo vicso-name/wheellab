@@ -1,0 +1,141 @@
+@use "../partials/variables";
+
+// No Figma spec exists for either the case_study archive or single
+// template — both reuse Case Study Section's own card component classes
+// (.case-study-section__card-bezel/-inner/-image/-text/-stats, loaded
+// alongside this file — see inc/enqueue.php) for visual consistency
+// instead of inventing a new card look from scratch.
+
+.case-study-archive {
+    padding: 100px 0;
+
+    @media screen and (max-width: variables.$medium) {
+        padding: 60px 0;
+    }
+}
+
+.case-study-archive__header {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 1000px;
+    margin-bottom: 64px;
+}
+
+.case-study-archive__title {
+    color: var(--content-main-primary);
+}
+
+.case-study-archive__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+
+    @media screen and (max-width: variables.$medium) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.case-study-archive__empty {
+    color: var(--content-main-secondary);
+}
+
+.case-study-archive__pagination {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 64px;
+
+    .page-numbers {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 44px;
+        height: 44px;
+        padding: 0 12px;
+        color: var(--content-main-secondary);
+        text-decoration: none;
+        background: var(--bg-main-surface-2);
+        border-radius: 12px;
+        transition: background var(--transition-fast);
+
+        &:hover {
+            background: var(--bg-ghost-accent-2);
+        }
+
+        &.current {
+            color: var(--content-main-primary);
+            background: var(--bg-ghost-accent-2);
+        }
+
+        &.dots {
+            background: none;
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Single
+// ---------------------------------------------------------------------------
+
+.case-study-single {
+    padding: 100px 0;
+
+    @media screen and (max-width: variables.$medium) {
+        padding: 60px 0;
+    }
+}
+
+.case-study-single__header {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    max-width: 1000px;
+    margin-bottom: 48px;
+}
+
+.case-study-single__title {
+    color: var(--content-main-primary);
+}
+
+.case-study-single__description {
+    margin: 0;
+    color: var(--content-main-secondary);
+}
+
+.case-study-single__image {
+    width: 100%;
+    aspect-ratio: 506 / 342;
+    overflow: hidden;
+    background: var(--bg-main-surface-2);
+    border-radius: 20px;
+    margin-bottom: 48px;
+
+    img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+}
+
+.case-study-single__stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 48px;
+}
+
+.case-study-single__content {
+    max-width: 800px;
+    color: var(--content-main-secondary);
+
+    p {
+        margin: 0 0 24px;
+    }
+}
+
+.case-study-single__back {
+    display: inline-flex;
+    margin-top: 48px;
+}
