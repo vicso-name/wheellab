@@ -1,0 +1,64 @@
+{
+    "key": "group_about_section",
+    "title": "About Section",
+    "fields": [
+        {
+            "key": "field_as_label",
+            "label": "Eyebrow Label",
+            "name": "label",
+            "type": "text",
+            "default_value": "About us",
+            "wrapper": {
+                "width": "100"
+            }
+        },
+        {
+            "key": "field_as_title",
+            "label": "Title",
+            "name": "title",
+            "type": "text",
+            "default_value": "Engineering iGaming platforms that operators trust to scale.",
+            "wrapper": {
+                "width": "100"
+            }
+        },
+        {
+            "key": "field_as_description",
+            "label": "Description",
+            "name": "description",
+            "type": "textarea",
+            "rows": 3,
+            "default_value": "We build custom casino, sportsbook, and platform software for operators and startups ready to launch, scale, or modernize. End-to-end engineering, iGaming-native, compliance-aware from day one.",
+            "wrapper": {
+                "width": "100"
+            }
+        },
+        {
+            "key": "field_as_logos",
+            "label": "Logos",
+            "name": "logos",
+            "type": "gallery",
+            "instructions": "Trusted-by logos, shown as an infinite scrolling row. Leave empty to hide the row entirely.",
+            "return_format": "array",
+            "preview_size": "medium",
+            "wrapper": {
+                "width": "100"
+            }
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "block",
+                "operator": "==",
+                "value": "acf/about-section"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "active": true
+}

@@ -1,0 +1,212 @@
+@use "../partials/variables";
+
+// Source: WheelLab Website (Figma) — node 527:24707 ("Content Group"), via
+// get_design_context. No outer section header exists in this frame — see
+// the PHP template's header comment for why section padding is assumed
+// rather than sourced.
+
+.about-section {
+    padding: 100px 0;
+
+    @media screen and (max-width: variables.$medium) {
+        padding: 60px 0;
+    }
+}
+
+.about-section__card {
+    display: flex;
+    padding: 8px;
+    background: var(--bg-main-surface-2);
+    border: 1px solid var(--outline-neutral);
+    border-radius: 20px;
+    box-shadow: 0 2px 24px 0 rgb(105 56 239 / 12%), 0 1px 2px 0 rgb(0 0 0 / 8%);
+}
+
+.about-section__card-inner {
+    display: flex;
+    flex: 1 0 0;
+    flex-direction: column;
+    gap: 96px;
+    min-width: 0;
+    padding: 96px 80px;
+    overflow: hidden;
+    background: var(--bg-main-surface-2-light);
+    border-radius: 16px;
+
+    // node 758:60716 ("Text Block", mobile) — uniform 40px padding on
+    // every side, replacing the 96px/80px desktop split, and the same
+    // 40px gap below instead of 96px.
+    @media screen and (max-width: variables.$small) {
+        gap: 40px;
+        padding: 40px;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Text
+// ---------------------------------------------------------------------------
+
+.about-section__text {
+    display: flex;
+    align-items: flex-start;
+    width: 100%;
+
+    // node 758:60811 ("Text Container", mobile) — label/title/description
+    // stack in a single column instead of the desktop label-column +
+    // content-column row, with a plain 40px gap between all three.
+    @media screen and (max-width: variables.$small) {
+        flex-direction: column;
+        gap: 40px;
+    }
+}
+
+// Figma lays the label out as one 109px column followed by a second,
+// empty 109px placeholder column before the heading starts — replicated
+// here as a fixed width plus a margin covering that second column's own
+// width + gap, instead of an empty spacer element.
+.about-section__label {
+    flex-shrink: 0;
+    width: 109px;
+    padding-top: 8px;
+    margin-right: 133px;
+    color: var(--content-main-secondary);
+
+    // Stacked full-width on mobile — the fixed width/margin only existed
+    // to hold the desktop row's column geometry.
+    @media screen and (max-width: variables.$small) {
+        width: 100%;
+        padding-top: 0;
+        margin-right: 0;
+    }
+}
+
+.about-section__content {
+    display: flex;
+    flex: 1 0 0;
+    flex-direction: column;
+    gap: 96px;
+    min-width: 0;
+    // Mirrors Figma's trailing 109px placeholder + gap on the far right
+    // of this row, keeping the heading's right edge short of the card's
+    // true edge to match the label's width on the left.
+    padding-right: 133px;
+
+    @media screen and (max-width: variables.$small) {
+        gap: 40px;
+        padding-right: 0;
+    }
+}
+
+.about-section__title {
+    color: var(--content-main-primary);
+    // No override needed here even though get_design_context's cached
+    // JSX reported 44px/52px for this mobile frame — get_variable_defs
+    // on the actual node resolved to 24px/32px, which already matches
+    // the sitewide h2 $small override in _tokens.scss exactly.
+}
+
+.about-section__extra {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 24px;
+    width: 100%;
+    // This row has its own additional 109px + gap placeholder nested
+    // inside it (on top of .about-section__content's own trailing
+    // padding), giving the icon + text group a wider right-hand gutter
+    // than the heading above it — confirmed via get_design_context, not
+    // a guess.
+    padding-right: 133px;
+
+    // node 758:60723 (mobile) drops the icon entirely (see
+    // .about-section__extra-icon) and the description just becomes a
+    // plain full-width block, no right-aligned grouping.
+    @media screen and (max-width: variables.$small) {
+        justify-content: flex-start;
+        padding-right: 0;
+    }
+}
+
+.about-section__extra-icon {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    color: var(--content-main-secondary);
+
+    @media screen and (max-width: variables.$small) {
+        display: none;
+    }
+}
+
+.about-section__extra-text {
+    max-width: 506px;
+    margin: 0;
+    color: var(--content-main-secondary);
+
+    // node 758:60728 ("Long Description", mobile) — confirmed via
+    // get_variable_defs: Paragraph/Body S resolves to 14px/22px here,
+    // smaller than the shared --text-body-s-size token (16px, unchanged
+    // on mobile everywhere else), so this is scoped to just this one
+    // element rather than touching the shared token.
+    @media screen and (max-width: variables.$small) {
+        max-width: none;
+        font-size: 14px;
+        line-height: 22px;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Logo marquee (node 527:24725 — "Running line with trusted companies")
+// ---------------------------------------------------------------------------
+
+.about-section__divider {
+    width: 100%;
+    margin: 0;
+    border: 0;
+    border-top: 1px solid var(--outline-neutral);
+}
+
+.about-section__marquee {
+    width: 100%;
+    overflow: hidden;
+    // Fades the scrolling logos out at both edges instead of letting
+    // overflow: hidden clip them mid-shape — percentage stops so the
+    // fade scales with the card instead of eating a fixed chunk of the
+    // (much narrower) mobile row.
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+}
+
+.about-section__marquee-track {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 80px;
+    width: max-content;
+    // Set inline per-instance from the logo count so the scroll SPEED
+    // stays constant regardless of how many logos the admin uploads,
+    // rather than a fixed duration stretching/compressing with count.
+    animation: about-section-marquee var(--marquee-duration, 30s) linear infinite;
+
+    @media (prefers-reduced-motion: reduce) {
+        animation-play-state: paused;
+    }
+}
+
+.about-section__marquee-logo {
+    flex-shrink: 0;
+    height: 32px;
+    width: auto;
+}
+
+@keyframes about-section-marquee {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        // The track renders the logo list twice back-to-back, so exactly
+        // -50% is one full set's width — the loop point is seamless.
+        transform: translateX(-50%);
+    }
+}
