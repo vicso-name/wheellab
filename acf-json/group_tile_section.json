@@ -1,0 +1,85 @@
+{
+    "key": "group_tile_section",
+    "title": "Tile Section",
+    "fields": [
+        {
+            "key": "field_ts_title",
+            "label": "Title",
+            "name": "title",
+            "type": "text",
+            "default_value": "Why the Front-End Is the Product",
+            "wrapper": {
+                "width": "100"
+            }
+        },
+        {
+            "key": "field_ts_description",
+            "label": "Description",
+            "name": "description",
+            "type": "textarea",
+            "rows": 3,
+            "default_value": "Every operator on your platform has the same bonus engine and the same game catalogue. The template that came with it is running on dozens of other sites right now. Players can't tell your provider from anyone else's — they can tell your lobby from anyone else's in about two seconds.",
+            "wrapper": {
+                "width": "100"
+            }
+        },
+        {
+            "key": "field_ts_cards",
+            "label": "Cards",
+            "name": "cards",
+            "type": "repeater",
+            "layout": "block",
+            "button_label": "Add Card",
+            "sub_fields": [
+                {
+                    "key": "field_ts_card_icon",
+                    "label": "Icon",
+                    "name": "icon",
+                    "type": "image",
+                    "return_format": "array",
+                    "preview_size": "medium",
+                    "instructions": "Single-color SVG — it's tinted accent-2 cyan automatically via CSS mask, so the uploaded file's own color doesn't matter.",
+                    "mime_types": "svg",
+                    "wrapper": {
+                        "width": "100"
+                    }
+                },
+                {
+                    "key": "field_ts_card_title",
+                    "label": "Title",
+                    "name": "title",
+                    "type": "text",
+                    "required": 1,
+                    "wrapper": {
+                        "width": "100"
+                    }
+                },
+                {
+                    "key": "field_ts_card_description",
+                    "label": "Description",
+                    "name": "description",
+                    "type": "textarea",
+                    "rows": 3,
+                    "wrapper": {
+                        "width": "100"
+                    }
+                }
+            ]
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "block",
+                "operator": "==",
+                "value": "acf/tile-section"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "active": true
+}

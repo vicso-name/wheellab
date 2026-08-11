@@ -1,0 +1,163 @@
+@use "../partials/variables";
+
+// Source: WheelLab Website (Figma) — node 783:27431 ("Tile section"), via
+// get_design_context.
+//
+// The first row is asymmetric (905px / 639px, ≈7:5), every row after it
+// an even 50/50 split (772px / 772px in the 4-card Figma mock) — a
+// 12-column grid reproduces that: the first two cards get a 7/5 span
+// (≈1.4, within ~1% of the true 905:639 ratio), everything else defaults
+// to a plain 6/6 so it still generalizes to any repeater length.
+
+.tile-section {
+    position: relative;
+    overflow: hidden;
+    padding: 120px 0;
+
+    @media screen and (max-width: variables.$medium) {
+        padding: 60px 0;
+    }
+}
+
+// node 783:27546 — same shared glow texture as Domains Section's card
+// glow (confirmed byte-identical asset), just centered on the section
+// itself instead of anchored/rotated per-card.
+.tile-section__glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 1727.577px;
+    height: 953px;
+    object-fit: cover;
+    opacity: 0.3;
+    filter: blur(80px);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
+.tile-section__header {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 1000px;
+    margin-bottom: 64px;
+
+    @media screen and (max-width: variables.$medium) {
+        margin-bottom: 40px;
+    }
+}
+
+.tile-section__title {
+    color: var(--content-main-primary);
+}
+
+.tile-section__description {
+    margin: 0;
+    color: var(--content-main-secondary);
+}
+
+// ---------------------------------------------------------------------------
+// Cards
+// ---------------------------------------------------------------------------
+
+.tile-section__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 24px;
+
+    @media screen and (max-width: variables.$medium) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.tile-section__card {
+    display: flex;
+    grid-column: span 6;
+    padding: 8px;
+    background: var(--bg-main-surface-2);
+    border: 1px solid var(--outline-neutral);
+    border-radius: 20px;
+    // No explicit height anywhere in this card — CSS Grid's default
+    // align-items: stretch already equalizes every card in a row to the
+    // tallest one's natural content height, so the min-height/line-clamp
+    // trick used for the sliders elsewhere isn't needed here.
+
+    @media screen and (max-width: variables.$medium) {
+        grid-column: 1 / -1;
+    }
+
+    // node 792:9727 ("Feature Group") — the first row's two cards, wider
+    // (span 7) then narrower (span 5) instead of the plain 6/6 every
+    // other row gets.
+    &:nth-child(1) {
+        grid-column: span 7;
+
+        @media screen and (max-width: variables.$medium) {
+            grid-column: 1 / -1;
+        }
+    }
+
+    &:nth-child(2) {
+        grid-column: span 5;
+
+        @media screen and (max-width: variables.$medium) {
+            grid-column: 1 / -1;
+        }
+    }
+}
+
+.tile-section__card-inner {
+    display: flex;
+    flex: 1 0 0;
+    flex-direction: column;
+    gap: 24px;
+    min-width: 0;
+    padding: 32px;
+    overflow: hidden;
+    background: var(--bg-main-surface-2-light);
+    border-radius: 16px;
+}
+
+.tile-section__card-icon {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    background: var(--bg-ghost-accent-2);
+    border-radius: 8px;
+}
+
+.tile-section__card-icon-glyph {
+    width: 28px;
+    height: 28px;
+    background-color: var(--content-solid-accent-2);
+    -webkit-mask-position: center;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-size: contain;
+    mask-position: center;
+    mask-repeat: no-repeat;
+    mask-size: contain;
+}
+
+.tile-section__card-text {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-width: 0;
+}
+
+.tile-section__card-title {
+    color: var(--content-solid-accent-2);
+}
+
+.tile-section__card-description {
+    margin: 0;
+    // Content/Main/Primary (full white), not the ...secondary used
+    // elsewhere — confirmed via get_design_context, a deliberate
+    // difference from Solutions/Domains card body text.
+    color: var(--content-main-primary);
+}
