@@ -7,7 +7,12 @@
 
 .footer {
   position: relative;
-  overflow: hidden;
+  // Figma (node 617:3647): the footer frame itself has clipsContent: false
+  // — the background rectangle below is allowed to paint past the frame's
+  // own bounds on every side, and its blur dissolves into that overflow
+  // naturally. overflow: hidden here would clip the blur at the footer's
+  // own edges, turning the soft falloff into a hard line.
+  overflow: visible;
   padding: 160px 0 220px;
 
   @media screen and (max-width: variables.$small) {
@@ -21,31 +26,70 @@
 // ---------------------------------------------------------------------------
 
 .footer__bg {
+  // Figma's background rectangle is sized/positioned relative to the
+  // 1728×842 footer frame as: 2037×1124 at (-166, 0) — i.e. ~18% wider
+  // (overflowing roughly evenly left/right), top-aligned with the
+  // footer's own top, and ~33% taller than the frame. That extra height
+  // is Figma's own canvas headroom, not something a live page should
+  // reproduce literally: unlike the top edge — which bleeds into content
+  // that already exists above it, so a top offset never grows the page —
+  // .footer is the last thing on the page, so extending this box past
+  // its bottom directly grows the document's actual scrollable height,
+  // leaving empty, content-free scroll space below .footer__logomark
+  // (its own overflow is deliberately smaller, see below). bottom: 0
+  // instead — the blur filter still bleeds its softness past the box's
+  // own edge on its own (proven by the top edge, which gets the same
+  // smooth falloff from inset top: 0), it just no longer inflates the
+  // box's own layout size to do it.
   position: absolute;
-  inset: 0;
+  inset: 0 -9% 0 -9%;
   z-index: 0;
   pointer-events: none;
-  overflow: hidden;
+  // No overflow: hidden — .footer__bg-image's blur needs to spread past
+  // even this box; the softness comes from the blur radius itself
+  // dissolving to nothing, not from a clipped/hard edge.
+  overflow: visible;
 }
 
 .footer__bg-image {
   position: absolute;
-  inset: -10%;
-  width: 120%;
+  inset: 0;
+  width: 100%;
   max-width: none;
-  height: 120%;
+  height: 100%;
   object-fit: cover;
-  filter: blur(64px);
+  // Figma crops the source aurora image to its bottom-right quadrant
+  // (imageTransform offset ~50%/50%, scale ~50%) — object-position mimics
+  // that crop instead of centering it.
+  object-position: 85% 75%;
+  // Matches the Figma layer blur radius (128) — this is what makes the
+  // rectangle's own edges dissolve to nothing once unclipped, instead of
+  // needing a separate manual fade.
+  filter: blur(128px);
 }
 
 .footer__logomark {
+  // Centered horizontally, bottom edge overflowing past the footer's own
+  // bottom so it's partially cropped by the page's edge — not a corner
+  // accent. No transform: the source SVG is already the final
+  // orientation, no rotation needed.
+  //
+  // bottom is a calc() off its own width (≈ its own height too — the
+  // source SVG is near-square) rather than a plain percentage: a plain
+  // percentage is relative to .footer's height, which varies a lot with
+  // footer content, so it either left a big dead gap between the mark
+  // and the page's true end (short footers) or clipped it too early
+  // (tall ones). This keeps a fixed ~20% of the mark's own height
+  // hanging past the footer's bottom edge — which, since .footer is the
+  // last thing on the page, becomes the page's actual end, so there's no
+  // leftover empty padding beyond it.
   position: absolute;
   z-index: 0;
   left: 50%;
-  bottom: -12%;
-  width: min(588px, 45vw);
+  bottom: calc(min(588px, 45vw) * -0.2);
+  width: min(588px, 45vw); // 585px in Figma — its native, unscaled size
   max-width: none;
-  transform: translateX(-50%) rotate(90deg);
+  transform: translateX(-50%);
   pointer-events: none;
 
   img {
@@ -54,13 +98,10 @@
     height: auto;
   }
 
-  // Mobile: anchored to the right edge instead of centered (node 590:15816).
   @media screen and (max-width: variables.$small) {
-    left: auto;
-    right: -20px;
-    bottom: -8%;
+    bottom: calc(min(313px, 82vw) * -0.2);
     width: min(313px, 82vw);
-    transform: rotate(90deg);
+    transform: translateX(-50%);
   }
 }
 
@@ -98,8 +139,9 @@
   background: var(--bg-main-surface-2);
   border: 1px solid var(--outline-neutral);
   border-radius: 20px;
-  backdrop-filter: blur(100px);
-  -webkit-backdrop-filter: blur(100px);
+  // Figma: Background Blur radius 200 on the glassmorphism card.
+  backdrop-filter: blur(200px);
+  -webkit-backdrop-filter: blur(200px);
 
   @media screen and (max-width: variables.$small) {
     padding: 4px;
