@@ -28,6 +28,10 @@ function wheellab_register_acf_blocks() {
         'contact_section',
         'featured_posts_section',
         'solutions_section',
+        'domains_section',
+        'tile_section',
+        'about_section',
+        'case_study_section',
     ];
 
     foreach ($blocks as $block_name) {

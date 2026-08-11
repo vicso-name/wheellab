@@ -123,6 +123,38 @@ add_action('wp_enqueue_scripts', function () {
             ['btf-main-styles', 'btf-blog-card-styles'],
             wheellab_asset_ver('build/css/sections/blog_filter.min.css')
         );
+
+        // Bare get_field() is safe here — this runs during the real page
+        // render (no nested WP_Query active yet), same as blog_hero.php's
+        // own field lookups above.
+        if (get_field('subscribe_enabled')) {
+            wp_enqueue_style(
+                'btf-blog-subscribe-styles',
+                wheellab_asset_url('build/css/sections/blog_subscribe.min.css'),
+                ['btf-main-styles'],
+                wheellab_asset_ver('build/css/sections/blog_subscribe.min.css')
+            );
+        }
+    }
+
+    // Case Study archive + single (case_study CPT) — same reasoning:
+    // archive-case_study.php / single-case_study.php aren't ACF blocks
+    // either. case_study_section.min.css supplies the reused
+    // .case-study-section__card-* component styles; case_study_archive
+    // is the archive/single-only layout around them.
+    if (is_post_type_archive('case_study') || is_singular('case_study')) {
+        wp_enqueue_style(
+            'btf-case-study-card-styles',
+            wheellab_asset_url('build/css/sections/case_study_section.min.css'),
+            ['btf-main-styles'],
+            wheellab_asset_ver('build/css/sections/case_study_section.min.css')
+        );
+        wp_enqueue_style(
+            'btf-case-study-archive-styles',
+            wheellab_asset_url('build/css/sections/case_study_archive.min.css'),
+            ['btf-main-styles', 'btf-case-study-card-styles'],
+            wheellab_asset_ver('build/css/sections/case_study_archive.min.css')
+        );
     }
 
     // 3) Scripts
@@ -160,6 +192,21 @@ add_action('wp_enqueue_scripts', function () {
             'ajaxUrl' => admin_url('admin-ajax.php'),
             'nonce'   => wp_create_nonce('wheellab_blog_query'),
         ]);
+
+        if (get_field('subscribe_enabled')) {
+            wp_enqueue_script(
+                'btf-blog-subscribe-script',
+                wheellab_asset_url('build/js/sections/blog_subscribe.min.js'),
+                [],
+                wheellab_asset_ver('build/js/sections/blog_subscribe.min.js'),
+                true
+            );
+            wp_localize_script('btf-blog-subscribe-script', 'wheellabMailchimp', [
+                'ajaxUrl'      => admin_url('admin-ajax.php'),
+                'nonce'        => wp_create_nonce('wheellab_mailchimp_subscribe'),
+                'genericError' => __('Something went wrong. Please try again later.', 'wheellab'),
+            ]);
+        }
     }
 
 }, 5);

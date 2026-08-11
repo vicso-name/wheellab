@@ -15,6 +15,7 @@ module.exports = [
                 console: 'readonly',
                 fetch: 'readonly',
                 MutationObserver: 'readonly',
+                IntersectionObserver: 'readonly',
                 DOMParser: 'readonly',
                 URLSearchParams: 'readonly',
                 Swiper: 'readonly',

@@ -102,8 +102,10 @@ add_action( 'after_setup_theme', 'wheellab_setup' );
 
 
 require_once get_template_directory() . '/inc/enqueue.php';
+require_once get_template_directory() . '/inc/cpt_cases.php';
 require_once get_template_directory() . '/inc/acf_blocks.php';
 require_once get_template_directory() . '/inc/acf_options.php';
 require_once get_template_directory() . '/inc/ajax_blog.php';
+require_once get_template_directory() . '/inc/ajax_mailchimp.php';
 require_once get_template_directory() . '/inc/theme_function.php';
 require_once get_template_directory() . '/inc/theme_settings.php';
