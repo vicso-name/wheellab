@@ -1,6 +1,6 @@
 {
     "key": "group_template_blog",
-    "title": "Blog Page — Hero",
+    "title": "Blog Page — Hero & Subscribe",
     "fields": [
         {
             "key": "field_blog_hero_title",
@@ -17,6 +17,114 @@
             "type": "textarea",
             "rows": 3,
             "default_value": "Explore expert perspectives, industry trends, technology updates, and business strategies shaping the future of digital products and services."
+        },
+        {
+            "key": "field_blog_subscribe_enabled",
+            "label": "Show Subscribe Block",
+            "name": "subscribe_enabled",
+            "type": "true_false",
+            "instructions": "Renders between the first 6 and the next 6 posts in the grid (node 527:28142).",
+            "default_value": 1,
+            "ui": 1
+        },
+        {
+            "key": "field_blog_subscribe_title",
+            "label": "Title",
+            "name": "subscribe_title",
+            "type": "text",
+            "default_value": "Subscribe to our blog updates",
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_blog_subscribe_enabled",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ]
+        },
+        {
+            "key": "field_blog_subscribe_description",
+            "label": "Description",
+            "name": "subscribe_description",
+            "type": "textarea",
+            "rows": 2,
+            "default_value": "Stay informed with fresh ideas, practical knowledge, and thought leadership from our team.",
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_blog_subscribe_enabled",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ]
+        },
+        {
+            "key": "field_blog_subscribe_button_text",
+            "label": "Button Text",
+            "name": "subscribe_button_text",
+            "type": "text",
+            "default_value": "Subscribe",
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_blog_subscribe_enabled",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ]
+        },
+        {
+            "key": "field_blog_subscribe_mailchimp_api_key",
+            "label": "Mailchimp API Key",
+            "name": "subscribe_mailchimp_api_key",
+            "type": "password",
+            "instructions": "Mailchimp account → Profile → Extras → API keys. The data center (e.g. “us21”) is read from the suffix after the last dash, so no separate data center field is needed.",
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_blog_subscribe_enabled",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ]
+        },
+        {
+            "key": "field_blog_subscribe_mailchimp_audience_id",
+            "label": "Mailchimp Audience ID",
+            "name": "subscribe_mailchimp_audience_id",
+            "type": "text",
+            "instructions": "Mailchimp → Audience → Settings → Audience name and defaults → Audience ID.",
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_blog_subscribe_enabled",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ]
+        },
+        {
+            "key": "field_blog_subscribe_mailchimp_double_optin",
+            "label": "Require double opt-in",
+            "name": "subscribe_mailchimp_double_optin",
+            "type": "true_false",
+            "instructions": "Sends a Mailchimp confirmation email before the subscriber is added to the audience. Recommended unless your Mailchimp audience settings already handle consent.",
+            "default_value": 1,
+            "ui": 1,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_blog_subscribe_enabled",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ]
         }
     ],
     "location": [

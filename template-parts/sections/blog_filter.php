@@ -15,13 +15,20 @@
  * either; it reuses the project's existing "solid accent pill" language.
  *
  * Source: WheelLab Website (Figma) — node 527:28120 (chips), 527:28132
- * ("shown" count), 527:28151 ("View more" button).
+ * ("shown" count), 527:28151 ("View more" button), 527:28142 (Subscribe
+ * banner, spliced in after the 6th card below).
  */
 
 $categories = get_categories(['hide_empty' => false]);
 $categories = array_filter($categories, static fn($cat) => $cat->slug !== 'uncategorized');
 
 $initial_query = new WP_Query(wheellab_blog_query_args('', 1));
+
+// Subscribe banner only on the plain, unfiltered first page (never on
+// category switches or "load more" — inc/ajax_blog.php's grid response
+// never includes it, and it only ever makes sense once, between the
+// first two 3-card rows and the next two, not re-inserted mid-append).
+$subscribe_enabled = (bool) get_field('subscribe_enabled', get_queried_object_id());
 ?>
 
 <section class="blog-filter">
@@ -51,11 +58,17 @@ $initial_query = new WP_Query(wheellab_blog_query_args('', 1));
             data-page="1"
             data-max-pages="<?php echo (int) $initial_query->max_num_pages; ?>"
         >
-            <?php if ($initial_query->have_posts()) : ?>
-                <?php while ($initial_query->have_posts()) : $initial_query->the_post(); ?>
-                    <?php get_template_part('template-parts/sections/blog_card'); ?>
-                <?php endwhile; ?>
-            <?php endif; ?>
+            <?php if ($initial_query->have_posts()) :
+                $card_index = 0;
+                while ($initial_query->have_posts()) : $initial_query->the_post();
+                    $card_index++;
+                    get_template_part('template-parts/sections/blog_card');
+
+                    if ($card_index === 6 && $subscribe_enabled && $initial_query->post_count > 6) {
+                        get_template_part('template-parts/sections/blog_subscribe');
+                    }
+                endwhile;
+            endif; ?>
         </div>
         <?php wp_reset_postdata(); ?>
 

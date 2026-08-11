@@ -1,0 +1,224 @@
+@use "../partials/variables";
+
+// Source: WheelLab Website (Figma) — node 527:28142 ("Subscribe to our blog
+// updates", desktop), node 620:11682 ("Subscribe Banner", mobile 393px).
+// Rendered inline inside .blog-filter__grid (template-parts/sections/
+// blog_filter.php, template-parts/sections/blog_subscribe.php) between the
+// first 6 and next 6 cards — grid-column: 1 / -1 spans the full row
+// regardless of the grid's own column count (3/2/1 at $large/$small, see
+// blog_filter.scss). No tablet frame exists, so the row → column switch
+// below uses $medium (768px), matching Hero/Domains' own un-sourced
+// tablet fallback.
+//
+// Same accent-2 (cyan) ghost bezel as .blog-card (which is accent-1
+// instead — a real difference in the Figma tokens, not a copy-paste
+// slip), and the same mix-blend-lighten corner-glow recipe as
+// .domains-section__card-glow / .case-study-section__card-glow / .blog-
+// card__glow, reusing that shared texture. The two/one rotated,
+// hypot()-sized glow blobs Figma exports here are a Figma authoring
+// artifact (container-query units, not real CSS) rather than something
+// worth reproducing pixel-for-pixel — simplified to the same flat corner
+// anchor already established by those other sections.
+
+.blog-subscribe {
+  grid-column: 1 / -1;
+}
+
+.blog-subscribe__bezel {
+  display: flex;
+  width: 100%;
+  padding: 8px;
+  background: var(--bg-ghost-accent-2);
+  border: 1px solid var(--outline-accent-2);
+  border-radius: 20px;
+
+  @media screen and (max-width: variables.$small) {
+    padding: 4px;
+  }
+}
+
+.blog-subscribe__inner {
+  position: relative;
+  width: 100%;
+  padding: 40px;
+  overflow: hidden;
+  // Figma's desktop export shows an untokenized rgba(255,255,255,0.02)
+  // here, but the mobile variant of this same layer is explicitly bound
+  // to this token — treated as authoring drift between the two Figma
+  // variants rather than a deliberate two-tone design, so both use it.
+  background: var(--bg-main-surface-2-light);
+  border-radius: 16px;
+
+  @media screen and (max-width: variables.$small) {
+    padding: 16px;
+  }
+}
+
+.blog-subscribe__glow {
+  position: absolute;
+  width: 460px;
+  max-width: none;
+  height: auto;
+  opacity: 0.35;
+  mix-blend-mode: lighten;
+  filter: blur(35px);
+  pointer-events: none;
+}
+
+.blog-subscribe__glow--1 {
+  top: -160px;
+  left: -160px;
+}
+
+.blog-subscribe__glow--2 {
+  right: -160px;
+  bottom: -160px;
+
+  // node 620:11682 (mobile) has only one glow, not two.
+  @media screen and (max-width: variables.$medium) {
+    display: none;
+  }
+}
+
+.blog-subscribe__content {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  width: 100%;
+
+  @media screen and (max-width: variables.$medium) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 32px;
+  }
+}
+
+.blog-subscribe__text {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 700px;
+  width: 100%;
+
+  @media screen and (max-width: variables.$medium) {
+    gap: 12px;
+    max-width: none;
+  }
+}
+
+.blog-subscribe__title {
+  // Overrides the global h1-h4 { color: var(--c-text); } boilerplate leak
+  // — same fix already needed on every other heading in this theme.
+  color: var(--content-main-primary);
+}
+
+.blog-subscribe__description {
+  margin: 0;
+  color: var(--content-main-secondary);
+}
+
+// ---------------------------------------------------------------------------
+// Form
+// ---------------------------------------------------------------------------
+
+.blog-subscribe__form {
+  display: flex;
+  align-items: flex-end;
+  gap: 20px;
+  flex-shrink: 0;
+
+  @media screen and (max-width: variables.$medium) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+    width: 100%;
+  }
+}
+
+.blog-subscribe__field {
+  width: 340px;
+
+  @media screen and (max-width: variables.$medium) {
+    width: 100%;
+  }
+}
+
+.blog-subscribe__input {
+  display: block;
+  width: 100%;
+  height: 56px;
+  padding: 16px;
+  color: var(--content-main-primary);
+  background: var(--bg-main-surface-2);
+  border: 0;
+  border-radius: 16px;
+
+  &::placeholder {
+    color: var(--content-main-tertiary);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--outline-accent-2);
+    outline-offset: -2px;
+  }
+}
+
+.blog-subscribe__submit.btn-gradient {
+  // .btn-gradient's own content-driven height (~64px: 4px bezel padding
+  // × 2 + 16px inner padding × 2 + button-text-m's 24px line-height) is
+  // taller than this component's own 56px frame — same "force the outer
+  // frame, let align-items: stretch (the flex default) compress the
+  // inner pill to fit" recipe already used by the mobile Hero primary
+  // button and Case Study Section's CTA.
+  flex-shrink: 0;
+  width: 200px;
+  height: 56px;
+
+  .btn-gradient__inner {
+    width: 100%;
+  }
+
+  &:disabled {
+    cursor: default;
+    opacity: 0.6;
+  }
+
+  @media screen and (max-width: variables.$medium) {
+    width: 100%;
+  }
+
+  // node 620:11682's button text resolves to 14px/16px, matching the
+  // mobile Hero primary button's own identical override (button-text-s's
+  // own token line-height, 1.571 → ~22px, doesn't match this specific
+  // instance's flatter 16px).
+  @media screen and (max-width: variables.$small) {
+    .button-text-m {
+      font-size: 14px;
+      line-height: 16px;
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Submit status (JS-driven — src/js/sections/blog_subscribe.js)
+// ---------------------------------------------------------------------------
+
+.blog-subscribe__status {
+  width: 100%;
+  margin: 0;
+  color: var(--content-main-secondary);
+
+  &[hidden] {
+    display: none;
+  }
+
+  &.is-error {
+    color: var(--content-solid-warning);
+  }
+
+  &.is-success {
+    color: var(--content-solid-positive);
+  }
+}
