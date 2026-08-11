@@ -12,10 +12,22 @@
 
 // Same two-layer bezel as .header__cta / .btn-gradient — outer glass frame
 // (accent-tinted here, not neutral) around a solid inner card.
+//
+// .blog-card is a <div>, not an <a> — .blog-card__author is its own real
+// link to the author page now, and an <a> can't contain another <a>.
+// .blog-card__link is a stretched-link overlay covering the whole card
+// instead, sitting below .blog-card__author (z-index) so that link stays
+// independently clickable. See template-parts/sections/blog_card.php.
 .blog-card {
+  position: relative;
   display: flex;
   color: inherit;
-  text-decoration: none;
+}
+
+.blog-card__link {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
 }
 
 .blog-card__bezel {
@@ -133,6 +145,20 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.blog-card__author {
+  // Above .blog-card__link (z-index: 1) so this stays its own clickable
+  // target instead of the stretched post-link overlay swallowing clicks.
+  position: relative;
+  z-index: 2;
+  color: inherit;
+  text-decoration: none;
+
+  &:hover {
+    color: var(--content-solid-accent-2);
+    text-decoration: underline;
+  }
 }
 
 // ---------------------------------------------------------------------------

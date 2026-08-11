@@ -11,13 +11,20 @@
  * and the surrounding glass card. See docs/acf-block-patterns.md § Contact
  * Section for the CF7 form template (field names / wrapper markup) the CSS
  * in contact_section.scss expects.
+ *
+ * Also rendered directly (not as a block) by author.php via
+ * get_template_part() — Theme Options > Contact supplies its fields there.
  */
 
-$title       = get_field('title')       ?: '';
-$description = get_field('description') ?: '';
-$badges_text = get_field('badges_text') ?: '';
-$badges      = get_field('badges')      ?: [];
-$shortcode   = get_field('form_shortcode') ?: '';
+// Falls back to Theme Options > Contact whenever this partial is rendered
+// outside a real ACF block instance (e.g. author.php, which has no page/
+// post to hold block content) — same fallback pattern reviews_section.php
+// already uses for its default review list.
+$title       = get_field('title')          ?: get_field('title', 'option')          ?: '';
+$description = get_field('description')    ?: get_field('description', 'option')    ?: '';
+$badges_text = get_field('badges_text')    ?: get_field('badges_text', 'option')    ?: '';
+$badges      = get_field('badges')         ?: get_field('badges', 'option')         ?: [];
+$shortcode   = get_field('form_shortcode') ?: get_field('form_shortcode', 'option') ?: '';
 
 // 3 default badge icons from the Figma design — replaced wholesale if the
 // admin fills in the "Badge Icons" repeater instead.

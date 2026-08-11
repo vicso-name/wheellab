@@ -157,6 +157,45 @@ add_action('wp_enqueue_scripts', function () {
         );
     }
 
+    // Author archive (author.php) — same reasoning as the blocks above:
+    // author_hero.min.css isn't an ACF block so it's never auto-detected.
+    // reviews_section.min.css/contact_section.min.css ARE ACF blocks, but
+    // wheellab_enqueue_detected_block_assets() (inc/acf_blocks.php) only
+    // runs on is_singular() pages — author.php is an archive, so it's
+    // never picked up there either and has to be enqueued explicitly too.
+    if (is_author()) {
+        wp_enqueue_style(
+            'btf-author-hero-styles',
+            wheellab_asset_url('build/css/sections/author_hero.min.css'),
+            ['btf-main-styles'],
+            wheellab_asset_ver('build/css/sections/author_hero.min.css')
+        );
+        wp_enqueue_style(
+            'btf-blog-card-styles',
+            wheellab_asset_url('build/css/sections/blog_card.min.css'),
+            ['btf-main-styles'],
+            wheellab_asset_ver('build/css/sections/blog_card.min.css')
+        );
+        wp_enqueue_style(
+            'btf-blog-filter-styles',
+            wheellab_asset_url('build/css/sections/blog_filter.min.css'),
+            ['btf-main-styles', 'btf-blog-card-styles'],
+            wheellab_asset_ver('build/css/sections/blog_filter.min.css')
+        );
+        wp_enqueue_style(
+            'btf-reviews-section-styles',
+            wheellab_asset_url('build/css/sections/reviews_section.min.css'),
+            ['btf-main-styles'],
+            wheellab_asset_ver('build/css/sections/reviews_section.min.css')
+        );
+        wp_enqueue_style(
+            'btf-contact-section-styles',
+            wheellab_asset_url('build/css/sections/contact_section.min.css'),
+            ['btf-main-styles'],
+            wheellab_asset_ver('build/css/sections/contact_section.min.css')
+        );
+    }
+
     // 3) Scripts
     // Swiper JS (conditionally)
     $script_deps = [];
@@ -207,6 +246,39 @@ add_action('wp_enqueue_scripts', function () {
                 'genericError' => __('Something went wrong. Please try again later.', 'wheellab'),
             ]);
         }
+    }
+
+    // Author archive: "load more" pagination (no chips — see
+    // author_posts.js), plus the Reviews/Contact block scripts that
+    // wheellab_enqueue_detected_block_assets() can't reach here (see the
+    // matching CSS block above for why).
+    if (is_author()) {
+        wp_enqueue_script(
+            'btf-author-posts-script',
+            wheellab_asset_url('build/js/sections/author_posts.min.js'),
+            [],
+            wheellab_asset_ver('build/js/sections/author_posts.min.js'),
+            true
+        );
+        wp_localize_script('btf-author-posts-script', 'wheellabBlog', [
+            'ajaxUrl' => admin_url('admin-ajax.php'),
+            'nonce'   => wp_create_nonce('wheellab_blog_query'),
+        ]);
+
+        wp_enqueue_script(
+            'btf-reviews-section-script',
+            wheellab_asset_url('build/js/sections/reviews_section.min.js'),
+            [],
+            wheellab_asset_ver('build/js/sections/reviews_section.min.js'),
+            true
+        );
+        wp_enqueue_script(
+            'btf-contact-section-script',
+            wheellab_asset_url('build/js/sections/contact_section.min.js'),
+            [],
+            wheellab_asset_ver('build/js/sections/contact_section.min.js'),
+            true
+        );
     }
 
 }, 5);

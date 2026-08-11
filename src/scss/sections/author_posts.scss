@@ -1,0 +1,20 @@
+@use "../partials/variables";
+
+// Source: WheelLab Website (Figma) — node 527:30074 (pb-80 on the composed
+// frame). Used only by author.php.
+//
+// Grid/count/load-more/card styles are intentionally NOT duplicated here —
+// this section reuses .blog-filter__count / .blog-filter__grid /
+// .blog-filter__load-more from blog_filter.scss and .blog-card* from
+// blog_card.scss verbatim (both already enqueued on author.php, see
+// inc/enqueue.php), since the grid is visually and behaviorally identical
+// to the Blog page's. Only this section's own top/bottom spacing lives
+// here.
+
+.author-posts {
+    padding: 0 0 80px;
+
+    @media screen and (max-width: variables.$small) {
+        padding-bottom: 40px;
+    }
+}

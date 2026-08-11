@@ -1,0 +1,157 @@
+@use "../partials/variables";
+
+// Source: WheelLab Website (Figma) — node 625:17738 (desktop), node
+// 625:17890 (mobile). Used only by author.php — not an ACF block, so it's
+// enqueued conditionally in inc/enqueue.php the same way blog_hero.scss is.
+
+.author-hero {
+  // Overrides .section-first's own 140px/120px top and 60px bottom
+  // padding. Plain page background here (var(--bg-main-background), via
+  // body) — no glow/BG layer behind this card, unlike the footer or blog
+  // hero.
+  padding-top: 100px;
+  padding-bottom: 0;
+
+  @media screen and (max-width: variables.$small) {
+    padding-top: 80px;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Card
+// ---------------------------------------------------------------------------
+
+.author-hero__card {
+  width: 100%;
+  padding: 8px; // gap/card-padding/focus
+  background: var(--bg-ghost-accent-2);
+  border: 1px solid var(--outline-accent-2);
+  border-radius: 20px;
+  box-shadow: 0 2px 24px 0 rgb(105 56 239 / 12%), 0 1px 2px -0.5px rgb(0 0 0 / 8%);
+  overflow: hidden;
+
+  @media screen and (max-width: variables.$small) {
+    padding: 4px;
+  }
+}
+
+.author-hero__card-inner {
+  display: flex;
+  align-items: flex-start;
+  gap: 32px;
+  padding: 40px; // gap/card-padding/m
+  background: var(--bg-main-surface-2-light);
+  border-radius: 16px;
+
+  @media screen and (max-width: variables.$small) {
+    flex-direction: column;
+    gap: 8px;
+    padding: 16px;
+  }
+}
+
+.author-hero__photo {
+  flex-shrink: 0;
+  width: 100px;
+  height: 100px;
+  border-radius: 1000px;
+  overflow: hidden;
+
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  // node 625:17890 — full-width square photo stacked above content,
+  // square corners become a 16px radius instead of a circle.
+  @media screen and (max-width: variables.$small) {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    border-radius: 16px;
+  }
+}
+
+.author-hero__content {
+  display: flex;
+  flex: 1 0 0;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
+}
+
+.author-hero__info {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+
+  @media screen and (max-width: variables.$small) {
+    gap: 8px;
+  }
+}
+
+// Inter Bold 28px/36 (node 527:30083) — not one of the Funnel Display
+// h1-h4 sizes, so styled directly rather than via the .h1/.h2 utilities.
+.author-hero__name {
+  margin: 0;
+  font-family: var(--font-family-body);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--text-subhead-size);
+  line-height: var(--text-subhead-line-height);
+  color: var(--content-main-primary);
+
+  @media screen and (max-width: variables.$small) {
+    font-size: var(--text-body-m-size);
+    line-height: var(--text-body-m-line-height);
+  }
+}
+
+.author-hero__diamond {
+  flex-shrink: 0;
+  width: 6px;
+  height: 6px;
+  background: var(--content-main-tertiary);
+  transform: rotate(45deg);
+}
+
+.author-hero__job-title {
+  color: var(--content-main-tertiary);
+}
+
+.author-hero__bio {
+  margin: 0;
+  color: var(--content-main-secondary);
+}
+
+.author-hero__socials {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+
+  @media screen and (max-width: variables.$small) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+}
+
+.author-hero__social {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--content-solid-accent-2);
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.author-hero__social-icon {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+}

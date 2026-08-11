@@ -36,4 +36,10 @@ if (function_exists('acf_add_options_page')) {
         'menu_title'  => __('Reviews', 'wheellab'),
         'parent_slug' => 'theme-options',
     ]);
+
+    acf_add_options_sub_page([
+        'page_title'  => __('Contact', 'wheellab'),
+        'menu_title'  => __('Contact', 'wheellab'),
+        'parent_slug' => 'theme-options',
+    ]);
 }
