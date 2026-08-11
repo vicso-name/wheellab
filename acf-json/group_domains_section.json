@@ -1,0 +1,148 @@
+{
+    "key": "group_domains_section",
+    "title": "Domains Section",
+    "fields": [
+        {
+            "key": "field_ds_title",
+            "label": "Title",
+            "name": "title",
+            "type": "text",
+            "default_value": "Solutions",
+            "wrapper": {
+                "width": "100"
+            }
+        },
+        {
+            "key": "field_ds_description",
+            "label": "Description",
+            "name": "description",
+            "type": "textarea",
+            "rows": 3,
+            "default_value": "We engineer the systems operators rely on — from player-facing platforms to back-office tooling and the integrations that hold it all together.",
+            "wrapper": {
+                "width": "100"
+            }
+        },
+        {
+            "key": "field_ds_featured_card",
+            "label": "Featured Card",
+            "name": "featured_card",
+            "type": "group",
+            "instructions": "The one full-width card at the top of the section.",
+            "sub_fields": [
+                {
+                    "key": "field_ds_featured_title",
+                    "label": "Title",
+                    "name": "title",
+                    "type": "text",
+                    "required": 1,
+                    "wrapper": {
+                        "width": "100"
+                    }
+                },
+                {
+                    "key": "field_ds_featured_description",
+                    "label": "Description",
+                    "name": "description",
+                    "type": "textarea",
+                    "rows": 3,
+                    "wrapper": {
+                        "width": "100"
+                    }
+                },
+                {
+                    "key": "field_ds_featured_image",
+                    "label": "Illustration",
+                    "name": "image",
+                    "type": "image",
+                    "return_format": "array",
+                    "preview_size": "medium",
+                    "wrapper": {
+                        "width": "100"
+                    }
+                },
+                {
+                    "key": "field_ds_featured_link",
+                    "label": "Link",
+                    "name": "link",
+                    "type": "link",
+                    "return_format": "array",
+                    "instructions": "The whole card links here.",
+                    "required": 1,
+                    "wrapper": {
+                        "width": "100"
+                    }
+                }
+            ]
+        },
+        {
+            "key": "field_ds_cards",
+            "label": "Cards",
+            "name": "cards",
+            "type": "repeater",
+            "layout": "block",
+            "button_label": "Add Card",
+            "instructions": "The grid below the featured card.",
+            "sub_fields": [
+                {
+                    "key": "field_ds_card_title",
+                    "label": "Title",
+                    "name": "title",
+                    "type": "text",
+                    "required": 1,
+                    "wrapper": {
+                        "width": "100"
+                    }
+                },
+                {
+                    "key": "field_ds_card_description",
+                    "label": "Description",
+                    "name": "description",
+                    "type": "textarea",
+                    "rows": 3,
+                    "wrapper": {
+                        "width": "100"
+                    }
+                },
+                {
+                    "key": "field_ds_card_image",
+                    "label": "Illustration",
+                    "name": "image",
+                    "type": "image",
+                    "return_format": "array",
+                    "preview_size": "medium",
+                    "wrapper": {
+                        "width": "100"
+                    }
+                },
+                {
+                    "key": "field_ds_card_link",
+                    "label": "Link",
+                    "name": "link",
+                    "type": "link",
+                    "return_format": "array",
+                    "instructions": "The whole card links here.",
+                    "required": 1,
+                    "wrapper": {
+                        "width": "100"
+                    }
+                }
+            ]
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "block",
+                "operator": "==",
+                "value": "acf/domains-section"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "active": true
+}
