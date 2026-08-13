@@ -1,0 +1,81 @@
+{
+    "key": "group_table_section",
+    "title": "Table Section",
+    "fields": [
+        {
+            "key": "field_table_columns",
+            "label": "Columns",
+            "name": "columns",
+            "type": "repeater",
+            "layout": "table",
+            "button_label": "Add Column",
+            "min": 2,
+            "instructions": "One row per column header, left to right (e.g. “Country”, “Average rates”…). This also sets how many cells you should fill in per table row below, in the same order.",
+            "sub_fields": [
+                {
+                    "key": "field_table_column_label",
+                    "label": "Label",
+                    "name": "label",
+                    "type": "text",
+                    "required": 1,
+                    "wrapper": {
+                        "width": "100"
+                    }
+                }
+            ]
+        },
+        {
+            "key": "field_table_rows",
+            "label": "Rows",
+            "name": "rows",
+            "type": "repeater",
+            "layout": "block",
+            "button_label": "Add Row",
+            "min": 1,
+            "instructions": "One row per table row (e.g. one per country). Inside each row, add one cell per column above, in the same left-to-right order — leave a cell's content blank rather than skipping it if a column doesn't apply.",
+            "sub_fields": [
+                {
+                    "key": "field_table_row_cells",
+                    "label": "Cells",
+                    "name": "cells",
+                    "type": "repeater",
+                    "layout": "table",
+                    "button_label": "Add Cell",
+                    "min": 1,
+                    "wrapper": {
+                        "width": "100"
+                    },
+                    "sub_fields": [
+                        {
+                            "key": "field_table_cell_content",
+                            "label": "Content",
+                            "name": "content",
+                            "type": "wysiwyg",
+                            "tabs": "visual",
+                            "toolbar": "basic",
+                            "media_upload": 0,
+                            "wrapper": {
+                                "width": "100"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "block",
+                "operator": "==",
+                "value": "acf/table-section"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "active": true
+}

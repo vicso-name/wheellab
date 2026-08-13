@@ -1,0 +1,53 @@
+// Source: WheelLab Website (Figma) — node 527:29045 ("Controls").
+// Used only by single.php (sidebar) — not an ACF block.
+
+.single-post-toc {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px;
+  background: var(--bg-main-surface-2);
+  border-radius: 16px;
+}
+
+.single-post-toc__label {
+  display: flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 8px 16px;
+  font-weight: var(--font-weight-bold);
+  color: var(--content-main-secondary);
+}
+
+.single-post-toc__list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.single-post-toc__link {
+  display: flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 8px 16px;
+  color: var(--content-main-secondary);
+  text-decoration: none;
+  border-radius: 12px;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+
+  &:hover {
+    color: var(--content-main-primary);
+  }
+
+  // Scroll-spy state (single_post_toc.js) — a smaller radius than the
+  // resting state (8px vs. 12px) and a filled background is how Figma
+  // marks "currently in view", not just a color change.
+  &.is-active {
+    color: var(--content-main-primary);
+    background: var(--bg-ghost-accent-2);
+    border-radius: 8px;
+  }
+}

@@ -1,0 +1,140 @@
+@use "../partials/variables";
+
+// Source: WheelLab Website (Figma) — node 618:9919 ("Rate card", mobile;
+// no separate desktop mock was given — same card, just wider, capped at
+// the 1031px reading width like every other post-bottom card here).
+
+.single-post-rating {
+  // Flex item of .single-post-body__footer (display:flex; column) — an
+  // auto side margin on the cross axis overrides align-items:stretch, so
+  // without an explicit width this shrinks to its own content size
+  // instead of filling the line before max-width caps it.
+  // No margin:auto here on purpose — this sits directly under the
+  // article, flush with its left edge (same as .single-post-body__content
+  // and the FAQ card above), not centered in the wider container that
+  // also spans where the now-absent sidebar used to be.
+  width: 100%;
+  max-width: 1031px;
+  padding: 8px; // gap/card-padding/focus
+  // Not a named token — Figma gives this card its own one-off 8% white,
+  // distinct from --bg-main-surface-2 (10%) used by the star buttons below.
+  background: rgb(255 255 255 / 8%);
+  border: 1px solid rgb(255 255 255 / 8%);
+  border-radius: 20px;
+  box-shadow: 0 2px 24px 0 rgb(105 56 239 / 12%), 0 1px 2px -0.5px rgb(0 0 0 / 8%);
+
+  @media screen and (max-width: variables.$small) {
+    padding: 4px;
+  }
+}
+
+.single-post-rating__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 40px; // gap/card-padding/m (desktop)
+  background: rgb(255 255 255 / 2%);
+  border-radius: 16px;
+
+  @media screen and (max-width: variables.$small) {
+    // Figma's own mobile value — not the 20px other post-bottom cards
+    // use, deliberately kept as given rather than unified.
+    padding: 16px;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// "Rate this article" + star buttons
+// ---------------------------------------------------------------------------
+
+.single-post-rating__title {
+  margin: 0 0 12px;
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-bold);
+  font-size: 20px;
+  line-height: 28px;
+  color: var(--content-main-primary);
+}
+
+.single-post-rating__stars {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.single-post-rating__star {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  padding: 4px;
+  color: var(--content-main-primary);
+  cursor: pointer;
+  background: var(--bg-main-surface-2);
+  border: 1px solid var(--outline-neutral);
+  border-radius: 12px;
+  transition: color var(--transition-fast), border-color var(--transition-fast);
+
+  &:disabled {
+    cursor: default;
+  }
+
+  &.is-active {
+    color: var(--content-solid-accent-2);
+    border-color: var(--outline-accent-2);
+  }
+}
+
+.single-post-rating__star-icon {
+  width: 20px;
+  height: 20px;
+}
+
+// ---------------------------------------------------------------------------
+// Average summary ("★ 5.0 ⬥ 15 people rated")
+// ---------------------------------------------------------------------------
+
+.single-post-rating__summary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.single-post-rating__summary-stars {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.single-post-rating__summary-icon {
+  width: 24px;
+  height: 24px;
+  color: var(--content-solid-accent-2);
+}
+
+.single-post-rating__summary-value {
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-bold);
+  font-size: 20px;
+  line-height: 28px;
+  color: var(--content-solid-accent-2);
+}
+
+.single-post-rating__diamond {
+  flex-shrink: 0;
+  width: 6px;
+  height: 6px;
+  background: var(--content-main-tertiary);
+  transform: rotate(45deg);
+}
+
+.single-post-rating__summary-count {
+  font-family: var(--font-family-body);
+  font-size: 16px;
+  line-height: 24px;
+  color: var(--content-main-secondary);
+}

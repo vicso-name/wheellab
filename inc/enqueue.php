@@ -157,6 +157,47 @@ add_action('wp_enqueue_scripts', function () {
         );
     }
 
+    // Single post (single.php) — none of these are ACF blocks, same
+    // reasoning as everything else in this block.
+    if (is_singular('post')) {
+        wp_enqueue_style(
+            'btf-single-post-hero-styles',
+            wheellab_asset_url('build/css/sections/single_post_hero.min.css'),
+            ['btf-main-styles'],
+            wheellab_asset_ver('build/css/sections/single_post_hero.min.css')
+        );
+        wp_enqueue_style(
+            'btf-single-post-body-styles',
+            wheellab_asset_url('build/css/sections/single_post_body.min.css'),
+            ['btf-main-styles'],
+            wheellab_asset_ver('build/css/sections/single_post_body.min.css')
+        );
+        wp_enqueue_style(
+            'btf-single-post-toc-styles',
+            wheellab_asset_url('build/css/sections/single_post_toc.min.css'),
+            ['btf-main-styles'],
+            wheellab_asset_ver('build/css/sections/single_post_toc.min.css')
+        );
+        wp_enqueue_style(
+            'btf-single-post-cta-styles',
+            wheellab_asset_url('build/css/sections/single_post_cta.min.css'),
+            ['btf-main-styles'],
+            wheellab_asset_ver('build/css/sections/single_post_cta.min.css')
+        );
+        wp_enqueue_style(
+            'btf-single-post-rating-styles',
+            wheellab_asset_url('build/css/sections/single_post_rating.min.css'),
+            ['btf-main-styles'],
+            wheellab_asset_ver('build/css/sections/single_post_rating.min.css')
+        );
+        wp_enqueue_style(
+            'btf-single-post-author-card-styles',
+            wheellab_asset_url('build/css/sections/single_post_author_card.min.css'),
+            ['btf-main-styles'],
+            wheellab_asset_ver('build/css/sections/single_post_author_card.min.css')
+        );
+    }
+
     // Author archive (author.php) — same reasoning as the blocks above:
     // author_hero.min.css isn't an ACF block so it's never auto-detected.
     // reviews_section.min.css/contact_section.min.css ARE ACF blocks, but
@@ -246,6 +287,31 @@ add_action('wp_enqueue_scripts', function () {
                 'genericError' => __('Something went wrong. Please try again later.', 'wheellab'),
             ]);
         }
+    }
+
+    // Single post: sidebar Table of Contents scroll-spy, plus the
+    // AJAX-driven "Rate this article" widget.
+    if (is_singular('post')) {
+        wp_enqueue_script(
+            'btf-single-post-toc-script',
+            wheellab_asset_url('build/js/sections/single_post_toc.min.js'),
+            [],
+            wheellab_asset_ver('build/js/sections/single_post_toc.min.js'),
+            true
+        );
+        wp_enqueue_script(
+            'btf-single-post-rating-script',
+            wheellab_asset_url('build/js/sections/single_post_rating.min.js'),
+            [],
+            wheellab_asset_ver('build/js/sections/single_post_rating.min.js'),
+            true
+        );
+        wp_localize_script('btf-single-post-rating-script', 'wheellabRating', [
+            'ajaxUrl'        => admin_url('admin-ajax.php'),
+            'nonce'          => wp_create_nonce('wheellab_rate_post'),
+            'personSingular' => __('%s person rated', 'wheellab'),
+            'personPlural'   => __('%s people rated', 'wheellab'),
+        ]);
     }
 
     // Author archive: "load more" pagination (no chips — see

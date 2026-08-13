@@ -1,0 +1,254 @@
+@use "../partials/variables";
+
+// Source: WheelLab Website (Figma) — node 581:15346 ("Faq").
+// Two width modes — see the PHP template's header comment and the
+// "Width" ACF field. Both modes sit inside the normal .container
+// (1568px, consistent with every other section); --post additionally
+// caps the card itself at 1031px, centered, matching the reading-width
+// article column it's designed to sit in when used inside a blog post.
+
+.faq-section {
+  padding: 60px 0;
+
+  @media screen and (max-width: variables.$small) {
+    padding: 40px 0;
+  }
+}
+
+.faq-section--post .faq-section__card {
+  max-width: 1031px;
+  margin: 0 auto;
+}
+
+.faq-section__card {
+  width: 100%;
+  padding: 8px; // gap/card-padding/focus
+  background: var(--bg-main-surface-2);
+  border: 1px solid var(--outline-neutral);
+  border-radius: 20px;
+  box-shadow: 0 2px 24px 0 rgb(105 56 239 / 12%), 0 1px 2px -0.5px rgb(0 0 0 / 8%);
+}
+
+.faq-section__inner {
+  padding: 40px; // gap/card-padding/m
+  background: var(--bg-main-surface-2-light);
+  border-radius: 16px;
+
+  @media screen and (max-width: variables.$small) {
+    padding: 20px;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Header
+// ---------------------------------------------------------------------------
+
+.faq-section__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 32px;
+  margin-bottom: 32px;
+  border-bottom: 1px solid var(--divider-main);
+}
+
+.faq-section__header-icon {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  color: var(--content-main-primary);
+}
+
+.faq-section__title {
+  margin: 0;
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-bold);
+  font-size: 28px;
+  line-height: 34px;
+  color: var(--content-main-primary);
+  // Overrides the global h2/.h2 uppercase transform (_typography.scss) —
+  // this title is normal case in Figma, unlike the site's other h2s.
+  text-transform: none;
+
+  @media screen and (max-width: variables.$small) {
+    font-size: 22px;
+    line-height: 1.3;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Items (accordion)
+// ---------------------------------------------------------------------------
+
+.faq-section__list {
+  display: flex;
+  flex-direction: column;
+}
+
+.faq-section__item {
+  // Figma references this as "system/divider" for item rows vs
+  // "Divider/Main" for the header rule above — both resolve to the same
+  // white 20% value, so both use --divider-main here.
+  border-bottom: 1px solid var(--divider-main);
+
+  &:last-child {
+    border-bottom: 0;
+  }
+}
+
+.faq-section__question {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  padding: 32px 0;
+  color: inherit;
+  text-align: left;
+  background: none;
+  border: 0;
+  cursor: pointer;
+
+  @media screen and (max-width: variables.$small) {
+    padding: 20px 0;
+    gap: 12px;
+  }
+}
+
+.faq-section__question-text {
+  flex: 1 0 0;
+  font-weight: var(--font-weight-bold); // mobile: Semi Bold
+  font-size: 20px;
+  line-height: 30px;
+  color: var(--content-main-primary);
+
+  @media screen and (max-width: variables.$small) {
+    font-weight: var(--font-weight-semibold);
+    font-size: 16px;
+    line-height: 24px;
+  }
+}
+
+.faq-section__toggle {
+  position: relative;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  color: var(--content-solid-accent-2);
+}
+
+.faq-section__toggle-icon {
+  position: absolute;
+  inset: 0;
+  width: 24px;
+  height: 24px;
+  margin: auto;
+  transition: opacity var(--transition-fast);
+}
+
+// Plus shows while collapsed, close shows while open — swapped purely
+// via CSS off the parent .is-open class, no JS DOM/attribute swapping.
+.faq-section__toggle-icon--close {
+  opacity: 0;
+}
+
+.faq-section__item.is-open {
+  .faq-section__toggle-icon--plus {
+    opacity: 0;
+  }
+
+  .faq-section__toggle-icon--close {
+    opacity: 1;
+  }
+}
+
+// Grid-rows 0fr→1fr trick: animates height smoothly without JS having to
+// measure content, and still degrades gracefully (fully readable, just
+// unanimated) with reduced-motion/no-JS.
+.faq-section__answer-wrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--transition-base);
+}
+
+.faq-section__item.is-open .faq-section__answer-wrap {
+  grid-template-rows: 1fr;
+}
+
+.faq-section__answer-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; // keeps .faq-section__button from stretching full-width
+  gap: 24px; // answer-to-button spacing, only applied *between* children
+  min-height: 0;
+  overflow: hidden;
+}
+
+// Space from the last visible piece (the button when present, otherwise
+// the answer text itself) down to the item's divider. This has to be a
+// margin on the child, not padding on .answer-inner itself — padding
+// there doesn't shrink away with the rest of the content when the grid
+// row above collapses to 0fr while closed (min-height: 0 only lets
+// *content* height collapse, not an element's own padding), so it was
+// leaking a permanent 36px-tall sliver of every closed item.
+.faq-section__answer-inner > :last-child {
+  margin-bottom: 36px;
+}
+
+.faq-section__answer {
+  align-self: stretch; // full-width for text wrapping, unlike the button below it
+  margin: 0;
+  color: var(--content-main-secondary);
+}
+
+// ---------------------------------------------------------------------------
+// Optional per-item CTA button
+// ---------------------------------------------------------------------------
+
+.faq-section__button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 48px;
+  padding: 0 20px;
+  color: var(--label-accent);
+  text-decoration: none;
+  // Figma layers a solid white base UNDER the purple wash (two stacked
+  // background-images) — without it the purple alone reads as a dark,
+  // barely-there tint against this card's own dark background instead
+  // of the light lavender pill it's meant to be.
+  background: linear-gradient(180deg, rgb(149 67 218 / 30%) 0%, rgb(149 67 218 / 10%) 100%), #fff;
+  border: 1px solid rgb(255 255 255 / 32%);
+  border-radius: 12px;
+  transition: border-color var(--transition-fast);
+
+  &:hover {
+    border-color: rgb(255 255 255 / 60%);
+  }
+}
+
+.faq-section__button-text {
+  font-weight: var(--font-weight-semibold);
+  // A prior pass judged Figma's literal 16px oversized against this
+  // button by eye and flattened it to 14px sitewide; the later full
+  // desktop→mobile typography audit gives 16/24 as the real desktop
+  // value with 14/16 specifically as the (smaller, tighter) mobile
+  // size — restoring the desktop size and adding the intended mobile
+  // step down, rather than the same 14px at every width.
+  font-size: 16px;
+  line-height: 24px;
+  text-transform: uppercase;
+
+  @media screen and (max-width: variables.$small) {
+    font-size: 14px;
+    line-height: 16px;
+  }
+}
+
+.faq-section__button-icon {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+}

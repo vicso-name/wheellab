@@ -1,0 +1,206 @@
+@use "../partials/variables";
+
+// Source: WheelLab Website (Figma) — node 581:15436 (desktop),
+// node 617:14281 (mobile). Same "Rate card" family/token system as
+// single_post_rating.scss (8% white outer, 2% white inner, same shadow).
+
+.single-post-author {
+  // See the matching comment in single_post_rating.scss — flex item of
+  // .single-post-body__footer, needs an explicit width or it shrinks to
+  // its own content size instead of filling the line. No margin:auto —
+  // flush left under the article, not centered in the wider container.
+  width: 100%;
+  max-width: 1031px;
+  padding: 8px; // gap/card-padding/focus
+  background: rgb(255 255 255 / 8%);
+  border: 1px solid rgb(255 255 255 / 8%);
+  border-radius: 20px;
+  box-shadow: 0 2px 24px 0 rgb(105 56 239 / 12%), 0 1px 2px -0.5px rgb(0 0 0 / 8%);
+
+  @media screen and (max-width: variables.$small) {
+    padding: 4px;
+  }
+}
+
+.single-post-author__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 32px; // gap/card-padding/s (desktop)
+  padding: 40px; // gap/card-padding/m (desktop)
+  background: rgb(255 255 255 / 2%);
+  border-radius: 16px;
+
+  @media screen and (max-width: variables.$small) {
+    gap: 16px;
+    padding: 16px;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Taxonomy tags — omitted entirely (row + divider) when the post has no
+// terms in any taxonomy, see the PHP template.
+// ---------------------------------------------------------------------------
+
+.single-post-author__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.single-post-author__tag {
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 16px;
+  color: var(--content-main-primary);
+  text-decoration: none;
+  background: var(--bg-main-surface-2);
+  border-radius: 8px;
+  transition: color var(--transition-fast);
+
+  &:hover {
+    color: var(--content-solid-accent-2);
+  }
+}
+
+.single-post-author__divider {
+  border-top: 1px solid var(--divider-main);
+}
+
+// ---------------------------------------------------------------------------
+// Author row — avatar / name+meta / social icons.
+// Desktop: single row, socials pushed to the far right via margin-left:
+// auto (not a 3-way justify-content:space-between — that would spread
+// the avatar away from its own name/meta instead of keeping them
+// adjacent). Mobile: stacks all three, full width, no auto-push.
+// ---------------------------------------------------------------------------
+
+.single-post-author__row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  @media screen and (max-width: variables.$small) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.single-post-author__avatar {
+  flex-shrink: 0;
+  display: block;
+  width: 60px;
+  height: 60px;
+
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+}
+
+.single-post-author__content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+
+  @media screen and (max-width: variables.$small) {
+    width: 100%;
+  }
+}
+
+.single-post-author__details {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.single-post-author__name {
+  font-weight: var(--font-weight-bold);
+  font-size: 16px;
+  line-height: 24px;
+  color: var(--content-main-primary);
+  text-decoration: none;
+
+  &:hover {
+    color: var(--content-solid-accent-2);
+  }
+}
+
+.single-post-author__title {
+  font-size: 16px;
+  line-height: 24px;
+  color: var(--content-main-secondary);
+}
+
+.single-post-author__stats {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+
+  // Figma drops the diamond separators between stats on mobile — the
+  // flex-wrap gap alone carries the spacing there.
+  @media screen and (max-width: variables.$small) {
+    .single-post-author__diamond {
+      display: none;
+    }
+  }
+}
+
+.single-post-author__stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  line-height: 24px;
+  color: var(--content-main-secondary);
+}
+
+.single-post-author__stat-icon {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+}
+
+.single-post-author__diamond {
+  flex-shrink: 0;
+  width: 6px;
+  height: 6px;
+  background: var(--content-main-tertiary);
+  transform: rotate(45deg);
+}
+
+.single-post-author__socials {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+  margin-left: auto;
+
+  @media screen and (max-width: variables.$small) {
+    margin-left: 0;
+  }
+}
+
+.single-post-author__social {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  color: var(--content-solid-accent-2);
+  transition: opacity var(--transition-fast);
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.single-post-author__social-icon {
+  width: 32px;
+  height: 32px;
+}

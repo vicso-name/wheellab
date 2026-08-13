@@ -298,6 +298,125 @@ function wheellab_inline_svg( int $attachment_id, string $class = '' ): string {
     return $svg;
 }
 
+/**
+ * Injects id="" anchors into every <h2> in already-rendered post HTML
+ * (skipping any that already have one) and returns both the modified
+ * markup and a flat list describing them — single source of truth for
+ * both, so the sidebar Table of Contents (template-parts/sections/
+ * single_post_toc.php) can never link to a heading that doesn't
+ * actually carry that id. Only h2 is considered, per the TOC's Figma
+ * spec (node 527:29045) — h3+ aren't included.
+ *
+ * @return array{0: string, 1: array<int, array{text: string, anchor: string}>}
+ */
+function wheellab_add_heading_anchors_and_toc( string $content ): array {
+    if ( trim( $content ) === '' || stripos( $content, '<h2' ) === false ) {
+        return [ $content, [] ];
+    }
+
+    $dom = new DOMDocument();
+    $prev_errors = libxml_use_internal_errors( true );
+    // NOIMPLIED/NODEFDTD: load the fragment as-is, without DOMDocument
+    // wrapping it in an implied <html><body> (which saveHTML() would
+    // then also emit back out).
+    $dom->loadHTML(
+        '<?xml encoding="utf-8" ?>' . $content,
+        LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD
+    );
+    libxml_clear_errors();
+    libxml_use_internal_errors( $prev_errors );
+
+    $toc  = [];
+    $used = [];
+
+    // Snapshot into a plain array first — getElementsByTagName() returns
+    // a live list, and mutating attributes on nodes while iterating a
+    // live NodeList is a common source of skipped items.
+    $headings = iterator_to_array( $dom->getElementsByTagName( 'h2' ) );
+
+    foreach ( $headings as $node ) {
+        $text = trim( $node->textContent );
+        if ( $text === '' ) {
+            continue;
+        }
+
+        // Skip h2s that belong to an embedded ACF block (Reviews, FAQ,
+        // etc.) rather than the article's own outline — every block in
+        // this theme renders as <section class="...">, unlike a plain
+        // core/heading block's bare <h2>, so an ancestor <section> is a
+        // reliable signal either way.
+        $ancestor    = $node->parentNode;
+        $inside_block = false;
+        while ( $ancestor ) {
+            if ( $ancestor instanceof DOMElement && strtolower( $ancestor->tagName ) === 'section' ) {
+                $inside_block = true;
+                break;
+            }
+            $ancestor = $ancestor->parentNode;
+        }
+        if ( $inside_block ) {
+            continue;
+        }
+
+        $anchor = $node->getAttribute( 'id' );
+        if ( $anchor === '' ) {
+            $anchor = sanitize_title( $text ) ?: 'section';
+            $base   = $anchor;
+            $i      = 2;
+            while ( isset( $used[ $anchor ] ) ) {
+                $anchor = $base . '-' . $i++;
+            }
+            $node->setAttribute( 'id', $anchor );
+        }
+        $used[ $anchor ] = true;
+
+        $toc[] = [ 'text' => $text, 'anchor' => $anchor ];
+    }
+
+    $html = '';
+    foreach ( $dom->childNodes as $child ) {
+        $html .= $dom->saveHTML( $child );
+    }
+
+    return [ $html, $toc ];
+}
+
+/**
+ * Estimated reading time in whole minutes (minimum 1) — WordPress has no
+ * built-in equivalent. ~200 words/minute, a commonly used average
+ * reading speed. Used by the single post hero (node 527:28732, "6 min").
+ */
+function wheellab_reading_time( int $post_id = 0 ): int {
+    $post_id = $post_id ?: get_the_ID();
+    $text    = wp_strip_all_tags( strip_shortcodes( get_post_field( 'post_content', $post_id ) ) );
+    $words   = str_word_count( $text );
+    return max( 1, (int) ceil( $words / 200 ) );
+}
+
+/**
+ * Simple post view counter stored as post meta. Not unique-visitor
+ * aware (a refresh or a bot both count) — deliberately basic, matching
+ * the "963 views" stat in the single post hero rather than building
+ * out real analytics. Not hooked automatically: call
+ * wheellab_track_post_view() once per page load from single.php only,
+ * so admin screens, AJAX and REST requests never increment it.
+ */
+function wheellab_get_post_views( int $post_id = 0 ): int {
+    $post_id = $post_id ?: get_the_ID();
+    return (int) get_post_meta( $post_id, 'wheellab_views', true );
+}
+
+function wheellab_track_post_view( int $post_id = 0 ): void {
+    if ( is_admin() || wp_doing_ajax() || wp_is_json_request() ) {
+        return;
+    }
+    $post_id = $post_id ?: get_the_ID();
+    if ( ! $post_id ) {
+        return;
+    }
+    update_post_meta( $post_id, 'wheellab_views', wheellab_get_post_views( $post_id ) + 1 );
+}
+
 add_action('init', function(){
 
     // Disable Comments

@@ -1,0 +1,103 @@
+{
+    "key": "group_faq_section",
+    "title": "FAQ Section",
+    "fields": [
+        {
+            "key": "field_faq_width",
+            "label": "Width",
+            "name": "width",
+            "type": "button_group",
+            "instructions": "Post width (1031px) matches a blog post's article column — use this when the block is added inside a post. Full width (1568px) matches the standard page container — use this on any other page.",
+            "choices": {
+                "post": "Post width",
+                "full": "Full width"
+            },
+            "default_value": "post",
+            "layout": "horizontal"
+        },
+        {
+            "key": "field_faq_show_header",
+            "label": "Show Header",
+            "name": "show_header",
+            "type": "true_false",
+            "instructions": "The question-mark icon + title row above the list.",
+            "default_value": 1,
+            "ui": 1
+        },
+        {
+            "key": "field_faq_title",
+            "label": "Title",
+            "name": "title",
+            "type": "text",
+            "default_value": "Frequently Asked Questions",
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_faq_show_header",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ]
+        },
+        {
+            "key": "field_faq_items",
+            "label": "Questions",
+            "name": "items",
+            "type": "repeater",
+            "layout": "block",
+            "button_label": "Add Question",
+            "min": 1,
+            "instructions": "The first question is expanded by default; the rest start collapsed.",
+            "sub_fields": [
+                {
+                    "key": "field_faq_item_question",
+                    "label": "Question",
+                    "name": "question",
+                    "type": "text",
+                    "required": 1,
+                    "wrapper": {
+                        "width": "100"
+                    }
+                },
+                {
+                    "key": "field_faq_item_answer",
+                    "label": "Answer",
+                    "name": "answer",
+                    "type": "textarea",
+                    "rows": 3,
+                    "required": 1,
+                    "wrapper": {
+                        "width": "100"
+                    }
+                },
+                {
+                    "key": "field_faq_item_button",
+                    "label": "Button",
+                    "name": "button",
+                    "type": "link",
+                    "return_format": "array",
+                    "instructions": "Optional — e.g. \"Check our cases\".",
+                    "wrapper": {
+                        "width": "100"
+                    }
+                }
+            ]
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "block",
+                "operator": "==",
+                "value": "acf/faq-section"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "active": true
+}

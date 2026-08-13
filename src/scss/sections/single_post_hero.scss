@@ -1,0 +1,208 @@
+@use "../partials/variables";
+
+// Source: WheelLab Website (Figma) — node 618:10350 (background +
+// gradient overlay), node 527:28732 (tags/title/author/meta content).
+// Used only by single.php — not an ACF block, so it's enqueued
+// conditionally in inc/enqueue.php. No mobile frame was sourced for this
+// one; the responsive values below are a reasonable scale-down of the
+// desktop spec, same reasoning as Solutions Section's own scoped mobile
+// title override (src/scss/sections/solutions_section.scss).
+
+.single-post-hero {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    // Same "pull the section up behind the sticky header" trick as
+    // .hero (hero_section.scss) — .header reserves ~96px/72px of flow
+    // height above this section by default, which otherwise reads as a
+    // hard seam between the header and the photo instead of the header
+    // floating transparently over it.
+    margin-top: -96px;
+    min-height: calc(800px + 96px);
+    overflow: hidden;
+
+    @media screen and (max-width: variables.$small) {
+        margin-top: -72px;
+        min-height: calc(560px + 72px);
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Background — featured image + bottom-heavy gradient wash
+// ---------------------------------------------------------------------------
+
+.single-post-hero__bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.single-post-hero__bg-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+// node 618:10350 ("Gradient") — unlike .hero__background-overlay (which
+// only fades the bottom half), this spans the whole image: the content
+// sits flush against the bottom edge here with much less headroom, so
+// the full photo needs darkening for the text to stay legible.
+.single-post-hero__bg-gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, transparent 0%, var(--bg-main-background) 79.605%, var(--bg-main-background) 100%);
+    pointer-events: none;
+}
+
+// ---------------------------------------------------------------------------
+// Content
+// ---------------------------------------------------------------------------
+
+.single-post-hero__content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    // Figma's "Center" padding is 64 265 64 80 — the left 80 is dropped
+    // here since .container already provides that inset consistently
+    // with every other section on the site; the large right gutter
+    // (a reading-width constraint against the photo) and vertical
+    // rhythm are kept.
+    padding: 64px 265px 64px 0;
+
+    @media screen and (max-width: variables.$medium) {
+        padding-right: 120px;
+    }
+
+    @media screen and (max-width: variables.$small) {
+        padding: 40px 0;
+        gap: 24px;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Tags
+// ---------------------------------------------------------------------------
+
+.single-post-hero__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.single-post-hero__tag {
+    display: inline-flex;
+    align-items: center;
+    height: 32px;
+    padding: 0 16px;
+    color: var(--content-main-primary);
+    background: var(--bg-main-surface-2);
+    border-radius: 8px;
+    // node 527:28734 ("Tag") — GLASS effect over the photo.
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+// ---------------------------------------------------------------------------
+// Title
+// ---------------------------------------------------------------------------
+
+.single-post-hero__title {
+    // h1's own family/weight/size/line-height (_typography.scss) already
+    // match Heading/H1 (Funnel Display Bold 56/64) exactly — only the
+    // color needs overriding (see blog_hero.scss for why: the global
+    // h1-h4 color rule in _general.scss is a stale boilerplate default).
+    color: var(--content-main-primary);
+
+    @media screen and (max-width: variables.$medium) {
+        font-size: 40px;
+        line-height: 1.2;
+    }
+
+    @media screen and (max-width: variables.$small) {
+        font-size: 32px;
+        line-height: 1.25;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Author + publication meta
+// ---------------------------------------------------------------------------
+
+.single-post-hero__author {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.single-post-hero__avatar {
+    flex-shrink: 0;
+    display: block;
+    width: 60px;
+    height: 60px;
+    border-radius: 1000px;
+    overflow: hidden;
+
+    img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+}
+
+.single-post-hero__author-content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+}
+
+.single-post-hero__author-info,
+.single-post-hero__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+}
+
+.single-post-hero__author-name {
+    font-weight: var(--font-weight-bold);
+    color: var(--content-main-secondary);
+    text-decoration: none;
+
+    &:hover {
+        color: var(--content-solid-accent-2);
+    }
+}
+
+.single-post-hero__author-title,
+.single-post-hero__meta-item {
+    color: var(--content-main-secondary);
+}
+
+.single-post-hero__meta-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.single-post-hero__meta-icon {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    color: var(--content-main-tertiary);
+}
+
+.single-post-hero__diamond {
+    flex-shrink: 0;
+    width: 6px;
+    height: 6px;
+    background: var(--content-main-tertiary);
+    transform: rotate(45deg);
+}

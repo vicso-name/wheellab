@@ -1,0 +1,122 @@
+@use "../partials/variables";
+
+// Source: WheelLab Website (Figma) — node 618:10351 ("AI highlight").
+// Meant to sit as the first element inside a blog post's article column
+// only — always capped at the 1031px reading width, unlike faq_section
+// there's no full-width variant in the source design so no width field.
+
+.ai-highlight-section {
+  max-width: 1031px;
+  margin: 0 auto;
+  padding: 8px; // gap/card-padding/focus
+  background: var(--bg-ghost-accent-2);
+  border: 1px solid var(--outline-accent-2);
+  border-radius: 20px;
+  // Same two-shadow recipe as faq_section/single_post_cta.
+  box-shadow: 0 2px 24px 0 rgb(105 56 239 / 12%), 0 1px 2px -0.5px rgb(0 0 0 / 8%);
+}
+
+.ai-highlight-section__inner {
+  position: relative;
+  padding: 40px; // gap/card-padding/m
+  // Figma/BG/Main/Surface 2 - Light — same token faq_section__inner uses
+  // for its equivalent panel.
+  background: var(--bg-main-surface-2-light);
+  border-radius: 16px;
+  overflow: hidden;
+
+  @media screen and (max-width: variables.$small) {
+    padding: 20px;
+  }
+}
+
+// A flattened export of this glow (baked blur+blend) drifted visibly
+// from Figma once composited against this project's actual page
+// background instead of Figma's own canvas color behind it — so instead
+// this reproduces the effect live: an oversized, centered crop of the
+// source texture (node 527:28781's image fill), blurred and screened
+// on with mix-blend-mode so it always blends correctly with whatever
+// sits behind .ai-highlight-section__inner.
+.ai-highlight-section__inner::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 195%;
+  height: 290%;
+  background-image: url("../../../assets/img/single-post/ai-highlight-glow.jpg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  mix-blend-mode: lighten;
+  opacity: 0.35;
+  filter: blur(70px);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+// ---------------------------------------------------------------------------
+// Title row
+// ---------------------------------------------------------------------------
+
+.ai-highlight-section__title-row {
+  position: relative;
+  z-index: 1; // sits above the glow's ::before
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 32px; // gap/card-padding/s
+}
+
+.ai-highlight-section__icon {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  color: var(--content-solid-accent-2);
+}
+
+.ai-highlight-section__title {
+  margin: 0;
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--text-h4-size);
+  line-height: var(--text-h4-line-height);
+  color: var(--content-solid-accent-2);
+
+  @media screen and (max-width: variables.$small) {
+    font-size: 22px;
+    line-height: 1.3;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Content (ACF wysiwyg output — normally a single <ul>, but styled
+// generically since an admin could also just write plain paragraphs)
+// ---------------------------------------------------------------------------
+
+.ai-highlight-section__content {
+  position: relative;
+  z-index: 1; // sits above the glow's ::before
+  font-family: var(--font-family-body);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--text-body-m-size);
+  line-height: var(--text-body-m-line-height);
+  color: var(--content-main-primary);
+
+  ul,
+  ol {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 0;
+    padding-left: 30px;
+  }
+
+  p {
+    margin: 0 0 16px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
