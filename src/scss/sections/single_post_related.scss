@@ -1,0 +1,136 @@
+@use "../partials/variables";
+
+// Structurally/visually the same slider shell as featured_posts_section.scss
+// (node 527:24951) — this is a deliberate copy, not a shared partial, same
+// reasoning as that file's own "kept as its own copy" notes (.header__cta /
+// .btn-gradient, .reviews-section__nav). The only real difference is no
+// description text under the title.
+
+.single-post-related {
+    position: relative;
+    overflow: hidden;
+    padding: 100px 0;
+
+    @media screen and (max-width: variables.$medium) {
+        padding: 60px 0;
+    }
+}
+
+.single-post-related__header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 64px;
+
+    @media screen and (max-width: variables.$medium) {
+        flex-wrap: wrap;
+        margin-bottom: 40px;
+    }
+}
+
+.single-post-related__title {
+    margin: 0;
+    color: var(--content-main-primary);
+}
+
+.single-post-related__nav-group {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 24px;
+    margin-left: auto;
+}
+
+.single-post-related__nav {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    background: none;
+    border: 0;
+    cursor: pointer;
+    transition: opacity var(--transition-fast);
+
+    &:hover {
+        opacity: 0.7;
+    }
+
+    &.swiper-button-disabled {
+        cursor: default;
+        opacity: 0.3;
+        pointer-events: none;
+    }
+
+    @media screen and (max-width: variables.$small) {
+        width: 44px;
+        height: 44px;
+        padding: 4px;
+        color: var(--content-main-secondary);
+        border-radius: 12px;
+
+        &.swiper-button-disabled {
+            color: var(--content-main-disabled);
+            opacity: 1;
+        }
+    }
+}
+
+.single-post-related__nav-icon--desktop {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.single-post-related__nav-icon--mobile {
+    display: none;
+    width: 20px;
+    height: 20px;
+}
+
+@media screen and (max-width: variables.$small) {
+    .single-post-related__nav-icon--desktop {
+        display: none;
+    }
+
+    .single-post-related__nav-icon--mobile {
+        display: block;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Slider
+// ---------------------------------------------------------------------------
+
+.single-post-related__swiper {
+    $inset: max(var(--container-padding), calc((100% - var(--container-max-width)) / 2 + var(--container-padding)));
+
+    padding: 0 $inset;
+}
+
+.single-post-related__slide {
+    display: flex;
+    flex-direction: column;
+    width: 507px;
+
+    @media screen and (max-width: variables.$large) {
+        width: 380px;
+    }
+
+    @media screen and (max-width: variables.$small) {
+        width: calc(100vw - 88px);
+    }
+
+    // Same fixed-3-lines title reasoning as .featured-posts-section__slide
+    // — scoped to the slider only, blog_card.scss stays untouched.
+    .blog-card__title {
+        display: -webkit-box;
+        min-height: 108px;
+        overflow: hidden;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+    }
+}

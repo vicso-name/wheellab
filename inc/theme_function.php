@@ -507,3 +507,12 @@ add_action('init', function(){
         }, 100);
     }
 }, 20);
+
+// A post can't be manually related to itself in the "Read More" section's
+// relationship field (acf-json/group_single_post_related.json) — $post_id
+// here is the post the field group is attached to (the one being edited),
+// not the field's stored value.
+add_filter('acf/fields/relationship/query/key=field_spr_manual', function ($args, $field, $post_id) {
+    $args['post__not_in'] = [(int) $post_id];
+    return $args;
+}, 10, 3);

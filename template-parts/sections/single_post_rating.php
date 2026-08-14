@@ -10,7 +10,10 @@
  * button state rendered below is only a UX convenience for a rater we
  * already recognize, not the actual guard.
  *
- * Source: WheelLab Website (Figma) — node 618:9919 ("Rate card").
+ * Source: WheelLab Website (Figma) — node 618:9919 ("Rate card", mobile),
+ * node 581:15393 ("Rate card", desktop). Desktop puts the title and star
+ * buttons on one row (title left, buttons right); mobile stacks them —
+ * see single_post_rating.scss's __header rule for the breakpoint switch.
  * Assets: build/css/sections/single_post_rating.min.css
  *         build/js/sections/single_post_rating.min.js
  */
@@ -28,24 +31,26 @@ $star_icon_url = esc_url(wheellab_asset_url('assets/img/icons/star.svg'));
     data-rated="<?php echo $already_rated ? '1' : '0'; ?>"
 >
     <div class="single-post-rating__inner">
-        <p class="single-post-rating__title"><?php esc_html_e('Rate this article', 'wheellab'); ?></p>
+        <div class="single-post-rating__header">
+            <p class="single-post-rating__title"><?php esc_html_e('Rate this article', 'wheellab'); ?></p>
 
-        <div class="single-post-rating__stars" role="group" aria-label="<?php esc_attr_e('Rate this article from 1 to 5 stars', 'wheellab'); ?>">
-            <?php for ($i = 1; $i <= 5; $i++) : ?>
-                <button
-                    type="button"
-                    class="single-post-rating__star<?php echo $already_rated && $i <= $user_rating ? ' is-active' : ''; ?>"
-                    data-rating="<?php echo (int) $i; ?>"
-                    <?php echo $already_rated ? 'disabled' : ''; ?>
-                    aria-label="<?php echo esc_attr(sprintf(
-                        /* translators: %d: star position, 1-5 */
-                        _n('%d star', '%d stars', $i, 'wheellab'),
-                        $i
-                    )); ?>"
-                >
-                    <img class="svg single-post-rating__star-icon" src="<?php echo $star_icon_url; ?>" alt="">
-                </button>
-            <?php endfor; ?>
+            <div class="single-post-rating__stars" role="group" aria-label="<?php esc_attr_e('Rate this article from 1 to 5 stars', 'wheellab'); ?>">
+                <?php for ($i = 1; $i <= 5; $i++) : ?>
+                    <button
+                        type="button"
+                        class="single-post-rating__star<?php echo $already_rated && $i <= $user_rating ? ' is-active' : ''; ?>"
+                        data-rating="<?php echo (int) $i; ?>"
+                        <?php echo $already_rated ? 'disabled' : ''; ?>
+                        aria-label="<?php echo esc_attr(sprintf(
+                            /* translators: %d: star position, 1-5 */
+                            _n('%d star', '%d stars', $i, 'wheellab'),
+                            $i
+                        )); ?>"
+                    >
+                        <img class="svg single-post-rating__star-icon" src="<?php echo $star_icon_url; ?>" alt="">
+                    </button>
+                <?php endfor; ?>
+            </div>
         </div>
 
         <div class="single-post-rating__summary">

@@ -1,0 +1,55 @@
+{
+    "key": "group_cta_banner_section",
+    "title": "CTA Banner Section",
+    "fields": [
+        {
+            "key": "field_ctab_title",
+            "label": "Title",
+            "name": "title",
+            "type": "text",
+            "required": 1,
+            "default_value": "See our portfolio with other projects",
+            "wrapper": {
+                "width": "100"
+            }
+        },
+        {
+            "key": "field_ctab_description",
+            "label": "Description",
+            "name": "description",
+            "type": "textarea",
+            "rows": 2,
+            "default_value": "Stay informed with fresh ideas, practical knowledge, and thought leadership from our team.",
+            "wrapper": {
+                "width": "100"
+            }
+        },
+        {
+            "key": "field_ctab_link",
+            "label": "Button",
+            "name": "link",
+            "type": "link",
+            "return_format": "array",
+            "required": 1,
+            "instructions": "Button text comes from the link's own title (e.g. \"Subscribe\").",
+            "wrapper": {
+                "width": "100"
+            }
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "block",
+                "operator": "==",
+                "value": "acf/cta-banner-section"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "active": true
+}

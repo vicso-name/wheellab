@@ -1,0 +1,97 @@
+@use "../partials/variables";
+
+// Source: WheelLab Website (Figma) — node 527:28993 ("Banner").
+
+.cta-banner-section {
+  background: var(--bg-ghost-accent-1);
+  border: 1px solid var(--outline-accent-1);
+  border-radius: 20px;
+  box-shadow: 0 2px 24px 0 rgb(105 56 239 / 12%), 0 1px 2px 0 rgb(0 0 0 / 8%);
+  padding: 8px; // gap/card-padding/focus
+}
+
+.cta-banner-section__inner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background-color: var(--bg-main-surface-1);
+  border-radius: 16px;
+  padding: 40px; // gap/card-padding/m
+
+  @media screen and (max-width: variables.$small) {
+    padding: 24px;
+  }
+}
+
+// Same reasoning as ai_highlight_section.scss's ::before — a flattened
+// export of this glow drifted once composited against a different real
+// background than Figma's own canvas, so this reproduces it live instead:
+// an oversized crop of the source texture, blurred and screened on with
+// mix-blend-mode so it always blends correctly with whatever's behind it.
+.cta-banner-section__inner::before {
+  content: "";
+  position: absolute;
+  inset: -20% -10%;
+  background-image: url("../../../assets/img/single-post/cta-banner-glow.jpg");
+  background-repeat: no-repeat;
+  background-position: right center;
+  background-size: cover;
+  mix-blend-mode: lighten;
+  opacity: 0.5;
+  filter: blur(50px);
+  pointer-events: none;
+}
+
+.cta-banner-section__content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 575px;
+}
+
+.cta-banner-section__text {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cta-banner-section__title {
+  // Same values as .h4 (_typography.scss's Heading/H4 — Funnel Display
+  // Bold 28/36) but set directly rather than relying on that class,
+  // same reasoning as single_post_cta.scss's title: the global h1-h4
+  // color rule in _general.scss is a stale boilerplate default this
+  // needs to override anyway.
+  margin: 0;
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--text-h4-size);
+  line-height: var(--text-h4-line-height);
+  color: var(--content-main-primary);
+}
+
+.cta-banner-section__description {
+  margin: 0;
+  // Figma's own value here (20/30) — not --text-body-m-line-height
+  // (1.4 = 28), kept as given rather than unified.
+  font-family: var(--font-family-body);
+  font-size: 20px;
+  line-height: 30px;
+  color: var(--content-main-secondary);
+
+  @media screen and (max-width: variables.$small) {
+    font-size: 16px;
+    line-height: 24px;
+  }
+}
+
+.cta-banner-section__button {
+  width: 200px;
+  flex-shrink: 0;
+
+  .btn-gradient__inner {
+    width: 100%;
+  }
+}

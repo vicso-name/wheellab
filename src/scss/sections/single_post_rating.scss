@@ -1,8 +1,7 @@
 @use "../partials/variables";
 
-// Source: WheelLab Website (Figma) — node 618:9919 ("Rate card", mobile;
-// no separate desktop mock was given — same card, just wider, capped at
-// the 1031px reading width like every other post-bottom card here).
+// Source: WheelLab Website (Figma) — node 618:9919 ("Rate card", mobile),
+// node 581:15393 ("Rate card", desktop).
 
 .single-post-rating {
   // Flex item of .single-post-body__footer (display:flex; column) — an
@@ -31,7 +30,7 @@
 .single-post-rating__inner {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 24px; // Center's own gap — 16px on mobile, see below
   padding: 40px; // gap/card-padding/m (desktop)
   background: rgb(255 255 255 / 2%);
   border-radius: 16px;
@@ -40,6 +39,7 @@
     // Figma's own mobile value — not the 20px other post-bottom cards
     // use, deliberately kept as given rather than unified.
     padding: 16px;
+    gap: 16px;
   }
 }
 
@@ -47,20 +47,47 @@
 // "Rate this article" + star buttons
 // ---------------------------------------------------------------------------
 
+// Desktop: title and buttons share one row (title left, buttons right).
+// Mobile: stacked — title on its own line, buttons in a full-width row
+// below it (node 618:9919 vs. node 581:15393).
+.single-post-rating__header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  @media screen and (max-width: variables.$small) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+}
+
 .single-post-rating__title {
-  margin: 0 0 12px;
+  flex: 1 0 0;
+  margin: 0;
   font-family: var(--font-family-display);
   font-weight: var(--font-weight-bold);
-  font-size: 20px;
-  line-height: 28px;
+  font-size: 28px;
+  line-height: 34px;
   color: var(--content-main-primary);
+
+  @media screen and (max-width: variables.$small) {
+    font-size: 20px;
+    line-height: 28px;
+  }
 }
 
 .single-post-rating__stars {
   display: flex;
   align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
+  justify-content: flex-end;
+  flex-shrink: 0;
+  gap: 16px;
+
+  @media screen and (max-width: variables.$small) {
+    justify-content: space-between;
+    width: 100%;
+  }
 }
 
 .single-post-rating__star {
@@ -101,7 +128,6 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-top: 4px;
 }
 
 .single-post-rating__summary-stars {
@@ -119,9 +145,14 @@
 .single-post-rating__summary-value {
   font-family: var(--font-family-display);
   font-weight: var(--font-weight-bold);
-  font-size: 20px;
-  line-height: 28px;
+  font-size: 28px;
+  line-height: 34px;
   color: var(--content-solid-accent-2);
+
+  @media screen and (max-width: variables.$small) {
+    font-size: 20px;
+    line-height: 28px;
+  }
 }
 
 .single-post-rating__diamond {

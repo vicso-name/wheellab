@@ -35,6 +35,7 @@ function wheellab_register_acf_blocks() {
         'faq_section',
         'ai_highlight_section',
         'table_section',
+        'cta_banner_section',
     ];
 
     foreach ($blocks as $block_name) {

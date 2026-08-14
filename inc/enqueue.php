@@ -166,6 +166,18 @@ add_action('wp_enqueue_scripts', function () {
             ['btf-main-styles'],
             wheellab_asset_ver('build/css/sections/single_post_hero.min.css')
         );
+        // blog_card.php is reused by single_post_related.php below, but
+        // (unlike featured_posts_section, an actual ACF block)
+        // single_post_related isn't one, so wheellab_enqueue_detected_block_assets()
+        // never finds it and its blog-card-fallback path doesn't fire here
+        // either (this page's other real ACF blocks make $found_any true) —
+        // same reasoning as is_author()'s explicit blog-card enqueue below.
+        wp_enqueue_style(
+            'btf-blog-card-styles',
+            wheellab_asset_url('build/css/sections/blog_card.min.css'),
+            ['btf-main-styles'],
+            wheellab_asset_ver('build/css/sections/blog_card.min.css')
+        );
         wp_enqueue_style(
             'btf-single-post-body-styles',
             wheellab_asset_url('build/css/sections/single_post_body.min.css'),
@@ -195,6 +207,23 @@ add_action('wp_enqueue_scripts', function () {
             wheellab_asset_url('build/css/sections/single_post_author_card.min.css'),
             ['btf-main-styles'],
             wheellab_asset_ver('build/css/sections/single_post_author_card.min.css')
+        );
+        wp_enqueue_style(
+            'btf-single-post-related-styles',
+            wheellab_asset_url('build/css/sections/single_post_related.min.css'),
+            ['btf-main-styles', 'btf-blog-card-styles'],
+            wheellab_asset_ver('build/css/sections/single_post_related.min.css')
+        );
+        // contact_section.min.css IS an ACF block, but it's rendered here
+        // via get_template_part() (falling back to Theme Options > Contact,
+        // same as author.php) rather than being inserted through the block
+        // editor, so wheellab_enqueue_detected_block_assets()'s post_content
+        // scan never finds it either — same reasoning as blog-card above.
+        wp_enqueue_style(
+            'btf-contact-section-styles',
+            wheellab_asset_url('build/css/sections/contact_section.min.css'),
+            ['btf-main-styles'],
+            wheellab_asset_ver('build/css/sections/contact_section.min.css')
         );
     }
 
@@ -289,8 +318,8 @@ add_action('wp_enqueue_scripts', function () {
         }
     }
 
-    // Single post: sidebar Table of Contents scroll-spy, plus the
-    // AJAX-driven "Rate this article" widget.
+    // Single post: sidebar Table of Contents scroll-spy, the AJAX-driven
+    // "Rate this article" widget, and the "Read more" swiper carousel.
     if (is_singular('post')) {
         wp_enqueue_script(
             'btf-single-post-toc-script',
@@ -312,6 +341,20 @@ add_action('wp_enqueue_scripts', function () {
             'personSingular' => __('%s person rated', 'wheellab'),
             'personPlural'   => __('%s people rated', 'wheellab'),
         ]);
+        wp_enqueue_script(
+            'btf-single-post-related-script',
+            wheellab_asset_url('build/js/sections/single_post_related.min.js'),
+            [],
+            wheellab_asset_ver('build/js/sections/single_post_related.min.js'),
+            true
+        );
+        wp_enqueue_script(
+            'btf-contact-section-script',
+            wheellab_asset_url('build/js/sections/contact_section.min.js'),
+            [],
+            wheellab_asset_ver('build/js/sections/contact_section.min.js'),
+            true
+        );
     }
 
     // Author archive: "load more" pagination (no chips — see
