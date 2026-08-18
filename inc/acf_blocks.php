@@ -36,6 +36,8 @@ function wheellab_register_acf_blocks() {
         'ai_highlight_section',
         'table_section',
         'cta_banner_section',
+        'case_study_hero',
+        'case_study_about_section',
     ];
 
     foreach ($blocks as $block_name) {

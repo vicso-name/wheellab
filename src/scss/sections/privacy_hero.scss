@@ -1,0 +1,184 @@
+@use "../partials/variables";
+
+// Source: WheelLab Website (Figma) — node 527:32387 (desktop),
+// node 783:12146 (mobile). Used only by template-privacy-policy.php.
+
+.privacy-hero {
+  position: relative;
+  overflow: hidden;
+  // Same "pull the section up behind the sticky header" trick as .hero
+  // (hero_section.scss) and .single-post-hero — .header reserves ~96px/
+  // 72px of flow height above this section by default, which otherwise
+  // reads as a hard seam (header's own solid bar, then the hero starting
+  // only below it) instead of the header floating transparently over the
+  // hero's own background/glow. padding-top grows by that same amount so
+  // the title still lands at the same visual position as before.
+  margin-top: -96px;
+  padding: calc(200px + 96px) 0 60px;
+
+  @media screen and (max-width: variables.$medium) {
+    padding-top: calc(140px + 96px);
+    padding-bottom: 48px;
+  }
+
+  @media screen and (max-width: variables.$small) {
+    margin-top: -72px;
+    padding-top: calc(120px + 72px);
+    padding-bottom: 40px;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Background — blurred texture glow + bottom-heavy gradient fade into the
+// page background. Same live-CSS-blend technique as ai_highlight_section /
+// cta_banner_section (a flattened export drifts once composited against a
+// different real backdrop than Figma's own canvas), layered with the exact
+// same gradient recipe single_post_hero.scss uses (transparent → 79.605% →
+// solid) — this hero cited that identical percentage in its own Figma data.
+// ---------------------------------------------------------------------------
+
+.privacy-hero__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.privacy-hero__bg::before {
+  content: "";
+  position: absolute;
+  // Oversized and offset up/left so the glow's brightest edge sits near
+  // the top-left corner (matching the design) with room to soften into
+  // nothing well before the section's own edges.
+  inset: -30% -10%;
+  background-image: url("../../../assets/img/privacy-policy/hero-glow.jpg");
+  background-repeat: no-repeat;
+  background-position: left top;
+  background-size: cover;
+  mix-blend-mode: lighten;
+  opacity: 0.6;
+  filter: blur(75px);
+}
+
+.privacy-hero__bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 0%, var(--bg-main-background) 79.605%, var(--bg-main-background) 100%);
+}
+
+// ---------------------------------------------------------------------------
+// Content
+// ---------------------------------------------------------------------------
+
+.privacy-hero__content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  text-align: center;
+
+  @media screen and (max-width: variables.$small) {
+    align-items: flex-start;
+    gap: 20px;
+    text-align: left;
+  }
+}
+
+.privacy-hero__title {
+  // h1's own family/weight/size/line-height (_typography.scss) already
+  // match Heading/H1 (Funnel Display Bold 56/64) exactly, at every
+  // breakpoint this hero's own Figma data specifies — only the color
+  // needs overriding (see blog_hero.scss for why: the global h1-h4 color
+  // rule in _general.scss is a stale boilerplate default).
+  margin: 0;
+  color: var(--content-main-primary);
+}
+
+.privacy-hero__description,
+.privacy-hero__updated {
+  margin: 0;
+  max-width: 800px;
+  font-family: var(--font-family-body);
+  font-size: 20px;
+  line-height: 30px;
+  color: var(--content-main-secondary);
+}
+
+.privacy-hero__updated {
+  font-weight: var(--font-weight-bold);
+}
+
+.privacy-hero__divider {
+  position: relative;
+  z-index: 1;
+  height: 1px;
+  max-width: var(--container-max-width); // 1568px, not full-bleed
+  margin: 60px auto 0;
+  background: var(--divider-main);
+
+  @media screen and (max-width: variables.$medium) {
+    margin-top: 48px;
+  }
+
+  @media screen and (max-width: variables.$small) {
+    margin-top: 40px;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Policy body — the_content() output, template-privacy-policy.php.
+// Base typography (h2/h3/p/ul/a colors, sizes, families) comes from
+// single_post_body.scss's shared .single-post-content rules (see that
+// file's header comment). Node 527:32397 ("Container" — the actual
+// policy body content) measured a different block rhythm than the blog
+// post spec this theme already had signed off (40px between any two
+// elements within a section / 64px before a new H2, vs. blog's 12px;
+// 8px between list items, vs. blog's 12px) — scoped here to
+// .privacy-content specifically rather than changed in the shared file,
+// so the already-approved blog article spacing is untouched.
+// ---------------------------------------------------------------------------
+
+.privacy-content {
+  // No top padding here on purpose — .privacy-hero's own bottom padding
+  // (60px desktop / 48px $medium / 40px $small) is already the gap from
+  // the divider down to this section; adding padding-top here on top of
+  // that stacked the two into a much bigger combined gap (124px on
+  // desktop) than intended.
+  padding: 0 0 100px;
+
+  @media screen and (max-width: variables.$small) {
+    padding-bottom: 60px;
+  }
+
+  .single-post-content {
+    max-width: 1031px;
+    margin: 0 auto;
+
+    > * {
+      margin-bottom: 40px;
+    }
+
+    :where(h2) {
+      margin-top: 64px;
+    }
+
+    // Re-asserted at this same (higher, due to the two ancestor classes
+    // above) specificity level — otherwise this rule loses to the
+    // margin-top:64px one above it instead of the reverse, since the
+    // base .single-post-content > :where(h2:first-child) exemption
+    // (single_post_body.scss) has lower specificity than this scope.
+    > :where(h2:first-child) {
+      margin-top: 0;
+    }
+
+    :where(ul),
+    :where(ol) {
+      gap: 8px;
+    }
+  }
+}
+

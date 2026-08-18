@@ -1,0 +1,189 @@
+@use "variables";
+
+// 404 page (404.php) — WheelLab Website (Figma) — node 527:32652
+// ("Main content"). The section itself still uses the same "pull up
+// behind the sticky header" trick as every other full-bleed hero in
+// this theme — but unlike those, the background here is a flattened
+// image exported directly from Figma (node 527:32653 desktop,
+// node 783:13325 mobile) rather than a live CSS blur+gradient
+// reproduction — the blur/blend recipe never quite matched the
+// reference closely enough to be worth the extra complexity here.
+
+.error-404 {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 100vh;
+  margin-top: -96px;
+  padding-top: 96px;
+  overflow: hidden;
+
+  @media screen and (max-width: variables.$small) {
+    margin-top: -72px;
+    padding-top: 72px;
+  }
+}
+
+.error-404__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background-color: var(--bg-main-background);
+  background-image: url("../../assets/img/404/bg-desktop.jpg");
+  background-repeat: no-repeat;
+  background-position: top center;
+  background-size: cover;
+
+  @media screen and (max-width: variables.$small) {
+    background-image: url("../../assets/img/404/bg-mobile.jpg");
+  }
+}
+
+.error-404__content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 60px;
+  width: 100%;
+
+  @media screen and (max-width: variables.$medium) {
+    flex-direction: column;
+    gap: 40px;
+    text-align: center;
+  }
+}
+
+.error-404__image {
+  flex-shrink: 0;
+  width: 478px;
+  height: 478px;
+
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  @media screen and (max-width: variables.$medium) {
+    width: 320px;
+    height: 320px;
+  }
+}
+
+.error-404__text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+
+  @media screen and (max-width: variables.$medium) {
+    align-items: center;
+  }
+}
+
+.error-404__title {
+  margin: 0;
+  color: var(--content-main-primary);
+}
+
+.error-404__description {
+  margin: 0;
+  font-family: var(--font-family-body);
+  font-size: 20px;
+  line-height: 30px;
+  color: var(--content-main-secondary);
+}
+
+.error-404__button {
+  width: 220px;
+  flex-shrink: 0;
+
+  .btn-gradient__inner {
+    width: 100%;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Mobile — node 783:13328 ("Main section") lays this out quite differently
+// from a scaled-down desktop: a full-height column (image / text block,
+// space-between) instead of vertically-centered side-by-side content,
+// left-aligned instead of centered, a larger Display-2-scale title instead
+// of H1, and a full-width button.
+// ---------------------------------------------------------------------------
+
+@media screen and (max-width: variables.$small) {
+  // Flex propagates "fill the remaining height" all the way down instead
+  // of each level hand-computing its own vh arithmetic: .error-404 is
+  // already min-height:100vh (base rule) — turn it into a column, let
+  // .container stretch to fill it, then .error-404__content fills that.
+  .error-404 {
+    display: flex;
+    flex-direction: column;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  // Scoped to this page's own instance — .container is a shared sitewide
+  // utility, so its own padding can't be touched globally here.
+  .error-404 > .container {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .error-404__content {
+    flex: 1;
+    flex-direction: column;
+    align-items: stretch;
+    // Only 2 items (image, text), so justify:space-between would just
+    // shove the image flush against the header — margin:auto on the
+    // image instead splits the leftover vertical space evenly above AND
+    // below it, landing it roughly centered in the space above the text
+    // block, with the text still ending flush at the bottom either way.
+    gap: 0;
+    padding-bottom: 20px;
+    text-align: left;
+  }
+
+  .error-404__image {
+    align-self: center;
+    flex-shrink: 0;
+    width: 100%;
+    height: 363px;
+    margin: auto 0;
+  }
+
+  .error-404__text {
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .error-404__title {
+    font-family: var(--font-family-display);
+    font-weight: var(--font-weight-bold);
+    font-size: 40px;
+    line-height: 40px;
+    letter-spacing: -1px;
+  }
+
+  .error-404__description {
+    font-size: 16px;
+    line-height: 24px;
+  }
+
+  .error-404__button {
+    width: 100%;
+
+    .btn-gradient__inner {
+      font-size: 14px;
+      line-height: 22px;
+    }
+  }
+}

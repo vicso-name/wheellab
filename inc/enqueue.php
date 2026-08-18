@@ -137,6 +137,24 @@ add_action('wp_enqueue_scripts', function () {
         }
     }
 
+    // Privacy Policy page template — hero styles, plus single_post_body
+    // .min.css for its shared .single-post-content article-typography
+    // rules (see that file's header comment for why it's reused here).
+    if (is_page_template('template-privacy-policy.php')) {
+        wp_enqueue_style(
+            'btf-privacy-hero-styles',
+            wheellab_asset_url('build/css/sections/privacy_hero.min.css'),
+            ['btf-main-styles'],
+            wheellab_asset_ver('build/css/sections/privacy_hero.min.css')
+        );
+        wp_enqueue_style(
+            'btf-single-post-body-styles',
+            wheellab_asset_url('build/css/sections/single_post_body.min.css'),
+            ['btf-main-styles'],
+            wheellab_asset_ver('build/css/sections/single_post_body.min.css')
+        );
+    }
+
     // Case Study archive + single (case_study CPT) — same reasoning:
     // archive-case_study.php / single-case_study.php aren't ACF blocks
     // either. case_study_section.min.css supplies the reused
@@ -156,6 +174,11 @@ add_action('wp_enqueue_scripts', function () {
             wheellab_asset_ver('build/css/sections/case_study_archive.min.css')
         );
     }
+
+    // Case Study Hero (acf/case-study-hero) is a real ACF block now, so
+    // wheellab_enqueue_detected_block_assets() (inc/acf_blocks.php) picks
+    // its CSS/JS up automatically wherever the editor inserts it — no
+    // manual enqueue needed here, same as every other block.
 
     // Single post (single.php) — none of these are ACF blocks, same
     // reasoning as everything else in this block.

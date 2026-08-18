@@ -8,7 +8,14 @@
 // the sitewide .container (1568px), so this uses its own max-width
 // rather than .container, to match that math instead of the general
 // site grid.
-// Used only by single.php.
+// The .single-post-body__* grid/layout rules below are used only by
+// single.php. The article-content-typography block further down
+// (.single-post-content h2/h3/p/ul/img/etc., scoped with :where() so it
+// never overrides a nested ACF block's own styling) is reused as-is by
+// template-privacy-policy.php too — same long-form heading+paragraph
+// content, just in a narrower single-column page instead of the
+// content+sidebar layout, so loading this whole file there is simpler
+// and safer than forking that typography into a second copy.
 
 .single-post-body {
   padding: 64px 0;

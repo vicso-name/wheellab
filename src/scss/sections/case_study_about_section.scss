@@ -1,0 +1,246 @@
+@use "../partials/variables";
+
+// Source: WheelLab Website (Figma) — node 527:31544 ("Main Container"),
+// node 719:17212 ("Content Section"), node 697:6024 ("Icon Section")
+// (desktop); node 783:5161 ("Logo Section") (mobile). The $medium
+// (tablet) stacking below has no Figma spec of its own — a reasonable
+// fallback, same reasoning as other "no tablet spec" sections in this
+// theme — but every $small rule matches the real mobile frame exactly.
+
+.case-study-about-section {
+    padding: 120px 0;
+
+    @media screen and (max-width: variables.$medium) {
+        padding: 80px 0;
+    }
+
+    @media screen and (max-width: variables.$small) {
+        padding: 64px 0;
+    }
+
+    // Figma's mobile content is inset 20px, not the sitewide .container
+    // mobile padding of 16px (_general.scss) — same scoped-override
+    // pattern as .case-study-hero > .container (case_study_hero.scss).
+    > .container {
+        @media screen and (max-width: variables.$small) {
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Text + client logo
+// ---------------------------------------------------------------------------
+
+.case-study-about-section__content {
+    display: flex;
+    align-items: flex-start;
+    gap: 64px;
+    margin-bottom: 64px;
+
+    @media screen and (max-width: variables.$medium) {
+        flex-direction: column;
+        gap: 40px;
+        margin-bottom: 40px;
+    }
+
+    // node 783:5161 — Logo (y:64–224) sits above About Section (y:256)
+    // with a 32px gap, and About Section (ends y:736) to Icons Section
+    // (starts y:768) is the same 32px — both refine the $medium
+    // fallback above with the real mobile numbers.
+    @media screen and (max-width: variables.$small) {
+        gap: 32px;
+        margin-bottom: 32px;
+    }
+}
+
+.case-study-about-section__text {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    // Figma's own fixed 1000px — capped as max-width instead so it
+    // doesn't overflow the container on narrower desktop widths.
+    width: 1000px;
+    max-width: 100%;
+    flex-shrink: 0;
+
+    // Once .content stacks to a column (at $medium and below), the
+    // Logo must render above this text — node 783:5161 confirms it for
+    // the real $small mobile frame; applied from $medium too since
+    // that's already where the stack begins and the same top-to-bottom
+    // reading order should hold at any stacked width.
+    @media screen and (max-width: variables.$medium) {
+        order: 2;
+    }
+}
+
+.case-study-about-section__title {
+    color: var(--content-main-primary);
+}
+
+.case-study-about-section__description {
+    color: var(--content-main-secondary);
+
+    p {
+        margin: 0 0 16px;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+}
+
+.case-study-about-section__logo {
+    display: flex;
+    flex: 1 0 0;
+    align-self: stretch;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+
+    img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        object-fit: contain;
+    }
+
+    @media screen and (max-width: variables.$medium) {
+        order: 1;
+        align-self: auto;
+        align-items: center;
+        justify-content: flex-start;
+    }
+
+    // node 783:5167 ("Logo") is no longer sharing a row with .text once
+    // stacked — flex: 1 0 0/align-self: stretch above were sizing it to
+    // match .text's height as a row sibling, meaningless (and would
+    // collapse to 0 height) once .content is display: flex column, so
+    // this resets to a plain full-width, self-sized block instead.
+    @media screen and (max-width: variables.$small) {
+        flex: none;
+        width: 100%;
+        justify-content: center;
+        padding: 40px 0;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Challenges — "Icon Section": a column of 2-card rows. Each row's first
+// card is a Figma-specified fixed width, the second FILLs the rest (905/
+// fill for row 1, 638/fill for row 2) — a 3rd+ row has no Figma spec of
+// its own, so it falls back to two equal FILL cards instead of repeating
+// either fixed value arbitrarily.
+// ---------------------------------------------------------------------------
+
+.case-study-about-section__challenges {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+
+    // node 783:5211 ("Icons Section") — all 4 cards stack in one column
+    // with a uniform 16px gap on mobile (vs. 24px desktop).
+    @media screen and (max-width: variables.$small) {
+        gap: 16px;
+    }
+}
+
+.case-study-about-section__challenge-row {
+    display: flex;
+    // Explicit rather than relying on the flex default — a card whose
+    // own text is a single line must still stretch to match a taller
+    // row sibling, not hug its own shorter content.
+    align-items: stretch;
+    gap: 24px;
+
+    @media screen and (max-width: variables.$small) {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    // node 697:6025/6026 ("Case study frame", row 1).
+    &:nth-child(1) > .case-study-about-section__challenge:first-child:not(:only-child) {
+        flex: none;
+        width: 905px;
+
+        @media screen and (max-width: variables.$small) {
+            width: auto;
+        }
+    }
+
+    // node 697:6060/6061 ("Case study frame", row 2).
+    &:nth-child(2) > .case-study-about-section__challenge:first-child:not(:only-child) {
+        flex: none;
+        width: 638px;
+
+        @media screen and (max-width: variables.$small) {
+            width: auto;
+        }
+    }
+}
+
+.case-study-about-section__challenge {
+    // Outer "Case study frame" — 8px padding reveals this as a thin
+    // frame around the lighter inner "Frame small" panel. FILL by
+    // default (the row's own fixed-width override above takes
+    // precedence for the applicable first card).
+    //
+    // display: flex here (rather than leaving this a plain block) is
+    // what lets .challenge-inner below fill this card's full height
+    // with flex: 1 — the robust way to do it: no height: 100% chain to
+    // maintain through every ancestor, and no non-standard
+    // -webkit-fill-available quirks.
+    display: flex;
+    flex: 1 0 0;
+    min-width: 0;
+    padding: 8px;
+    background: var(--bg-main-surface-2);
+    border: 1px solid var(--outline-neutral);
+    border-radius: 20px;
+
+    // node 783:5178 ("Case study frame") — thinner 4px frame on mobile.
+    @media screen and (max-width: variables.$small) {
+        padding: 4px;
+    }
+}
+
+.case-study-about-section__challenge-inner {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 24px;
+    padding: 32px;
+    background: var(--bg-main-surface-2-light);
+    border-radius: 16px;
+
+    // node I783:5178;444:7111 ("Frame small") — 16px padding/gap on
+    // mobile (vs. 32px/24px desktop).
+    @media screen and (max-width: variables.$small) {
+        gap: 16px;
+        padding: 16px;
+    }
+}
+
+.case-study-about-section__challenge-number {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    color: var(--content-solid-accent-2);
+    background: var(--bg-ghost-accent-2);
+    border-radius: 8px;
+    // Figma applies a GLASS effect (refraction/dispersion) to this badge
+    // — not reproducible 1:1 in CSS, approximated the same way
+    // .single-post-hero__tag approximates its own GLASS tag: a backdrop
+    // blur over the ghost-accent-2 fill.
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+.case-study-about-section__challenge-text {
+    margin: 0;
+    color: var(--content-solid-accent-2);
+}

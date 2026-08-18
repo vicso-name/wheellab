@@ -2,9 +2,13 @@
 /**
  * Single: Case Study (case_study CPT)
  *
- * No Figma spec exists for this page — title, featured image, stats
- * (reusing Case Study Section's own .case-study-section__card-stat
- * component), then the_content(). See
+ * Case Study Hero (title, tags, background image, highlight strip) is
+ * now a real ACF block (acf/case-study-hero) — it renders wherever the
+ * editor placed it via the_content() below, same as any other block on
+ * a Page, instead of being force-inserted by this template. Everything
+ * in the fixed .case-study-single section (description, stats, content)
+ * still has no Figma spec of its own, reusing Case Study Section's own
+ * .case-study-section__card-stat component. See
  * src/scss/sections/case_study_archive.scss.
  */
 
@@ -14,21 +18,15 @@ while (have_posts()) : the_post();
     $description = get_field('description') ?: '';
     $stats       = get_field('stats')       ?: [];
     $archive_url = get_post_type_archive_link('case_study');
+
+    the_content();
 ?>
 
 <section class="case-study-single">
     <div class="container">
-        <div class="case-study-single__header">
-            <h1 class="case-study-single__title"><?php the_title(); ?></h1>
-
-            <?php if ($description) : ?>
+        <?php if ($description) : ?>
+            <div class="case-study-single__header">
                 <p class="case-study-single__description body-m"><?php echo nl2br(esc_html($description)); ?></p>
-            <?php endif; ?>
-        </div>
-
-        <?php if (has_post_thumbnail()) : ?>
-            <div class="case-study-single__image">
-                <?php the_post_thumbnail('large', ['loading' => 'eager']); ?>
             </div>
         <?php endif; ?>
 
@@ -57,12 +55,6 @@ while (have_posts()) : the_post();
                         </div>
                     </div>
                 <?php endforeach; ?>
-            </div>
-        <?php endif; ?>
-
-        <?php if (get_the_content()) : ?>
-            <div class="case-study-single__content body-m">
-                <?php the_content(); ?>
             </div>
         <?php endif; ?>
 
