@@ -38,6 +38,11 @@ function wheellab_register_acf_blocks() {
         'cta_banner_section',
         'case_study_hero',
         'case_study_about_section',
+        'case_study_quote_section',
+        'case_study_showcase_section',
+        'case_study_tabs_section',
+        'case_study_screens_section',
+        'case_study_what_we_did_section',
     ];
 
     foreach ($blocks as $block_name) {

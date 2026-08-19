@@ -1,0 +1,42 @@
+{
+    "key": "group_case_study_quote_section",
+    "title": "Case Study Quote Section",
+    "fields": [
+        {
+            "key": "field_csq_quote",
+            "label": "Quote",
+            "name": "quote",
+            "type": "textarea",
+            "rows": 4,
+            "required": 1,
+            "wrapper": {
+                "width": "100"
+            }
+        },
+        {
+            "key": "field_csq_author",
+            "label": "Author",
+            "name": "author",
+            "type": "text",
+            "instructions": "Shown as “— {Author}” below the quote, e.g. “BoxBet team”.",
+            "wrapper": {
+                "width": "100"
+            }
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "block",
+                "operator": "==",
+                "value": "acf/case-study-quote-section"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "active": true
+}

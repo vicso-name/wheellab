@@ -1,0 +1,241 @@
+@use "../partials/variables";
+
+// Source: WheelLab Website (Figma) — node 527:31714 ("Tile section",
+// desktop), node 783:5995 ("Tile section", mobile).
+
+.case-study-tabs-section {
+    padding: 120px 0;
+
+    @media screen and (max-width: variables.$medium) {
+        padding: 80px 0;
+    }
+
+    @media screen and (max-width: variables.$small) {
+        padding: 64px 0;
+    }
+
+    > .container {
+        @media screen and (max-width: variables.$small) {
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+    }
+}
+
+.case-study-tabs-section__header {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 1000px;
+    margin: 0 0 64px;
+}
+
+.case-study-tabs-section__title {
+    color: var(--content-main-primary);
+}
+
+.case-study-tabs-section__description {
+    margin: 0;
+    font-family: var(--font-family-body);
+    // var(), not a literal 20px/28px — --text-body-m-* already steps
+    // down at $small (_tokens.scss) sitewide, so this follows for free.
+    font-size: var(--text-body-m-size);
+    line-height: var(--text-body-m-line-height);
+    color: var(--content-main-secondary);
+}
+
+// ---------------------------------------------------------------------------
+// Row — tabs left, image right. .frame has no intrinsic height of its
+// own (its children are all position: absolute), so it stretches to
+// match .tabs's real content height via the flex default (align-items:
+// stretch) rather than a hardcoded height.
+// ---------------------------------------------------------------------------
+
+.case-study-tabs-section__row {
+    display: flex;
+    gap: 24px;
+
+    @media screen and (max-width: variables.$medium) {
+        flex-direction: column;
+    }
+}
+
+.case-study-tabs-section__tabs {
+    display: flex;
+    flex: 1 0 0;
+    flex-direction: column;
+    justify-content: center;
+    gap: 24px;
+    min-width: 0;
+
+    // node 783:5999 ("Images Section") — image first, tabs below, once
+    // stacked. Same order-swap technique as .case-study-about-section__logo
+    // (case_study_about_section.scss); applied from $medium since that's
+    // already where .row stacks to a column.
+    @media screen and (max-width: variables.$medium) {
+        order: 2;
+        flex: none;
+    }
+
+    // node 783:6000 ("Tiles") — 16px gap between stacked tabs on mobile
+    // (vs. 24px desktop).
+    @media screen and (max-width: variables.$small) {
+        gap: 16px;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Tab button — two-layer "Case study frame" > "Frame small" card, same
+// pattern as .case-study-about-section__challenge(-inner). Resting
+// state is the plain neutral card; .is-active swaps in the cyan
+// ghost/outline variant plus a soft glow behind the label.
+// ---------------------------------------------------------------------------
+
+.case-study-tabs-section__tab {
+    display: block;
+    width: 100%;
+    padding: 8px;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+    background: var(--bg-main-surface-2);
+    border: 1px solid var(--outline-neutral);
+    border-radius: 20px;
+    box-shadow: none;
+    transition: background var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
+    appearance: none;
+
+    // node 783:6003 ("Case study frame") — thinner 4px frame on mobile.
+    @media screen and (max-width: variables.$small) {
+        padding: 4px;
+    }
+}
+
+.case-study-tabs-section__tab-inner {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    background: var(--bg-main-surface-2-light);
+    border-radius: 16px;
+    padding: 32px;
+    font-family: var(--font-family-display);
+    font-weight: var(--font-weight-bold);
+    // var(), not a literal 28px/36px — --text-h4-* already steps down at
+    // $small (_tokens.scss) sitewide, so this follows for free.
+    font-size: var(--text-h4-size);
+    line-height: var(--text-h4-line-height);
+    color: var(--content-solid-accent-2);
+
+    // node I783:6003;444:7111 ("Frame small") — 16px padding on mobile
+    // (vs. 32px desktop).
+    @media screen and (max-width: variables.$small) {
+        padding: 16px;
+    }
+}
+
+.case-study-tabs-section__tab.is-active {
+    background: var(--bg-ghost-accent-2);
+    border-color: var(--outline-accent-2);
+    box-shadow: 0 2px 24px 0 rgb(105 56 239 / 12%), 0 1px 2px -0.5px rgb(0 0 0 / 8%);
+
+    .case-study-tabs-section__tab-inner {
+        background: transparent;
+
+        // node 443:4429/443:4430 ("bg") — a blurred, screened glow
+        // behind the label, same reused texture + mix-blend technique
+        // as Domains/Case Study Section's own card glow.
+        &::before {
+            content: "";
+            position: absolute;
+            inset: -60%;
+            background-image: url("../../../assets/img/domains/card-glow.png");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+            mix-blend-mode: lighten;
+            opacity: 0.35;
+            filter: blur(35px);
+            pointer-events: none;
+        }
+
+        span,
+        > * {
+            position: relative;
+            z-index: 1;
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Image panel — every tab's image is already in the DOM, stacked via
+// position: absolute; case_study_tabs_section.js toggles which one is
+// opacity: 1, crossfading instead of swapping a single <img>'s src (no
+// reload flash mid-transition).
+// ---------------------------------------------------------------------------
+
+.case-study-tabs-section__frame {
+    display: flex;
+    flex: 1 0 0;
+    min-width: 0;
+    padding: 8px;
+    background: var(--bg-main-surface-2);
+    border: 1px solid var(--outline-neutral);
+    border-radius: 20px;
+
+    // node 783:5999 ("Images Section") — image first, tabs below, once
+    // stacked (see .case-study-tabs-section__tabs's own order rule).
+    // flex: none here too — flex: 1 0 0 was sizing this against .tabs's
+    // height as a row sibling; once .row is a column that's meaningless
+    // (and the height instead comes from .images's own aspect-ratio
+    // below), so this reverts to a plain full-width block.
+    @media screen and (max-width: variables.$medium) {
+        order: 1;
+        flex: none;
+        width: 100%;
+    }
+
+    // node 783:6005 ("Case study frame") — thinner 4px frame on mobile.
+    @media screen and (max-width: variables.$small) {
+        padding: 4px;
+    }
+}
+
+.case-study-tabs-section__images {
+    position: relative;
+    flex: 1;
+    background: var(--bg-main-surface-1);
+    border-radius: 12px;
+    overflow: hidden;
+
+    // Height comes from .tabs's own content height via flex stretch on
+    // desktop (see .case-study-tabs-section__row's own comment) — once
+    // .row stacks to a column there's no sibling height to match
+    // anymore, so this needs its own ratio instead. node 783:6005's
+    // inner image slot (345 × 237) — same ratio holds from $medium down
+    // to $small, just narrower.
+    @media screen and (max-width: variables.$medium) {
+        flex: none;
+        width: 100%;
+        aspect-ratio: 345 / 237;
+    }
+}
+
+.case-study-tabs-section__image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+
+    &.is-active {
+        opacity: 1;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .case-study-tabs-section__image {
+        transition: none;
+    }
+}
