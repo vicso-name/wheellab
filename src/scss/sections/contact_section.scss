@@ -85,9 +85,9 @@
     display: flex;
     flex: 1 0 0;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     min-width: 0;
-    padding: 60px 180px 60px 0;
+    padding: 60px 90px 60px 0;
 
     @media screen and (max-width: variables.$large) {
         width: 100%;

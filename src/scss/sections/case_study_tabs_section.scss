@@ -120,9 +120,9 @@
     padding: 32px;
     font-family: var(--font-family-display);
     font-weight: var(--font-weight-bold);
-    // var(), not a literal 28px/36px — --text-h4-* already steps down at
-    // $small (_tokens.scss) sitewide, so this follows for free.
-    font-size: var(--text-h4-size);
+    // Literal 24px, not var(--text-h4-size) — sized down from that
+    // token's own value (28px) on request.
+    font-size: 24px;
     line-height: var(--text-h4-line-height);
     color: var(--content-solid-accent-2);
 
@@ -130,6 +130,10 @@
     // (vs. 32px desktop).
     @media screen and (max-width: variables.$small) {
         padding: 16px;
+        // Matches --text-h4-size's own step-down at this breakpoint —
+        // kept explicit since font-size above no longer follows the
+        // token.
+        font-size: 18px;
     }
 }
 
