@@ -1,0 +1,57 @@
+{
+    "key": "group_service_manifesto_section",
+    "title": "Service Manifesto Section",
+    "fields": [
+        {
+            "key": "field_sms_heading",
+            "label": "Heading",
+            "name": "heading",
+            "type": "textarea",
+            "rows": 3,
+            "required": 1,
+            "instructions": "e.g. “Forty operators bought the same back-end this year. Most of them shipped the same lobby that came with it.”",
+            "wrapper": {
+                "width": "100"
+            }
+        },
+        {
+            "key": "field_sms_subheading",
+            "label": "Subheading",
+            "name": "subheading",
+            "type": "textarea",
+            "rows": 3,
+            "required": 1,
+            "instructions": "Revealed a beat after the heading, once this section scrolls into view.",
+            "wrapper": {
+                "width": "100"
+            }
+        },
+        {
+            "key": "field_sms_background_poster",
+            "label": "Background Poster",
+            "name": "background_poster",
+            "type": "image",
+            "return_format": "array",
+            "preview_size": "medium",
+            "instructions": "Optional — falls back to the theme's bundled default. Shown heavily blurred behind the text.",
+            "wrapper": {
+                "width": "100"
+            }
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "block",
+                "operator": "==",
+                "value": "acf/service-manifesto-section"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "active": true
+}
