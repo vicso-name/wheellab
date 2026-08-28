@@ -1,23 +1,5 @@
 @use "../partials/variables";
 
-// Source: WheelLab Website (Figma) — node 806:11678 ("Container", desktop)
-// and node 806:11856 ("Alternative", mobile 393px), via get_design_context.
-// Draggable before/after reveal, hand-rolled with Pointer Events +
-// clip-path (see service_comparison_section.js) — no slider library,
-// confirmed with the user for this block specifically (the handle is
-// fully custom-styled regardless of library, so one would only add a
-// dependency, not save CSS work).
-//
-// Mobile (≤$small/576px) is a GENUINELY DIFFERENT layout, not a reflow
-// of the same elements — two plain stacked cards, no drag/overlay/
-// chrome-bar at all. .service-comparison-section__desktop and __mobile
-// are two separate DOM trees (see the PHP template's header comment for
-// why) toggled by display: none here rather than repositioned via media
-// queries. h2's own mobile token override (_tokens.scss, 24px/32px) and
-// .body-m's (16px/24px) already match nodes 806:11858/806:11860 exactly
-// at this same $small breakpoint, so neither needs a manual override
-// here.
-
 .service-comparison-section {
     position: relative;
     overflow: hidden;
@@ -84,21 +66,15 @@
     }
 }
 
-// ---------------------------------------------------------------------------
-// Card
-// ---------------------------------------------------------------------------
-
 .service-comparison-section__card {
     position: relative;
     display: flex;
     flex-direction: column;
     width: 100%;
     max-width: 1302px;
-    // node 806:11686 — 1302×812 reference; aspect-ratio keeps the browser
-    // -chrome bar / image stage proportional at any viewport width
-    // instead of a fixed px height.
     aspect-ratio: 1302 / 812;
     padding: 8px;
+    overflow: hidden;
     background: var(--bg-main-surface-2);
     border: 1px solid var(--outline-neutral);
     border-radius: 20px;
@@ -116,9 +92,6 @@
     border-radius: 12px;
 }
 
-// node 806:11693 ("Progress bar") — decorative browser-chrome strip
-// ("both screenshots live in the same browser window"), not literal
-// window controls.
 .service-comparison-section__bar {
     display: flex;
     flex-shrink: 0;
@@ -153,10 +126,6 @@
     flex: 1 0 0;
     min-height: 0;
     overflow: hidden;
-    // Grabbing/dragging anywhere on the image itself moves the handle,
-    // not just on the thin handle line — see
-    // service_comparison_section.js's pointerdown listener (bound to
-    // .card, which contains this).
     cursor: ew-resize;
 }
 
@@ -171,31 +140,18 @@
 }
 
 .service-comparison-section__image--after {
-    // Reveals only the region right of the divider — updated per frame
-    // by service_comparison_section.js via this custom property (default
-    // 50%, matching the design's own resting state) rather than a
-    // scaled/re-cropped second element, so both images stay pixel-aligned
-    // regardless of drag position.
-    clip-path: inset(0 0 0 var(--comparison-reveal, 50%));
+    clip-path: inset(0 0 0 calc(var(--comparison-reveal, 50) * 1%));
 }
-
-// ---------------------------------------------------------------------------
-// Handle — spans the full card height (crossing over the browser-chrome
-// bar too), same as node 806:11695's own placement as a sibling of
-// "Image comparison", not scoped inside just the image stage.
-// ---------------------------------------------------------------------------
 
 .service-comparison-section__handle {
     position: absolute;
     top: 8px;
     bottom: 8px;
-    left: var(--comparison-reveal, 50%);
+    left: calc(8px + (100% - 16px) * var(--comparison-reveal, 50) / 100);
     z-index: 2;
     display: flex;
     align-items: center;
     justify-content: center;
-    // Wide hit area for touch/pointer grabbing — the visible line
-    // (below) is much thinner, centered inside this.
     width: 40px;
     margin-left: -20px;
     cursor: ew-resize;
@@ -246,20 +202,9 @@
     border-radius: 50%;
 }
 
-// ---------------------------------------------------------------------------
-// Mobile (≤$small/576px) — two plain stacked cards, no drag/overlay.
-// node 806:11856 ("Alternative"). See .service-comparison-section__desktop
-// above and the PHP template's header comment for why this is a separate
-// DOM tree rather than a reflow of the desktop markup.
-// ---------------------------------------------------------------------------
-
 .service-comparison-section__mobile {
     display: none;
     flex-direction: column;
-    // node 806:11856 — gap/section/gaps-m (32px) between title→before-card
-    // and before-card→after-card alike; .service-comparison-section__title
-    // already carries this same 32px as its own $small margin-bottom, so
-    // only the gap between the two cards needs it here.
     gap: 32px;
     width: 100%;
 
@@ -281,10 +226,6 @@
     color: var(--content-main-secondary);
     text-align: center;
 
-    // node 806:11863/806:11864 — icon + text, NOT accent2 cyan like the
-    // desktop "after" label (node 806:11685) — confirmed via
-    // get_design_context, a real difference between the two frames, not
-    // an inconsistency to "fix".
     &--after {
         display: flex;
         align-items: center;
@@ -302,18 +243,11 @@
 .service-comparison-section__stack-frame {
     position: relative;
     width: 100%;
-    // node 806:11861/806:11868 — 772×482.5 reference. No padding here —
-    // the 4px inset is on .stack-image itself (position: absolute, so a
-    // padding declared on this element wouldn't apply to it anyway).
     aspect-ratio: 772 / 482.5;
     background: var(--bg-main-surface-2);
     border: 1px solid var(--bg-main-surface-2);
     border-radius: 16px;
 
-    // node 806:11868 — the "after" card gets a purple-tinted bezel + glow
-    // shadow the "before" one doesn't (content/solid/accent at 40%/80%
-    // alpha — no sitewide token matches this exact shade+alpha pairing,
-    // so it's hardcoded here rather than forced onto an unrelated token).
     &--after {
         background: rgb(137 54 204 / 40%);
         border-color: rgb(137 54 204 / 80%);

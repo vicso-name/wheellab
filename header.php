@@ -13,14 +13,11 @@
     <a class="skip-link" href="#main"><?php esc_html_e('Skip to content', 'wheellab'); ?></a>
     <div id="wrapper">
         <?php
-        // Header content: logo + Book a Call live on the ACF Options page
-        // (Theme Options > Header). Nav items come from the "primary" WP
-        // menu (Appearance > Menus); the "Services" mega-menu is ACF fields
-        // attached to that menu item — see docs/acf-block-patterns.md and
-        // inc/theme_function.php.
+
         $header_logo        = get_field('logo', 'option') ?: null;
         $header_logo_mobile = get_field('logo_mobile', 'option') ?: null;
-        $header_cta         = get_field('book_a_call', 'option') ?: null;
+
+        $header_cta_title   = get_field('book_a_call', 'option')['title'] ?? '';
         $primary_items      = wheellab_get_primary_menu_items();
         ?>
         <header class="header" id="header">
@@ -84,15 +81,9 @@
                             <span class="visually-hidden"><?php esc_html_e('Search', 'wheellab'); ?></span>
                         </button>
 
-                        <?php if (!empty($header_cta['url'])) : ?>
-                            <a
-                                class="header__cta"
-                                href="<?php echo esc_url($header_cta['url']); ?>"
-                                <?php echo !empty($header_cta['target']) ? 'target="' . esc_attr($header_cta['target']) . '" rel="noopener"' : ''; ?>
-                            >
-                                <span class="header__cta-inner button-text-m"><?php echo esc_html($header_cta['title'] ?: __('Book a Call', 'wheellab')); ?></span>
-                            </a>
-                        <?php endif; ?>
+                        <a class="header__cta" href="#contact-section">
+                            <span class="header__cta-inner button-text-m"><?php echo esc_html($header_cta_title ?: __('Book a Call', 'wheellab')); ?></span>
+                        </a>
 
                         <button type="button" class="header__icon-btn header__menu-toggle" aria-expanded="false" aria-controls="header-mobile-panel">
                             <img class="svg header__menu-toggle-icon header__menu-toggle-icon--open" src="<?php echo esc_url(wheellab_asset_url('assets/img/icons/menu.svg')); ?>" alt="">

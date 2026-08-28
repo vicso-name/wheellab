@@ -1,16 +1,5 @@
 @use "../partials/variables";
 
-// Source: WheelLab Website (Figma) — node 743:10615 (desktop default state),
-// node 743:8062 (desktop post-submit "Request sent" state), node 581:15075
-// (mobile form card), node 758:47732 (full mobile section — title/subtitle
-// sizing, no divider, badges relocated below the form). All mobile nodes at
-// the $small breakpoint.
-//
-// The form fields themselves (input/textarea/radio/checkbox/submit) are
-// rendered by Contact Form 7, not by this template — see
-// docs/acf-block-patterns.md § Contact Section for the exact CF7 form
-// template (field names + wrapper markup) these rules target.
-
 .contact-section {
     position: relative;
     overflow: hidden;
@@ -20,12 +9,6 @@
         padding: 64px 0;
     }
 }
-
-// ---------------------------------------------------------------------------
-// Decorative background glow — purely visual, not CMS-editable. Same
-// oversized-blurred-image recipe as .footer__bg, simplified from Figma's
-// two rotated-blob layers into two corner-anchored glows.
-// ---------------------------------------------------------------------------
 
 .contact-section__bg {
     position: absolute;
@@ -55,10 +38,6 @@
     }
 }
 
-// ---------------------------------------------------------------------------
-// Layout
-// ---------------------------------------------------------------------------
-
 .contact-section__row {
     position: relative;
     z-index: 1;
@@ -67,19 +46,12 @@
     justify-content: center;
     gap: 24px;
 
-    // Single-column mode starts here (node 758:47732's 40px stacked gap
-    // applies for the whole range, not just below $small, so the layout
-    // reads as one coherent "mobile" state rather than an in-between one).
     @media screen and (max-width: variables.$large) {
         flex-direction: column;
         align-items: center;
         gap: 40px;
     }
 }
-
-// ---------------------------------------------------------------------------
-// Left column — title, description, trust badges
-// ---------------------------------------------------------------------------
 
 .contact-section__info {
     display: flex;
@@ -116,28 +88,21 @@
     margin: 40px 0;
     background: var(--outline-neutral);
 
-    // node 758:47732 drops the divider entirely once the columns stack —
-    // it separated two side-by-side columns, which no longer exist here.
     @media screen and (max-width: variables.$large) {
         display: none;
     }
 }
 
-// Desktop: inline next to the title, logos beside the text (node 743:10615).
 .contact-section__badges {
     display: flex;
     align-items: center;
     gap: 12px;
 
-    // Relocated to .contact-section__badges--mobile below the form on
-    // mobile (node 758:47732) — this variant just disappears there.
     @media screen and (max-width: variables.$large) {
         display: none;
     }
 }
 
-// Mobile: its own block after the form card, logos stacked above the
-// centered text (node 758:47732).
 .contact-section__badges--mobile {
     display: none;
     flex-direction: column;
@@ -179,7 +144,6 @@
         margin-right: 0;
     }
 
-    // Left-most logo sits on top, matching the Figma stacking order.
     &:nth-child(1) {
         z-index: 3;
     }
@@ -209,10 +173,6 @@
     color: var(--content-main-secondary);
 }
 
-// ---------------------------------------------------------------------------
-// Right column — form card
-// ---------------------------------------------------------------------------
-
 .contact-section__form-card {
     position: relative;
     flex-shrink: 0;
@@ -223,9 +183,6 @@
     border: 1px solid var(--outline-accent-2);
     border-radius: 20px;
     box-shadow: 0 2px 24px 0 rgb(105 56 239 / 12%), 0 1px 2px 0 rgb(0 0 0 / 8%);
-
-    // Card height is content-driven, not the fixed 784px from the Figma
-    // frame — a rigid height would clip validation messages / longer copy.
 
     @media screen and (max-width: variables.$small) {
         padding: 4px;
@@ -248,8 +205,6 @@
         padding: 16px;
     }
 
-    // CF7 wraps everything in <form class="wpcf7-form">; let it just pass
-    // the column layout through instead of adding another box.
     .wpcf7-form {
         display: flex;
         flex-direction: column;
@@ -288,17 +243,11 @@
     }
 }
 
-// ---------------------------------------------------------------------------
-// Form fields (rendered by Contact Form 7)
-// ---------------------------------------------------------------------------
-
 .contact-section__form-row {
     display: flex;
     gap: 40px;
     width: 100%;
 
-    // node 581:15075 flattens paired fields into one uniform 32px stack —
-    // same rhythm as the .wpcf7-form / .contact-section__form-inner gap.
     @media screen and (max-width: variables.$small) {
         flex-direction: column;
         gap: 32px;
@@ -330,8 +279,6 @@
     color: var(--content-solid-accent-2);
 }
 
-// Wraps the [acceptance] tag — a plain row, not a labeled column like
-// .contact-section__field.
 .contact-section__acceptance {
     width: 100%;
     margin: 0;
@@ -380,8 +327,6 @@
         }
     }
 
-    // ---- Preferred messenger (radio segmented control) --------------------
-
     .wpcf7-radio {
         display: flex;
         width: 100%;
@@ -418,8 +363,6 @@
         background: var(--bg-ghost-accent-2);
     }
 
-    // Kept in the DOM (not display:none) so keyboard/screen-reader users can
-    // still reach and operate the real input — visually hidden only.
     .wpcf7-radio input[type="radio"] {
         position: absolute;
         width: 1px;
@@ -431,8 +374,6 @@
         white-space: nowrap;
         border: 0;
     }
-
-    // ---- Acceptance checkbox -----------------------------------------------
 
     .wpcf7-acceptance label {
         display: flex;
@@ -480,8 +421,6 @@
         color: var(--content-main-secondary);
     }
 
-    // ---- Validation + response messaging -----------------------------------
-
     .wpcf7-not-valid-tip {
         display: block;
         margin-top: 4px;
@@ -507,15 +446,10 @@
         border-color: var(--content-solid-negative);
     }
 
-    // Success is already communicated by .contact-section__sent-overlay —
-    // CF7's own banner would just duplicate it, so hide it for that state
-    // only (still shown, styled above, for the error states).
     form.sent .wpcf7-response-output {
         display: none;
     }
 }
-
-// ---- Submit button (reuses the .btn-gradient bezel recipe) ----------------
 
 .contact-section__button-wrap {
     display: flex;
@@ -528,21 +462,12 @@
     width: 280px;
     max-width: 100%;
 
-    // Full-width on mobile (node 581:15075) instead of the fixed 280px
-    // desktop pill. Kept the "Send" label/16px sizing from the desktop
-    // button rather than the Figma instance's literal "book a Call" text —
-    // that's a stray copy-paste from the header CTA component, not an
-    // intentional redesign of this form's submit button.
     @media screen and (max-width: variables.$small) {
         width: 100%;
     }
 }
 
 .contact-section__submit .wpcf7-submit {
-    // Without this, the browser's native button chrome (appearance: auto)
-    // renders underneath/around the custom background — it doesn't respect
-    // border-radius, so it shows up as a squared-off box peeking out past
-    // the purple pill. This was the "broken button" bug.
     appearance: none;
     position: relative;
     box-sizing: border-box;
@@ -568,25 +493,15 @@
         opacity: 0.9;
     }
 
-    // contact_section.js swaps the value to "Sending..." and disables the
-    // input while CF7's AJAX request is in flight.
     &:disabled {
         cursor: default;
         opacity: 0.7;
     }
 }
 
-// CF7 still inserts this element after the button during submission — the
-// JS-driven "Sending..." label replaces it, so just remove it from the
-// layout instead of styling it (this was the "button is shifted" bug: an
-// unstyled .wpcf7-spinner was sitting in flow next to the button).
 .contact-section__submit .wpcf7-spinner {
     display: none;
 }
-
-// ---------------------------------------------------------------------------
-// Post-submit "Request sent" overlay (node 743:8062)
-// ---------------------------------------------------------------------------
 
 .contact-section__sent-overlay {
     position: absolute;
@@ -645,8 +560,6 @@
     color: var(--content-main-secondary);
 }
 
-// Dim + blur the real form once it's been submitted successfully — the
-// fields stay in the DOM (screen readers / back-nav) but read as inert.
 .contact-section__form-card.is-sent .contact-section__form-inner > *:not(.contact-section__sent-overlay) {
     opacity: 0.3;
     pointer-events: none;

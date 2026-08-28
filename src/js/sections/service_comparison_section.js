@@ -22,7 +22,12 @@ function initComparison(card) {
 
   function setReveal(percent) {
     const clamped = Math.min(100, Math.max(0, percent));
-    card.style.setProperty("--comparison-reveal", `${clamped}%`);
+    // Unitless (not "42%") — .card's own CSS does the % conversion where
+    // it's needed, and does it two different ways: the image clip-path
+    // is frame-relative (0-100% of .frame's own width), but the handle's
+    // left position has to additionally account for .card's 8px padding
+    // on each side, which a bare percentage can't express on its own.
+    card.style.setProperty("--comparison-reveal", clamped);
     handle.setAttribute("aria-valuenow", String(Math.round(clamped)));
   }
 

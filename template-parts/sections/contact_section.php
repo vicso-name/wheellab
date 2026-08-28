@@ -1,33 +1,11 @@
 <?php
-/**
- * Block: Contact Section
- * Registered as: acf/contact-section
- * Source: WheelLab Website (Figma) — node 743:10615 (desktop default state),
- *         node 743:8062 (desktop post-submit state), node 758:47732 (mobile).
- * Assets: build/css/sections/contact_section.min.css
- *         build/js/sections/contact_section.min.js
- *
- * The form itself is Contact Form 7 — this block only supplies the shortcode
- * and the surrounding glass card. See docs/acf-block-patterns.md § Contact
- * Section for the CF7 form template (field names / wrapper markup) the CSS
- * in contact_section.scss expects.
- *
- * Also rendered directly (not as a block) by author.php via
- * get_template_part() — Theme Options > Contact supplies its fields there.
- */
 
-// Falls back to Theme Options > Contact whenever this partial is rendered
-// outside a real ACF block instance (e.g. author.php, which has no page/
-// post to hold block content) — same fallback pattern reviews_section.php
-// already uses for its default review list.
 $title       = get_field('title')          ?: get_field('title', 'option')          ?: '';
 $description = get_field('description')    ?: get_field('description', 'option')    ?: '';
 $badges_text = get_field('badges_text')    ?: get_field('badges_text', 'option')    ?: '';
 $badges      = get_field('badges')         ?: get_field('badges', 'option')         ?: [];
 $shortcode   = get_field('form_shortcode') ?: get_field('form_shortcode', 'option') ?: '';
 
-// 3 default badge icons from the Figma design — replaced wholesale if the
-// admin fills in the "Badge Icons" repeater instead.
 if (!$badges) {
     $badges = [
         ['icon' => ['url' => wheellab_asset_url('assets/img/contact/badge-logo-1.jpg'), 'alt' => '']],
@@ -39,13 +17,11 @@ if (!$badges) {
 $class  = 'contact-section';
 $class .= !empty($block['className']) ? ' ' . $block['className']  : '';
 $class .= !empty($block['align'])     ? ' align' . $block['align'] : '';
-$id     = !empty($block['anchor'])    ? ' id="' . esc_attr($block['anchor']) . '"' : '';
+
+$id     = ' id="' . esc_attr(!empty($block['anchor']) ? $block['anchor'] : 'contact-section') . '"';
 
 $glow_url = esc_url(wheellab_asset_url('assets/img/contact/glow.jpg'));
 
-// Rendered once, reused in both the desktop badges block (inline, next to
-// the title) and the mobile one (its own block below the form — node
-// 758:47732 moves it there and switches the icons to sit above the text).
 ob_start();
 foreach ($badges as $badge) :
     $icon = $badge['icon'] ?? null;

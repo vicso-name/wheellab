@@ -262,7 +262,15 @@ Case Study CPT-context (`case_study_` prefix, meant for use inside a
 `case_study_showcase_section`, `case_study_tabs_section`,
 `case_study_screens_section`, `case_study_what_we_did_section`
 
-Service CPT-context (`service_` prefix): `service_hero`, `service_feature_cards`,
+Service CPT-context (`service_` prefix): `service_hero`, `service_manifesto_section`
+(reveal-on-scroll statement block — heading starts shifted down,
+diamond+subheading start at opacity:0, all three settle/fade in via
+IntersectionObserver + .is-visible once ~30% scrolled into view, same
+pattern as `case_study_quote_section.js`; Figma's own two-variant
+Smart Animate was reproduced as translateY/opacity/font-size deltas on
+a normal flex column rather than literal absolute-position keyframes;
+no bundled fallback background image — see the PHP template's own
+header comment for why), `service_feature_cards`,
 `service_comparison_section`, `service_process_deck`, `service_industry_tiles`,
 `service_capability_cards` (plain wrapping-row repeater — reuses
 `.solutions-section__card*`'s bezel/glow/image/title-row/arrow recipe
