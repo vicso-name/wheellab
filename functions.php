@@ -112,6 +112,7 @@ add_action( 'after_setup_theme', 'wheellab_setup' );
 
 require_once get_template_directory() . '/inc/enqueue.php';
 require_once get_template_directory() . '/inc/cpt_cases.php';
+require_once get_template_directory() . '/inc/case_template_manager.php';
 require_once get_template_directory() . '/inc/cpt_services.php';
 require_once get_template_directory() . '/inc/acf_blocks.php';
 require_once get_template_directory() . '/inc/acf_options.php';
