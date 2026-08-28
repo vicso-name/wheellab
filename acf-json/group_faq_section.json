@@ -83,17 +83,6 @@
                     }
                 }
             ]
-        },
-        {
-            "key": "field_faq_load_more",
-            "label": "Load More Button",
-            "name": "load_more",
-            "type": "link",
-            "return_format": "array",
-            "instructions": "Optional - a centered button below the card (node 806:11729). Leave empty to hide it.",
-            "wrapper": {
-                "width": "100"
-            }
         }
     ],
     "location": [

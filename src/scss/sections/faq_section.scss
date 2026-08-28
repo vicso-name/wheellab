@@ -1,16 +1,5 @@
 @use "../partials/variables";
 
-// Source: WheelLab Website (Figma) — node 581:15346 ("Faq"), also
-// reused verbatim at node 806:11724 (Service page) — see the PHP
-// template's header comment for what that second usage actually added
-// (a full-mode-only outside-card title treatment + optional Load More
-// button) versus what's simply the same reused card.
-// Two width modes — see the PHP template's header comment and the
-// "Width" ACF field. Both modes sit inside the normal .container
-// (1568px, consistent with every other section); --post additionally
-// caps the card itself at 1031px, centered, matching the reading-width
-// article column it's designed to sit in when used inside a blog post.
-
 .faq-section {
   padding: 60px 0;
 
@@ -24,9 +13,6 @@
   margin: 0 auto;
 }
 
-// node 806:11728 — full mode's own card width (Service page) is 1015px,
-// not the post-mode card's 1031px — a real Figma difference between the
-// two usages, not the same value reused.
 .faq-section--full .faq-section__card {
   max-width: 1015px;
   margin: 0 auto;
@@ -34,7 +20,7 @@
 
 .faq-section__card {
   width: 100%;
-  padding: 8px; // gap/card-padding/focus
+  padding: 8px;
   background: var(--bg-main-surface-2);
   border: 1px solid var(--outline-neutral);
   border-radius: 20px;
@@ -42,7 +28,7 @@
 }
 
 .faq-section__inner {
-  padding: 40px; // gap/card-padding/m
+  padding: 40px;
   background: var(--bg-main-surface-2-light);
   border-radius: 16px;
 
@@ -50,10 +36,6 @@
     padding: 20px;
   }
 }
-
-// ---------------------------------------------------------------------------
-// Header
-// ---------------------------------------------------------------------------
 
 .faq-section__header {
   display: flex;
@@ -78,8 +60,6 @@
   font-size: 28px;
   line-height: 34px;
   color: var(--content-main-primary);
-  // Overrides the global h2/.h2 uppercase transform (_typography.scss) —
-  // this title is normal case in Figma, unlike the site's other h2s.
   text-transform: none;
 
   @media screen and (max-width: variables.$small) {
@@ -88,10 +68,6 @@
   }
 }
 
-// node 806:11725 — full mode's title sits OUTSIDE the card, centered,
-// no icon, at the site's normal (unmodified) h2 size/weight/uppercase —
-// unlike .faq-section__title above, which overrides those specifically
-// for the compact icon+title row inside the card.
 .faq-section__title--full {
   max-width: 1000px;
   margin: 0 auto 64px;
@@ -103,24 +79,21 @@
   }
 }
 
-// ---------------------------------------------------------------------------
-// Items (accordion)
-// ---------------------------------------------------------------------------
-
 .faq-section__list {
   display: flex;
   flex-direction: column;
 }
 
 .faq-section__item {
-  // Figma references this as "system/divider" for item rows vs
-  // "Divider/Main" for the header rule above — both resolve to the same
-  // white 20% value, so both use --divider-main here.
   border-bottom: 1px solid var(--divider-main);
 
   &:last-child {
     border-bottom: 0;
   }
+}
+
+.faq-section__item--more {
+  display: none;
 }
 
 .faq-section__question {
@@ -143,7 +116,7 @@
 
 .faq-section__question-text {
   flex: 1 0 0;
-  font-weight: var(--font-weight-bold); // mobile: Semi Bold
+  font-weight: var(--font-weight-bold);
   font-size: 20px;
   line-height: 30px;
   color: var(--content-main-primary);
@@ -175,8 +148,6 @@
   transition: opacity var(--transition-fast);
 }
 
-// Plus shows while collapsed, close shows while open — swapped purely
-// via CSS off the parent .is-open class, no JS DOM/attribute swapping.
 .faq-section__toggle-icon--close {
   opacity: 0;
 }
@@ -191,9 +162,6 @@
   }
 }
 
-// Grid-rows 0fr→1fr trick: animates height smoothly without JS having to
-// measure content, and still degrades gracefully (fully readable, just
-// unanimated) with reduced-motion/no-JS.
 .faq-section__answer-wrap {
   display: grid;
   grid-template-rows: 0fr;
@@ -207,32 +175,21 @@
 .faq-section__answer-inner {
   display: flex;
   flex-direction: column;
-  align-items: flex-start; // keeps .faq-section__button from stretching full-width
-  gap: 24px; // answer-to-button spacing, only applied *between* children
+  align-items: flex-start;
+  gap: 24px;
   min-height: 0;
   overflow: hidden;
 }
 
-// Space from the last visible piece (the button when present, otherwise
-// the answer text itself) down to the item's divider. This has to be a
-// margin on the child, not padding on .answer-inner itself — padding
-// there doesn't shrink away with the rest of the content when the grid
-// row above collapses to 0fr while closed (min-height: 0 only lets
-// *content* height collapse, not an element's own padding), so it was
-// leaking a permanent 36px-tall sliver of every closed item.
 .faq-section__answer-inner > :last-child {
   margin-bottom: 36px;
 }
 
 .faq-section__answer {
-  align-self: stretch; // full-width for text wrapping, unlike the button below it
+  align-self: stretch;
   margin: 0;
   color: var(--content-main-secondary);
 }
-
-// ---------------------------------------------------------------------------
-// Optional per-item CTA button
-// ---------------------------------------------------------------------------
 
 .faq-section__button {
   display: inline-flex;
@@ -242,13 +199,10 @@
   padding: 0 20px;
   color: var(--label-accent);
   text-decoration: none;
-  // Figma layers a solid white base UNDER the purple wash (two stacked
-  // background-images) — without it the purple alone reads as a dark,
-  // barely-there tint against this card's own dark background instead
-  // of the light lavender pill it's meant to be.
   background: linear-gradient(180deg, rgb(149 67 218 / 30%) 0%, rgb(149 67 218 / 10%) 100%), #fff;
   border: 1px solid rgb(255 255 255 / 32%);
   border-radius: 12px;
+  cursor: pointer;
   transition: border-color var(--transition-fast);
 
   &:hover {
@@ -258,12 +212,6 @@
 
 .faq-section__button-text {
   font-weight: var(--font-weight-semibold);
-  // A prior pass judged Figma's literal 16px oversized against this
-  // button by eye and flattened it to 14px sitewide; the later full
-  // desktop→mobile typography audit gives 16/24 as the real desktop
-  // value with 14/16 specifically as the (smaller, tighter) mobile
-  // size — restoring the desktop size and adding the intended mobile
-  // step down, rather than the same 14px at every width.
   font-size: 16px;
   line-height: 24px;
   text-transform: uppercase;
@@ -279,12 +227,6 @@
   width: 24px;
   height: 24px;
 }
-
-// ---------------------------------------------------------------------------
-// Optional "Load more" button (node 806:11729) — same .faq-section__button
-// recipe as the per-item CTA above, just centered below the card instead
-// of inside an open item.
-// ---------------------------------------------------------------------------
 
 .faq-section__load-more {
   display: flex;
