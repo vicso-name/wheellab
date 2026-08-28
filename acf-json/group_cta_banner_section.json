@@ -31,7 +31,18 @@
             "type": "link",
             "return_format": "array",
             "required": 1,
-            "instructions": "Button text comes from the link's own title (e.g. \"Subscribe\").",
+            "instructions": "Button text comes from the link's own title (e.g. \"Subscribe\"). Primary (solid gradient) button.",
+            "wrapper": {
+                "width": "100"
+            }
+        },
+        {
+            "key": "field_ctab_secondary_link",
+            "label": "Secondary Button",
+            "name": "secondary_link",
+            "type": "link",
+            "return_format": "array",
+            "instructions": "Optional — leave empty for the original single-button banner. When set, renders as a glass-style button to the left of the primary one (e.g. \"Talk to us\").",
             "wrapper": {
                 "width": "100"
             }

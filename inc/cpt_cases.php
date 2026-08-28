@@ -8,6 +8,8 @@
  * instead of holding case data in its own repeater field.
  */
 
+defined('ABSPATH') || exit;
+
 add_action('init', 'wheellab_register_case_study_cpt');
 function wheellab_register_case_study_cpt() {
     register_post_type('case_study', [

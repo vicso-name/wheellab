@@ -8,6 +8,8 @@
  * To re-enable any removed feature, delete or comment out the block.
  */
 
+defined('ABSPATH') || exit;
+
 // =============================================================================
 // 1. Clean up WordPress defaults
 // =============================================================================

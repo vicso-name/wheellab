@@ -1,0 +1,184 @@
+@use "../partials/variables";
+
+// Source: WheelLab Website (Figma) — node 806:11703 ("Tile section",
+// desktop) and node 806:11976 ("Tile section", mobile 393px), via
+// get_design_context. Card bezel/icon-badge recipe is the same system
+// tile_section.scss already owns (same Figma layer name, same token
+// values) — copied deliberately for consistency, not re-derived. See
+// the PHP template's header comment for the three differences from
+// tile_section: WYSIWYG content with a styled bullet list, a mandatory
+// icon fallback, and a plain fixed 2-column grid instead of
+// tile_section's 12-col asymmetric first row.
+
+.service-industry-tiles {
+    position: relative;
+    padding: 120px 0;
+
+    @media screen and (max-width: variables.$medium) {
+        padding: 60px 0;
+    }
+
+    @media screen and (max-width: variables.$small) {
+        padding: 64px 0;
+    }
+}
+
+.service-industry-tiles__title {
+    max-width: 1000px;
+    margin: 0 0 64px;
+    color: var(--content-main-primary);
+
+    @media screen and (max-width: variables.$medium) {
+        margin-bottom: 40px;
+    }
+
+    @media screen and (max-width: variables.$small) {
+        margin-bottom: 32px;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Grid — plain fixed 2 columns (node 806:11703's own "Icons row" pairs),
+// not tile_section's 12-col asymmetric first row.
+// ---------------------------------------------------------------------------
+
+.service-industry-tiles__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+
+    @media screen and (max-width: variables.$medium) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.service-industry-tiles__card {
+    display: flex;
+    padding: 8px;
+    background: var(--bg-main-surface-2);
+    border: 1px solid var(--outline-neutral);
+    border-radius: 20px;
+    // No explicit height — CSS Grid's default align-items: stretch
+    // already equalizes every card in a row to the tallest one's
+    // natural content height (same reasoning as .tile-section__card).
+
+    @media screen and (max-width: variables.$small) {
+        padding: 4px;
+    }
+}
+
+.service-industry-tiles__card-inner {
+    display: flex;
+    flex: 1 0 0;
+    flex-direction: column;
+    gap: 24px;
+    min-width: 0;
+    padding: 32px;
+    overflow: hidden;
+    background: var(--bg-main-surface-2-light);
+    border-radius: 16px;
+
+    @media screen and (max-width: variables.$small) {
+        gap: 16px;
+        padding: 16px;
+    }
+}
+
+.service-industry-tiles__card-icon {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    background: var(--bg-ghost-accent-2);
+    border-radius: 8px;
+    // Same subtle "glass" edge highlight as the number badges in
+    // service_process_deck.scss (.service-process-deck__card-number) —
+    // bright inset line along the top, faint dark inset line along the
+    // bottom.
+    box-shadow: inset 0 1px 1px rgb(255 255 255 / 10%), inset 0 -1px 1px rgb(0 0 0 / 5%);
+}
+
+.service-industry-tiles__card-icon-glyph {
+    width: 28px;
+    height: 28px;
+    background-color: var(--content-solid-accent-2);
+    mask-position: center;
+    mask-repeat: no-repeat;
+    mask-size: contain;
+    -webkit-mask-position: center;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-size: contain;
+}
+
+.service-industry-tiles__card-text {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-width: 0;
+}
+
+.service-industry-tiles__card-title {
+    color: var(--content-solid-accent-2);
+}
+
+// ---------------------------------------------------------------------------
+// WYSIWYG content — the one thing that has to match the design exactly
+// is the bulleted list (solid white disc, 30px/24px indent, 8px item
+// gap). :where() keeps this at zero specificity, same technique
+// single_post_body.scss's own article-content typography uses, so a
+// future nested component's own styling always wins over this generic
+// default rather than fighting it.
+// ---------------------------------------------------------------------------
+
+.service-industry-tiles__card-content {
+    color: var(--content-main-primary);
+
+    > :where(p) {
+        margin: 0 0 16px;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    :where(ul),
+    :where(ol) {
+        margin: 0;
+        // node 806:11703 — ms-[30px] desktop.
+        padding-left: 30px;
+
+        @media screen and (max-width: variables.$small) {
+            // node 806:11976 — ms-[24px] mobile.
+            padding-left: 24px;
+        }
+    }
+
+    :where(ul) {
+        list-style: disc;
+    }
+
+    :where(ol) {
+        list-style: decimal;
+    }
+
+    :where(li) {
+        // node 806:11703 — mb-[8px] between items, none after the last.
+        margin-bottom: 8px;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    :where(a) {
+        color: var(--content-solid-accent-2);
+        text-decoration: none;
+        transition: opacity var(--transition-fast);
+
+        &:hover {
+            opacity: 0.8;
+        }
+    }
+}

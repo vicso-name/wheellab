@@ -23,13 +23,13 @@
   // Colors
   // ---------------------------------------------------------------------------
   // Sourced from: $primary-color, $text-color etc. in _variables.scss,
-  // hardcoded values in acf-block-toggle.scss, and --c-* usage in _general.scss.
+  // and --c-* usage in _general.scss.
 
   --color-primary:        #007bff;   // was $primary-color
   --color-text:           #333333;   // was $text-color; consumed as var(--c-text)
   --color-text-muted:     #6c757d;   // was $secondary-color
   --color-background:     #f8f9fa;   // was $background-color
-  --color-background-alt: #f0f0f0;   // ACF block toggle panel background
+  --color-background-alt: #f0f0f0;   // UNUSED — was the ACF block toggle panel background (src/scss/acf-block-toggle.scss, removed 2026-08-25, see ACF-BLOCKS-V3-WP71-MIGRATION-GUIDE.md)
   --color-border:         #007cba;   // ACF block toggle accent (WordPress admin blue)
   --color-white:          #ffffff;
   --color-black:          #000000;

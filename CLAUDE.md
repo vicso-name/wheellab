@@ -148,13 +148,12 @@ BrowserSync proxy is hardcoded to `http://wheellab.test` in [gulpfile.js:159](gu
 |---|---|
 | `clean` | Delete entire `build/` directory |
 | `styles` | Compile main + section + admin SCSS in parallel |
-| `scripts` | Compile main JS (incl. admin-scripts) + section JS in parallel |
+| `scripts` | Compile main JS + section JS in parallel |
 | `copyFonts` | Copy `fonts/**/*.{woff,woff2}` → `build/fonts/` |
 | `generateFontsCSS` | Auto-generate `build/fonts/fonts.css` from font files |
 | `browsersync` | Start BrowserSync server only |
 | `watch` | Start file watchers only (no initial compile) |
 | `stylesAdmin` | Compile `src/scss/admin-style.scss` → `build/css/admin-styles.min.css` |
-| `stylesBlockToggle` | Compile `src/scss/acf-block-toggle.scss` → `build/css/acf-block-toggle.min.css` |
 
 ---
 
@@ -412,8 +411,7 @@ Handled in `inc/acf_blocks.php` at `wp_enqueue_scripts` priority **6** (after gl
 ### Admin/Editor assets
 
 - Admin CSS: `build/css/admin-styles.min.css` ← compiled from `src/scss/admin-style.scss` (via `admin_enqueue_scripts`)
-- Editor JS: `build/js/admin-scripts.min.js` ← compiled from `src/js/admin-scripts.js` (via `enqueue_block_editor_assets`)
-- Editor CSS: `build/css/acf-block-toggle.min.css` ← compiled from `src/scss/acf-block-toggle.scss` (via `enqueue_block_editor_assets`)
+- Block editor (ACF Blocks v3) assets are **not** enqueued by the theme at all — see [ACF-BLOCKS-V3-WP71-MIGRATION-GUIDE.md](ACF-BLOCKS-V3-WP71-MIGRATION-GUIDE.md). `wp-content/mu-plugins/acf_blocks_wp71_compat.php` owns the entire editor-canvas experience (compact block preview cards, ACF/`buttons`/`dashicons` re-enqueue into the iframe, hiding the duplicate sidebar fields form) — it lives outside this repo and is deployed to `mu-plugins/` manually per environment.
 
 ### Asset versioning
 
@@ -517,13 +515,13 @@ When `generate-sections.js` creates a new SCSS file or JS file, lint will run ag
 
 3. ~~**`getFontWeight` defined twice in gulpfile.js**~~ — **FIXED 2026-05-26.** Duplicate definition removed; single definition kept at gulpfile.js:93.
 
-4. ~~**`scriptsMain` glob overlaps with `scriptsSections`**~~ — **FIXED 2026-05-26.** `paths.scripts.main` changed from `src/js/**/*.js` to `src/js/*.js`. Section JS no longer double-compiled. `admin-scripts.js` (at `src/js/`) is now correctly compiled to `build/js/admin-scripts.min.js` by `scriptsMain`.
+4. ~~**`scriptsMain` glob overlaps with `scriptsSections`**~~ — **FIXED 2026-05-26.** `paths.scripts.main` changed from `src/js/**/*.js` to `src/js/*.js`. Section JS no longer double-compiled. (`admin-scripts.js`, the file this originally fixed compilation for, was itself removed 2026-08-24 — see item 16.)
 
 5. ~~**`stylesAdmin` glob overlaps with `stylesMain`**~~ — **FIXED 2026-05-26.** `paths.styles.admin` changed from `src/scss/**/*.scss` to `src/scss/admin-style.scss`. The `stylesAdmin` rename now explicitly outputs `admin-styles.min.css` to match `inc/enqueue.php`'s expectation.
 
 6. **Swiper from manual vendor files:** `assets/swiper/` must be manually kept in sync with `node_modules/swiper`. The npm package is installed but not used in the build pipeline.
 
-7. ~~**`acf-block-toggle.min.css` has no source file**~~ — **FIXED 2026-05-26.** `src/scss/acf-block-toggle.scss` was already present in the repo but not compiled. Added `stylesBlockToggle` Gulp task compiling it to `build/css/acf-block-toggle.min.css`. Wired into `styles` parallel and `startwatch`.
+7. ~~**`acf-block-toggle.min.css` has no source file**~~ — **FIXED 2026-05-26, then removed 2026-08-24.** `src/scss/acf-block-toggle.scss` was compiled via a `stylesBlockToggle` Gulp task for years. That whole collapsible inline-editing UI (it + `src/js/admin-scripts.js`) was retired as part of the ACF Blocks v3 / WordPress 7.1 migration — see item 16 — since WP 7.1 made the editor canvas always-iframed with no opt-out, which the toggle's DOM-injection approach depended on.
 
 8. **`_header.scss` and `_footer.scss` are empty** — header and footer have no styles yet.
 
@@ -540,6 +538,8 @@ When `generate-sections.js` creates a new SCSS file or JS file, lint will run ag
 14. ~~**`str_replace('investments_', '', $block_name)`**~~ — **FIXED 2026-05-26.** Legacy no-op removed from block title generation. Title now uses `ucwords(str_replace('_', ' ', $block_name))` directly.
 
 15. **Funnel Display has no Bold static file / no Cyrillic glyphs on Google Fonts** — `fonts/funnel-display/FunnelDisplay-Bold.woff2` currently ships the same bytes as Regular (Google doesn't publish a distinct Bold instance), and the family has no Cyrillic coverage at all. Swap in real files (e.g. exported from Figma) if the design needs true Bold weight or Cyrillic display text. See [Type Scale](#type-scale).
+
+16. **ACF Blocks v3 / WordPress 7.1 migration (2026-08-24)** — WordPress 7.1 removed the last way to opt out of the always-iframed block editor canvas, which broke this theme's old collapsible inline-field-editing UI (`src/js/admin-scripts.js` + `src/scss/acf-block-toggle.scss`, and a short-lived live-preview variant that piped the theme's own frontend CSS into the iframe via `gulpfile.js`'s `stylesEditorPreview` task). All of that has been removed — block editing now goes entirely through ACF Blocks v3's own toolbar "Edit" modal, and the editor canvas shows a plain icon+title placeholder card instead of a live rendered preview. `inc/acf_blocks.php` block registration is back to the plain baseline (no per-block `mode`/`align`/`supports.align` overrides); the entire editor-canvas experience — compact preview cards, re-enqueuing ACF's own CSS into the iframe, hiding the duplicate sidebar fields form, the ACF-version admin notice — now lives in `wp-content/mu-plugins/acf_blocks_wp71_compat.php`, **outside this repo**, deployed manually per environment. Full rationale, root cause, and the same procedure for other projects: [ACF-BLOCKS-V3-WP71-MIGRATION-GUIDE.md](ACF-BLOCKS-V3-WP71-MIGRATION-GUIDE.md).
 
 ---
 
@@ -569,7 +569,6 @@ src/scss/partials/_fonts.scss          @font-face declarations for Funnel Displa
 src/scss/partials/_header.scss         Header styles — EMPTY
 src/scss/partials/_footer.scss         Footer styles — EMPTY
 src/scss/partials/_errors.scss         Error page styles — EMPTY
-src/scss/acf-block-toggle.scss         Block editor ACF toggle panel styles → build/css/acf-block-toggle.min.css
 src/scss/admin-style.scss              Admin CSS source (empty) → build/css/admin-styles.min.css
 src/scss/sections/hero_section.scss    Hero section styles — EMPTY
 

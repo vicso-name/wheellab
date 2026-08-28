@@ -3,6 +3,8 @@
  * Theme tweaks & helpers
  */
 
+defined('ABSPATH') || exit;
+
 add_filter('widget_text', 'do_shortcode', 11);
 remove_action('wp_head', 'wp_generator');
 

@@ -30,7 +30,6 @@ const paths = {
     main: 'src/scss/style.scss',
     sections: 'src/scss/sections/**/*.scss',
     admin: 'src/scss/admin-style.scss',
-    blockToggle: 'src/scss/acf-block-toggle.scss',
     dest: 'build/css',
     destSections: 'build/css/sections',
     destAdmin: 'build/css'
@@ -132,17 +131,6 @@ function stylesAdmin() {
     .pipe(browserSync.stream());
 }
 
-function stylesBlockToggle() {
-  return src(paths.styles.blockToggle)
-    .pipe(plumber({ errorHandler: notify.onError("Error in Styles Block Toggle: <%= error.message %>") }))
-    .pipe(sass({ outputStyle: 'expanded' }))
-    .pipe(rename({ suffix: '.min' }))
-    .pipe(autoprefixer({ overrideBrowserslist: ['last 10 versions'], grid: true }))
-    .pipe(gulpIf(isProduction, cleanCSS({ level: { 1: { specialComments: 0 } } })))
-    .pipe(dest(paths.styles.dest))
-    .pipe(browserSync.stream());
-}
-
 function stylesMain() {
   return src(paths.styles.main)
     .pipe(plumber({ errorHandler: notify.onError("Ошибка в Styles Main: <%= error.message %>") }))
@@ -168,7 +156,6 @@ function stylesSections() {
     .pipe(browserSync.stream());
 }
 
-
 function browsersyncServe(done) {
   browserSync.init({
     proxy: "http://wheellab.test",
@@ -187,7 +174,6 @@ function startwatch() {
   watch('src/scss/**/*.scss', stylesMain);
   watch(paths.styles.sections, stylesSections);
   watch(paths.styles.admin, stylesAdmin);
-  watch(paths.styles.blockToggle, stylesBlockToggle);
   watch(paths.scripts.main, scriptsMain);
   watch(paths.scripts.sections, scriptsSections);
   watch(paths.php.src, browsersyncReload);
@@ -215,7 +201,7 @@ async function lintJs() {
 
 const lint = parallel(lintScss, lintJs);
 const scripts = parallel(scriptsMain, scriptsSections);
-const styles = parallel(stylesMain, stylesSections, stylesAdmin, stylesBlockToggle);
+const styles = parallel(stylesMain, stylesSections, stylesAdmin);
 
 const build = series(lint, clean, parallel(styles, scripts, copyFonts, generateFontsCSS));
 const dev = series(clean, parallel(styles, scripts), browsersyncServe, startwatch);
@@ -225,7 +211,6 @@ exports.lint = lint;
 exports.scripts = scripts;
 exports.styles = styles;
 exports.stylesAdmin = stylesAdmin;
-exports.stylesBlockToggle = stylesBlockToggle;
 exports.browsersync = browsersyncServe;
 exports.watch = startwatch;
 exports.copyFonts = copyFonts;

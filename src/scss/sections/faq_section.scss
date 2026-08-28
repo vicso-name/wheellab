@@ -1,6 +1,10 @@
 @use "../partials/variables";
 
-// Source: WheelLab Website (Figma) — node 581:15346 ("Faq").
+// Source: WheelLab Website (Figma) — node 581:15346 ("Faq"), also
+// reused verbatim at node 806:11724 (Service page) — see the PHP
+// template's header comment for what that second usage actually added
+// (a full-mode-only outside-card title treatment + optional Load More
+// button) versus what's simply the same reused card.
 // Two width modes — see the PHP template's header comment and the
 // "Width" ACF field. Both modes sit inside the normal .container
 // (1568px, consistent with every other section); --post additionally
@@ -17,6 +21,14 @@
 
 .faq-section--post .faq-section__card {
   max-width: 1031px;
+  margin: 0 auto;
+}
+
+// node 806:11728 — full mode's own card width (Service page) is 1015px,
+// not the post-mode card's 1031px — a real Figma difference between the
+// two usages, not the same value reused.
+.faq-section--full .faq-section__card {
+  max-width: 1015px;
   margin: 0 auto;
 }
 
@@ -73,6 +85,21 @@
   @media screen and (max-width: variables.$small) {
     font-size: 22px;
     line-height: 1.3;
+  }
+}
+
+// node 806:11725 — full mode's title sits OUTSIDE the card, centered,
+// no icon, at the site's normal (unmodified) h2 size/weight/uppercase —
+// unlike .faq-section__title above, which overrides those specifically
+// for the compact icon+title row inside the card.
+.faq-section__title--full {
+  max-width: 1000px;
+  margin: 0 auto 64px;
+  color: var(--content-main-primary);
+  text-align: center;
+
+  @media screen and (max-width: variables.$small) {
+    margin-bottom: 40px;
   }
 }
 
@@ -251,4 +278,20 @@
   flex-shrink: 0;
   width: 24px;
   height: 24px;
+}
+
+// ---------------------------------------------------------------------------
+// Optional "Load more" button (node 806:11729) — same .faq-section__button
+// recipe as the per-item CTA above, just centered below the card instead
+// of inside an open item.
+// ---------------------------------------------------------------------------
+
+.faq-section__load-more {
+  display: flex;
+  justify-content: center;
+  margin-top: 64px;
+
+  @media screen and (max-width: variables.$small) {
+    margin-top: 40px;
+  }
 }

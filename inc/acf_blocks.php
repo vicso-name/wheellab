@@ -16,6 +16,7 @@
  *   are actually present on the current page.
  */
 
+defined('ABSPATH') || exit;
 
 add_action('acf/init', 'wheellab_register_acf_blocks');
 function wheellab_register_acf_blocks() {
@@ -36,6 +37,7 @@ function wheellab_register_acf_blocks() {
         'ai_highlight_section',
         'table_section',
         'cta_banner_section',
+        'stats_showcase_section',
         'case_study_hero',
         'case_study_about_section',
         'case_study_quote_section',
@@ -43,6 +45,12 @@ function wheellab_register_acf_blocks() {
         'case_study_tabs_section',
         'case_study_screens_section',
         'case_study_what_we_did_section',
+        'service_hero',
+        'service_feature_cards',
+        'service_comparison_section',
+        'service_process_deck',
+        'service_industry_tiles',
+        'service_capability_cards',
     ];
 
     foreach ($blocks as $block_name) {
@@ -53,10 +61,20 @@ function wheellab_register_acf_blocks() {
             'render_template' => "template-parts/sections/{$block_name}.php",
             'category'        => 'smlfy',
             'icon'            => 'admin-customizer',
-            'mode'            => 'preview',
             'keywords'        => ['section', $block_name],
+            // These are page-section blocks — always full-bleed by design,
+            // never inline content. 'align' + supports.align === ['full']
+            // is what makes WP core wrap the saved block in an
+            // 'alignfull' class on the REAL frontend (not just the
+            // editor) — dropping this during the 2026-08-25 ACF Blocks v3
+            // migration (that cleanup was only ever meant to remove the
+            // now-retired live-preview canvas sizing, not this) silently
+            // shrank every section block down to the theme's normal
+            // (non-full-bleed) content width. Requires
+            // add_theme_support('align-wide') in functions.php.
+            'align'           => 'full',
             'supports'        => [
-                'align' => false,
+                'align' => ['full'],
                 'mode'  => true,
                 'jsx'   => true,
             ],

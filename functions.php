@@ -8,10 +8,7 @@
  * @package wheellab
 */
 
-define("THEME_URI", get_template_directory_uri());
-define("THEME_DIR", get_template_directory());
-const THEME_NAME = 'wheellab';
-const S_VERSION = "1.0.0";
+const WHEELLAB_VERSION = '1.0.0';
 
 /**
  * Sets up theme defaults and registers support for various WordPress features.
@@ -71,6 +68,18 @@ function wheellab_setup() {
 		)
 	);
 
+	// Required for the 'full' alignment option (and its data-align="full"
+	// attribute) to be available at all — without it, WP's block editor
+	// never applies the align-full/align-wide handling to any block,
+	// custom or core, regardless of what a block's own 'supports'
+	// declare. All of this theme's page-section blocks (inc/acf_blocks.php)
+	// are always full-bleed by design and need this on the FRONTEND, not
+	// just in the editor — removing it (2026-08-25's ACF Blocks v3
+	// migration did, on the mistaken assumption it was only an editor-
+	// canvas-preview-sizing concern) silently shrank every section block
+	// down to the theme's normal (non-full-bleed) content width.
+	add_theme_support('align-wide');
+
 	// Set up the WordPress core custom background feature.
 	add_theme_support(
 		'custom-background',
@@ -103,6 +112,7 @@ add_action( 'after_setup_theme', 'wheellab_setup' );
 
 require_once get_template_directory() . '/inc/enqueue.php';
 require_once get_template_directory() . '/inc/cpt_cases.php';
+require_once get_template_directory() . '/inc/cpt_services.php';
 require_once get_template_directory() . '/inc/acf_blocks.php';
 require_once get_template_directory() . '/inc/acf_options.php';
 require_once get_template_directory() . '/inc/ajax_blog.php';

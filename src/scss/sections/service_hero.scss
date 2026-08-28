@@ -1,0 +1,317 @@
+@use "../partials/variables";
+
+// Source: WheelLab Website (Figma) — node 806:11598 ("Container", desktop
+// full block incl. background), node 806:11602 ("Content", desktop text +
+// buttons), node 806:11762 ("Frame", mobile 393px full block) + node
+// 806:11765 ("Gradient", mobile overlay, confirms the standard 79.605%
+// stop) via get_design_context + get_variable_defs. Structurally the same
+// full-bleed "pull up behind the sticky header" hero shape as
+// hero_section.scss / case_study_hero.scss (see .service-hero below) —
+// see those files' own comments for why each piece of that trick is
+// there. Differences from both: a static image background (no video,
+// unlike hero_section) whose DESKTOP fade math is its own (shorter/later
+// than the sitewide 79.605% stop used by hero_section/case_study_hero/
+// single_post_hero — starts around 2/3 down the section, not just past
+// halfway) but whose MOBILE fade reverts to that same sitewide 79.605%
+// convention (confirmed via node 806:11765, a plain full-inset instance
+// of the shared "Overlay/Gradient vertical" component, unlike desktop's
+// bespoke bottom-anchored box); and no CSS blur filter — the background
+// asset itself already ships pre-blurred/pre-rendered (same "cheaper than
+// blur()-ing a full-bleed image at runtime" reasoning as
+// stats_showcase_section.scss's bg.webp).
+//
+// Not reproduced: the mobile mock (node 806:11763's children) actually
+// layers a SECOND, oversized/offset duplicate image (left: -125.3%,
+// width: 350.6%) on top of the main cover image for extra atmosphere —
+// skipped here since it reads as a decorative Figma-only flourish, not a
+// real asset this theme has, and no other hero in this codebase
+// double-layers its background image either (hero_section/case_study_hero
+// are both single-layer). A single object-fit: cover treatment of
+// whatever background asset is set (or the fallback) is used at every
+// breakpoint instead, consistent with those other heroes.
+
+.service-hero {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    // Same header pull-up trick as .hero/.case-study-hero — .header
+    // reserves ~96px of flow height above this section by default (8px
+    // bezel padding × 2 + .header__bar-inner's 80px); pulling the section
+    // up by that same amount (and growing min-height to match) puts the
+    // background's own top edge flush with the true viewport top, with
+    // the header's glass pill floating above it via z-index instead of
+    // sitting in its own band.
+    margin-top: -96px;
+    min-height: calc(100vh + 96px);
+    // node 806:11598 ("Container") — pt-24 pb-64, identical to
+    // hero_section's own padding recipe.
+    padding: 24px 0 64px;
+    // Deliberately NOT overflow: hidden here (unlike a first pass at this
+    // rule). min-height (not height) means real content — the title,
+    // description, and buttons — is always free to push this section
+    // taller than 100vh when it needs to (a long heading, a wide/short
+    // window, whatever); a container-level overflow:hidden would silently
+    // clip that content the moment it ever needed more room, right at the
+    // viewport edge with no visual warning. The background image is the
+    // only thing that actually needs clipping, and .service-hero__bg
+    // already does that on its own — scoping overflow:hidden to it
+    // (rather than to real content) is the actual fix, not fighting the
+    // symptom by trying to force everything into exactly one viewport.
+    @media screen and (max-width: variables.$medium) {
+        padding: 24px 0 40px;
+    }
+
+    @media screen and (max-width: variables.$small) {
+        // Header shrinks to a 72px reserved height at this breakpoint
+        // (.header__bar-inner: 64px + .header__bar padding: 4px × 2).
+        margin-top: -72px;
+        min-height: calc(100vh + 72px);
+        padding: 0;
+
+        .container {
+            padding: 20px;
+        }
+    }
+
+    // Short-viewport safety valve — scoped to above $small (min-width)
+    // deliberately: the $small block right above already has its own
+    // correct, different header-offset math (-72px, not -96px) and its
+    // own zero-outer-padding/container-padding split, and mobile
+    // portrait viewports don't actually have this problem (tall relative
+    // to width) — this query only targets the wide/short desktop-ish
+    // case the bug report was actually about, so it can't fight or
+    // override that block.
+    //
+    // The header-pull-up trick's own math is
+    // the actual root cause of the overflow, not content length: margin-top
+    // pulls this section up by the header's reserved height (96px) so its
+    // TOP lines up with the true page top, but min-height then adds that
+    // same 96px back on TOP of a full 100vh — so even with min-height
+    // never growing an inch, this section's own bottom edge already sits
+    // 96px past one real viewport height. Content is bottom-anchored
+    // (justify-content: flex-end) against THAT bottom edge, not against
+    // the actual fold, so the button row ends up ~96px lower than "one
+    // screen" on any viewport, not just ones with unusually long copy.
+    // That slack is harmless on a typical tall viewport (the background's
+    // own gradient already fades to solid var(--bg-main-background) well
+    // before the box's true bottom edge — see .service-hero__bg-gradient
+    // — so nothing but empty background color occupies that extra 96px),
+    // but a wide/short window (a maximized browser on a 1440p monitor is
+    // a common, ordinary case — not an edge case) has little enough
+    // headroom that it pushes the real CTA buttons below the fold.
+    // Dropping the +96 supplement here — not touching the header pull-up
+    // itself — reclaims exactly that slack for short viewports: the
+    // section's bottom edge lines up with the actual fold instead of
+    // sitting 96px past it, which is what actually fixes this, rather
+    // than trimming content spacing to fight a symptom.
+    @media screen and (min-width: variables.$small + 1px) and (height <= 1440px) {
+        min-height: 100vh;
+        padding-bottom: 40px;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Background — static image + bottom-heavy gradient wash
+// ---------------------------------------------------------------------------
+
+.service-hero__bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.service-hero__bg-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+// node 806:11601 ("Background shape") — a 351px-tall fade over the
+// 1080px reference frame (67.5% down before any fade starts, reaching
+// the solid page background by ~88.6% down) — later and steeper than
+// the sitewide 79.605%-stop convention, so more of the image stays
+// visible above the content before it darkens.
+.service-hero__bg-gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, transparent 0%, transparent 67.5%, var(--bg-main-background) 88.6%, var(--bg-main-background) 100%);
+    pointer-events: none;
+
+    // node 806:11765 ("Gradient", mobile) — the bespoke bottom-anchored
+    // box above is a desktop-only composition; mobile reverts to the
+    // plain sitewide 79.605% full-inset fade (same formula as
+    // hero_section/case_study_hero), confirmed via get_design_context on
+    // the mobile frame rather than assumed.
+    @media screen and (max-width: variables.$small) {
+        background: linear-gradient(to bottom, transparent 0%, var(--bg-main-background) 79.605%, var(--bg-main-background) 100%);
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Content — text column + button group, bottom-aligned side by side
+// (identical layout shape to .hero__content)
+// ---------------------------------------------------------------------------
+
+.service-hero__content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: flex-end;
+    gap: 64px;
+    width: 100%;
+
+    @media screen and (max-width: variables.$medium) {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 24px;
+    }
+
+    // node 806:11768 ("Center") — a single flat 20px rhythm between
+    // title/description/buttons on mobile, tighter than desktop/tablet's
+    // 24px.
+    @media screen and (max-width: variables.$small) {
+        gap: 20px;
+    }
+}
+
+.service-hero__text {
+    display: flex;
+    flex: 1 0 0;
+    flex-direction: column;
+    gap: 24px;
+    min-width: 0;
+
+    @media screen and (max-width: variables.$small) {
+        gap: 20px;
+    }
+}
+
+.service-hero__title {
+    // node 806:11605 — Heading/H1. Size/weight/family/line-height already
+    // come from the global `h1, .h1` rule (_typography.scss); this only
+    // overrides its light-theme placeholder color (_general.scss's
+    // `h1,h2,h3,h4 { color: var(--c-text) }`) for this dark section, same
+    // as .hero__title / .case-study-hero__title do.
+    color: var(--content-main-primary);
+
+    // node 806:11769 ("Title big", mobile) — get_variable_defs on the
+    // 393px mock resolves this to Display/Display 2 at 40px/40px,
+    // letter-spacing -1px (NOT this codebase's usual Display 2 desktop
+    // size of 120px — Figma's own responsive variable resolution, same
+    // caveat hero_section.scss's own title override notes). A flat step
+    // rather than hero_section's fluid clamp() — that clamp exists there
+    // because its desktop→mobile range is huge (120→40); this block's
+    // range (56→40, off the smaller H1 scale) is modest enough that
+    // case_study_hero__title's simpler flat-step precedent fits better.
+    @media screen and (max-width: variables.$small) {
+        font-size: 40px;
+        line-height: 40px;
+        letter-spacing: -1px;
+    }
+}
+
+.service-hero__description {
+    max-width: 673px;
+    margin: 0;
+    color: var(--content-main-secondary);
+}
+
+.service-hero__buttons {
+    display: flex;
+    flex-shrink: 0;
+    gap: 24px;
+
+    @media screen and (max-width: variables.$medium) {
+        flex-wrap: wrap;
+        width: 100%;
+    }
+
+    // node 806:11771 ("Frame", mobile) — both buttons go full-width and
+    // shrink to a fixed 56px outer height (vs desktop's content-driven
+    // ~64px) — same treatment hero_section.scss's own $small override
+    // gives its shared .btn-gradient, applied here to both button
+    // components since this design fixes the height on the secondary one
+    // too (806:11772/806:11773 both measure h-[56px] on the mobile mock).
+    @media screen and (max-width: variables.$small) {
+        flex-flow: column nowrap;
+
+        .btn-gradient,
+        .service-hero__btn-secondary {
+            width: 100%;
+            height: 56px;
+        }
+
+        .btn-gradient__inner,
+        .service-hero__btn-secondary-inner {
+            width: 100%;
+        }
+
+        // get_variable_defs on the mobile mock resolves System/Button
+        // text M to 14px/16px here (vs its own 16px/24px desktop
+        // default) — same override hero_section.scss's own $small
+        // buttons block applies to the shared .button-text-m class.
+        .button-text-m {
+            font-size: 14px;
+            line-height: 16px;
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Secondary button ("See the animation reel") — this block's own copy of
+// the shared glass-frame + tinted-pill recipe (same one hero_section.scss
+// keeps as .hero__btn-secondary — duplicated per block by this codebase's
+// own convention rather than cross-referenced, see .btn-gradient's own
+// comment in _general.scss for why). Icon reuses the exact inline SVG
+// (same path data) already used by faq_section.php / cta_banner_section.php
+// for their own "Learn more" arrows — Figma's "arrow-down-line" export is
+// byte-identical to it.
+// ---------------------------------------------------------------------------
+
+.service-hero__btn-secondary {
+    display: inline-flex;
+    flex-shrink: 0;
+    padding: 4px;
+    color: inherit;
+    text-decoration: none;
+    background: var(--bg-main-surface-2);
+    border: 1px solid var(--outline-neutral);
+    border-radius: 16px;
+    box-shadow: 0 2px 8px 0 rgb(105 56 239 / 12%), 0 1px 2px 0 rgb(0 0 0 / 8%);
+    transition: opacity var(--transition-fast);
+
+    &:hover {
+        opacity: 0.85;
+    }
+}
+
+.service-hero__btn-secondary-inner {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 16px 24px;
+    color: var(--label-accent);
+    white-space: nowrap;
+    background-color: #fff;
+    background-image: linear-gradient(180deg, var(--color-primary-alpha-30) 0%, var(--color-primary-alpha-10) 100%);
+    border: 1px solid rgb(255 255 255 / 32%);
+    border-radius: 12px;
+
+    // node I806:11772;294:21558 (mobile inner container) — horizontal
+    // padding tightens from desktop's 24px to 20px.
+    @media screen and (max-width: variables.$small) {
+        padding: 16px 20px;
+    }
+}
+
+.service-hero__btn-secondary-icon {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+}

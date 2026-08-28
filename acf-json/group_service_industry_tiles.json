@@ -1,0 +1,81 @@
+{
+    "key": "group_service_industry_tiles",
+    "title": "Service Industry Tiles",
+    "fields": [
+        {
+            "key": "field_sit_title",
+            "label": "Title",
+            "name": "title",
+            "type": "text",
+            "required": 1,
+            "instructions": "e.g. “Custom SaaS solutions we build across industries”",
+            "wrapper": {
+                "width": "100"
+            }
+        },
+        {
+            "key": "field_sit_cards",
+            "label": "Cards",
+            "name": "cards",
+            "type": "repeater",
+            "layout": "block",
+            "button_label": "Add Card",
+            "min": 1,
+            "instructions": "Rendered as a 2-column grid on desktop/tablet, one column on mobile.",
+            "sub_fields": [
+                {
+                    "key": "field_sit_card_icon",
+                    "label": "Icon",
+                    "name": "icon",
+                    "type": "image",
+                    "return_format": "array",
+                    "preview_size": "thumbnail",
+                    "instructions": "Optional — falls back to the theme's default icon (tinted the same accent cyan) when empty. Upload a single-color glyph on a transparent background to get a unique icon for this card.",
+                    "wrapper": {
+                        "width": "100"
+                    }
+                },
+                {
+                    "key": "field_sit_card_title",
+                    "label": "Title",
+                    "name": "title",
+                    "type": "text",
+                    "required": 1,
+                    "instructions": "e.g. “Fintech”",
+                    "wrapper": {
+                        "width": "100"
+                    }
+                },
+                {
+                    "key": "field_sit_card_content",
+                    "label": "Content",
+                    "name": "content",
+                    "type": "wysiwyg",
+                    "tabs": "visual",
+                    "toolbar": "basic",
+                    "media_upload": 0,
+                    "required": 1,
+                    "instructions": "Bulleted list of what's built for this industry — rendered with the design's own bullet styling. Bold/italic/links also supported.",
+                    "wrapper": {
+                        "width": "100"
+                    }
+                }
+            ]
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "block",
+                "operator": "==",
+                "value": "acf/service-industry-tiles"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "active": true
+}

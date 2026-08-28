@@ -1,0 +1,78 @@
+{
+    "key": "group_service_comparison_section",
+    "title": "Service Comparison Section",
+    "fields": [
+        {
+            "key": "field_scs_title",
+            "label": "Title",
+            "name": "title",
+            "type": "text",
+            "required": 1,
+            "instructions": "e.g. “Generic back-end skin vs. custom front-end”",
+            "wrapper": {
+                "width": "100"
+            }
+        },
+        {
+            "key": "field_scs_before_label",
+            "label": "Before Label",
+            "name": "before_label",
+            "type": "text",
+            "required": 1,
+            "instructions": "e.g. “Default WheelLab lobby”",
+            "wrapper": {
+                "width": "50"
+            }
+        },
+        {
+            "key": "field_scs_after_label",
+            "label": "After Label",
+            "name": "after_label",
+            "type": "text",
+            "required": 1,
+            "instructions": "e.g. “Custom-built lobby”",
+            "wrapper": {
+                "width": "50"
+            }
+        },
+        {
+            "key": "field_scs_before_image",
+            "label": "Before Image",
+            "name": "before_image",
+            "type": "image",
+            "required": 1,
+            "return_format": "array",
+            "preview_size": "medium",
+            "wrapper": {
+                "width": "50"
+            }
+        },
+        {
+            "key": "field_scs_after_image",
+            "label": "After Image",
+            "name": "after_image",
+            "type": "image",
+            "required": 1,
+            "return_format": "array",
+            "preview_size": "medium",
+            "wrapper": {
+                "width": "50"
+            }
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "block",
+                "operator": "==",
+                "value": "acf/service-comparison-section"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "active": true
+}

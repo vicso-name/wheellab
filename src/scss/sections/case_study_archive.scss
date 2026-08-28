@@ -109,6 +109,18 @@
     flex-wrap: wrap;
     gap: 20px;
     margin-bottom: 48px;
+
+    // Matches .case-study-section__card-stats' own mobile override (same
+    // card component, different wrapper) — without this, wrapped flex
+    // items whose min-width drops to 0 at this width (see
+    // .case-study-section__card-stat below) report a few px of
+    // scrollable overflow on some viewports even though nothing visibly
+    // pokes out, because the flex-wrap + gap layout still measures each
+    // item's un-shrunk content size for scrollWidth purposes. Stacking
+    // in one column sidesteps the wrap computation entirely.
+    @media screen and (max-width: variables.$small) {
+        flex-flow: column nowrap;
+    }
 }
 
 .case-study-single__back {

@@ -16,10 +16,13 @@ module.exports = [
                 fetch: 'readonly',
                 MutationObserver: 'readonly',
                 IntersectionObserver: 'readonly',
+                ResizeObserver: 'readonly',
                 DOMParser: 'readonly',
                 URLSearchParams: 'readonly',
                 Swiper: 'readonly',
                 setTimeout: 'readonly',
+                requestAnimationFrame: 'readonly',
+                performance: 'readonly',
             },
         },
         rules: {

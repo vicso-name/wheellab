@@ -1,0 +1,79 @@
+{
+    "key": "group_stats_showcase_section",
+    "title": "Stats Showcase Section",
+    "fields": [
+        {
+            "key": "field_stss_logo",
+            "label": "Marquee Logo",
+            "name": "logo",
+            "type": "image",
+            "required": 1,
+            "return_format": "array",
+            "preview_size": "medium",
+            "instructions": "A single logo, tiled through the 4 scrolling background columns.",
+            "wrapper": {
+                "width": "100"
+            }
+        },
+        {
+            "key": "field_stss_slides",
+            "label": "Slides",
+            "name": "slides",
+            "type": "repeater",
+            "layout": "block",
+            "button_label": "Add Slide",
+            "min": 1,
+            "instructions": "Each slide is a stable state of the shared 4-icon orbit (see stats_showcase_section.js) — advances automatically every ~3.5–4.5s.",
+            "sub_fields": [
+                {
+                    "key": "field_stss_slide_stat",
+                    "label": "Stat",
+                    "name": "stat",
+                    "type": "text",
+                    "required": 1,
+                    "instructions": "e.g. “100+”",
+                    "wrapper": {
+                        "width": "33"
+                    }
+                },
+                {
+                    "key": "field_stss_slide_title",
+                    "label": "Title",
+                    "name": "title",
+                    "type": "text",
+                    "required": 1,
+                    "instructions": "Exactly two words — each renders as its own animated line (e.g. “Gaming Providers”).",
+                    "wrapper": {
+                        "width": "67"
+                    }
+                },
+                {
+                    "key": "field_stss_slide_description",
+                    "label": "Description",
+                    "name": "description",
+                    "type": "textarea",
+                    "rows": 2,
+                    "required": 1,
+                    "wrapper": {
+                        "width": "100"
+                    }
+                }
+            ]
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "block",
+                "operator": "==",
+                "value": "acf/stats-showcase-section"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "active": true
+}

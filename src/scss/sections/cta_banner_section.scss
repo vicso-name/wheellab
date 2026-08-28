@@ -1,6 +1,13 @@
 @use "../partials/variables";
 
-// Source: WheelLab Website (Figma) — node 527:28993 ("Banner").
+// Source: WheelLab Website (Figma) — node 527:28993 ("Banner", original
+// single-button layout) and node 806:11708 ("Banner", two-button layout),
+// via get_design_context on both — genuinely different structures, not
+// one superseding the other: 527:28993 stacks its one button directly
+// below the text in a single column; 806:11708 puts text and buttons
+// side by side as separate flex children instead. See
+// .cta-banner-section__content--split below and the PHP template's own
+// header comment for how both stay intact off one block.
 
 .cta-banner-section {
   background: var(--bg-ghost-accent-1);
@@ -50,12 +57,47 @@
   flex-direction: column;
   gap: 24px;
   max-width: 575px;
+
+  // node 806:11708 — text and buttons as side-by-side flex children
+  // instead of one stacked column, only when a secondary button exists
+  // (see the PHP template's header comment for why this is a modifier,
+  // not the block's only layout).
+  &--split {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 64px;
+    max-width: none;
+    width: 100%;
+
+    // No sourced mobile frame for this two-button layout — reverts to
+    // the same stacked column as the single-button case below $medium,
+    // same "collapse a side-by-side banner to a column on narrower
+    // screens" adaptation used throughout this page.
+    @media screen and (max-width: variables.$medium) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 24px;
+    }
+  }
 }
 
 .cta-banner-section__text {
   display: flex;
   flex-direction: column;
   gap: 12px;
+
+  // node 806:11708 — 711px reference width for the text column when
+  // side by side with the button group.
+  .cta-banner-section__content--split & {
+    flex: 1 0 0;
+    max-width: 711px;
+    min-width: 0;
+
+    @media screen and (max-width: variables.$medium) {
+      max-width: none;
+    }
+  }
 }
 
 .cta-banner-section__title {
@@ -87,11 +129,69 @@
   }
 }
 
+.cta-banner-section__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+  gap: 16px;
+}
+
 .cta-banner-section__button {
-  width: 200px;
   flex-shrink: 0;
 
-  .btn-gradient__inner {
-    width: 100%;
+  // node 806:11704 — fixed 200px only applies when this is the ONLY
+  // button (the original single-button banner every existing usage of
+  // this block still is). Once a secondary button is added, the primary
+  // reverts to its natural content-hugging width instead — Figma's own
+  // "Start a design brief" primary button is wider than 200px and would
+  // wrap awkwardly forced into that width.
+  &:only-child {
+    width: 200px;
+
+    .btn-gradient__inner {
+      width: 100%;
+    }
   }
+}
+
+// This block's own copy of the glass-frame + tinted-pill secondary
+// button recipe (see this file's header comment for why it's a copy,
+// not a shared class).
+.cta-banner-section__button-secondary {
+  display: inline-flex;
+  flex-shrink: 0;
+  padding: 4px;
+  color: inherit;
+  text-decoration: none;
+  background: var(--bg-main-surface-2);
+  border: 1px solid var(--outline-neutral);
+  border-radius: 16px;
+  box-shadow: 0 2px 8px 0 rgb(105 56 239 / 12%), 0 1px 2px 0 rgb(0 0 0 / 8%);
+  transition: opacity var(--transition-fast);
+
+  &:hover {
+    opacity: 0.85;
+  }
+}
+
+.cta-banner-section__button-secondary-inner {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  min-width: 200px;
+  padding: 16px 20px;
+  color: var(--label-accent);
+  white-space: nowrap;
+  background-color: #fff;
+  background-image: linear-gradient(180deg, var(--color-primary-alpha-30) 0%, var(--color-primary-alpha-10) 100%);
+  border: 1px solid rgb(255 255 255 / 32%);
+  border-radius: 12px;
+}
+
+.cta-banner-section__button-secondary-icon {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
 }

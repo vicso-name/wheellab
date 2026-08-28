@@ -1,0 +1,267 @@
+@use "../partials/variables";
+
+// Source: WheelLab Website (Figma) — node 806:11709 ("Frame"). This is
+// a direct copy of Solutions Section's own card recipe
+// (.solutions-section__card* — same bezel/inner/glow/info/image
+// nesting, same hover targets and values, byte-identical corner arrow
+// SVG) — not re-derived. Real differences: this is a PLAIN wrapping
+// row here, not a Swiper slider (no nav/slide wrapper — cards just
+// wrap onto new lines); card height is this design's own 640px, not
+// Solutions Section's 720px; no mobile Figma frame was given for this
+// node, so mobile below is a plain single-column collapse rather than
+// Solutions Section's own sourced mobile crop/tint treatment; and
+// unlike Solutions Section's own illustrations, these cards' images
+// are pre-cropped/extracted assets meant to sit flush at the bottom
+// edge (bottom: 0, no bleed), not Figma-hand-cropped originals needing
+// the bottom:-45%/height:145% overflow trick.
+//
+// Each card's illustration is shown via object-fit: contain so it
+// scales down to fit an arbitrary admin-uploaded image without
+// distortion.
+
+.service-capability-cards {
+    position: relative;
+    padding: 96px 0;
+
+    @media screen and (max-width: variables.$medium) {
+        padding: 60px 0;
+    }
+
+    @media screen and (max-width: variables.$small) {
+        padding: 48px 0;
+    }
+}
+
+.service-capability-cards__title {
+    max-width: 1000px;
+    margin: 0 0 64px;
+    color: var(--content-main-primary);
+
+    @media screen and (max-width: variables.$medium) {
+        margin-bottom: 40px;
+    }
+
+    @media screen and (max-width: variables.$small) {
+        margin-bottom: 32px;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Grid — plain flex-wrap row (node 806:11709's own "Container" is itself
+// flex-wrap), NOT a slider. 3 cards fill one row at the reference
+// 1568px content width (506.67px each, gap 24) — flex-basis 480px lets
+// any repeater length wrap naturally at that width instead of hardcoding
+// "3 columns".
+// ---------------------------------------------------------------------------
+
+.service-capability-cards__grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+}
+
+.service-capability-cards__card {
+    display: flex;
+    flex: 1 1 480px;
+    color: inherit;
+    text-decoration: none;
+
+    @media screen and (max-width: variables.$medium) {
+        flex-basis: 100%;
+    }
+}
+
+.service-capability-cards__card-bezel {
+    display: flex;
+    flex: 1 0 0;
+    width: 100%;
+    // node 806:11709 — 640px reference height (Solutions Section's own
+    // card is 720px — a real difference, not copied blindly).
+    height: 640px;
+    padding: 8px;
+    background: var(--bg-ghost-accent-2);
+    border: 1px solid var(--outline-accent-2);
+    border-radius: 20px;
+    box-shadow: 0 2px 24px 0 rgb(105 56 239 / 12%), 0 1px 2px 0 rgb(0 0 0 / 8%);
+    transition: background 0.4s ease-out, border-color 0.4s ease-out;
+
+    @media screen and (max-width: variables.$medium) {
+        height: auto;
+        padding: 4px;
+    }
+}
+
+.service-capability-cards__card-inner {
+    position: relative;
+    display: flex;
+    flex: 1 0 0;
+    flex-direction: column;
+    min-width: 0;
+    padding: 32px;
+    overflow: hidden;
+    background: var(--bg-main-surface-1);
+    border-radius: 16px;
+    transition: background 0.4s ease-out;
+
+    @media screen and (max-width: variables.$medium) {
+        gap: 16px;
+        padding: 16px;
+    }
+}
+
+.service-capability-cards__card-glow {
+    position: absolute;
+    max-width: none;
+    height: auto;
+    mix-blend-mode: lighten;
+    pointer-events: none;
+    transition: transform 0.4s ease-out;
+
+    &--a {
+        bottom: -200px;
+        left: -200px;
+        width: 520px;
+        opacity: 0.35;
+        filter: blur(32px);
+        transform-origin: bottom left;
+    }
+
+    &--b {
+        top: -150px;
+        left: 50%;
+        width: 720px;
+        opacity: 0.45;
+        filter: blur(50px);
+        transform: translateX(-50%);
+        transform-origin: top center;
+    }
+}
+
+.service-capability-cards__card-info {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    min-width: 0;
+}
+
+.service-capability-cards__card-title-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+    width: 100%;
+
+    @media screen and (max-width: variables.$medium) {
+        gap: 16px;
+    }
+}
+
+.service-capability-cards__card-title {
+    flex: 1 0 0;
+    min-width: 0;
+    color: var(--content-solid-accent-2);
+}
+
+.service-capability-cards__card-description {
+    margin: 0;
+    color: var(--content-main-secondary);
+    transition: color 0.4s ease-out;
+}
+
+.service-capability-cards__card-arrow {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    color: var(--content-solid-accent-2);
+
+    @media screen and (max-width: variables.$medium) {
+        width: 24px;
+        height: 24px;
+    }
+}
+
+.service-capability-cards__card-image {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    // Smaller than Solutions Section's own 396px — that recipe's
+    // illustrations bleed off the card edge (bottom:-45%), so 396px of
+    // box only ever showed part of a much taller source image. These
+    // are pre-cropped, shown in full via object-fit: contain, so the
+    // same 396px box let a tall/dense icon read as visually bigger and
+    // crowd the text above it. 320px keeps the image clearly smaller
+    // than the text's own reserved space regardless of description
+    // length (see the ACF field's own maxlength for that).
+    height: 320px;
+    pointer-events: none;
+    transition: height 0.4s ease-out;
+
+    @media screen and (max-width: variables.$medium) {
+        position: relative;
+        right: auto;
+        bottom: auto;
+        left: auto;
+        width: calc(100% + 32px);
+        height: 280px;
+        margin-left: -16px;
+    }
+
+    img {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        // Right, not center — these icon renders aren't symmetric
+        // compositions (e.g. service_coins.png's second coin is
+        // already cropped at its own right edge, in the source file
+        // itself). Anchoring right puts that existing edge flush
+        // against the card's own right edge instead of stranding it
+        // mid-card with empty space on both sides — reads as the art
+        // intentionally bleeding off the frame, same convention as
+        // Solutions Section's own card illustrations.
+        object-position: bottom right;
+
+        @media screen and (max-width: variables.$medium) {
+            object-fit: cover;
+            object-position: center;
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Hover (Smart Animate, Ease Out, 400ms — desktop only, clickable cards
+// only). Same recipe as .solutions-section__card:hover.
+// ---------------------------------------------------------------------------
+
+@media screen and (min-width: variables.$medium + 1px) {
+    a.service-capability-cards__card:hover {
+        .service-capability-cards__card-bezel {
+            background: var(--bg-main-surface-2);
+            border-color: var(--outline-neutral);
+        }
+
+        .service-capability-cards__card-inner {
+            background: var(--bg-main-surface-2-light);
+        }
+
+        .service-capability-cards__card-description {
+            color: var(--content-main-primary);
+        }
+
+        .service-capability-cards__card-image {
+            height: 330px;
+        }
+
+        .service-capability-cards__card-glow--a {
+            transform: scale(1.03);
+        }
+
+        .service-capability-cards__card-glow--b {
+            transform: translateX(-50%) scale(1.22);
+        }
+    }
+}

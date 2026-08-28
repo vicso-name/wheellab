@@ -25,14 +25,14 @@ function wheellab_theme_dir(): string {
 }
 
 /**
- * Smart asset version: filemtime if exists, else S_VERSION or theme version.
+ * Smart asset version: filemtime if exists, else WHEELLAB_VERSION or theme version.
  */
 function wheellab_asset_ver(string $rel): string {
     $abs = wheellab_theme_dir() . '/' . ltrim($rel, '/');
     if (file_exists($abs)) {
         return (string) filemtime($abs);
     }
-    if (defined('S_VERSION')) return (string) S_VERSION;
+    if (defined('WHEELLAB_VERSION')) return (string) WHEELLAB_VERSION;
     return (string) wp_get_theme()->get('Version');
 }
 
@@ -414,28 +414,6 @@ add_action('wp_enqueue_scripts', function () {
     }
 
 }, 5);
-
-/* -----------------------------------------------------------
- * Editor (block editor) assets
- * ----------------------------------------------------------- */
-add_action('enqueue_block_editor_assets', function () {
-    // Editor JS
-    wp_enqueue_script(
-        'btf-editor-scripts',
-        wheellab_asset_url('build/js/admin-scripts.min.js'),
-        ['wp-blocks', 'wp-dom-ready', 'wp-edit-post'],
-        wheellab_asset_ver('build/js/admin-scripts.min.js'),
-        true
-    );
-
-    // Editor CSS
-    wp_enqueue_style(
-        'btf-editor-styles',
-        wheellab_asset_url('build/css/acf-block-toggle.min.css'),
-        ['wp-edit-blocks'],
-        wheellab_asset_ver('build/css/acf-block-toggle.min.css')
-    );
-});
 
 /* -----------------------------------------------------------
  * Optional optimizations

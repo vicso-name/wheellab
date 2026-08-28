@@ -1,0 +1,332 @@
+@use "../partials/variables";
+
+// Source: WheelLab Website (Figma) — node 806:11678 ("Container", desktop)
+// and node 806:11856 ("Alternative", mobile 393px), via get_design_context.
+// Draggable before/after reveal, hand-rolled with Pointer Events +
+// clip-path (see service_comparison_section.js) — no slider library,
+// confirmed with the user for this block specifically (the handle is
+// fully custom-styled regardless of library, so one would only add a
+// dependency, not save CSS work).
+//
+// Mobile (≤$small/576px) is a GENUINELY DIFFERENT layout, not a reflow
+// of the same elements — two plain stacked cards, no drag/overlay/
+// chrome-bar at all. .service-comparison-section__desktop and __mobile
+// are two separate DOM trees (see the PHP template's header comment for
+// why) toggled by display: none here rather than repositioned via media
+// queries. h2's own mobile token override (_tokens.scss, 24px/32px) and
+// .body-m's (16px/24px) already match nodes 806:11858/806:11860 exactly
+// at this same $small breakpoint, so neither needs a manual override
+// here.
+
+.service-comparison-section {
+    position: relative;
+    overflow: hidden;
+    padding: 96px 0;
+
+    @media screen and (max-width: variables.$medium) {
+        padding: 60px 0;
+    }
+
+    @media screen and (max-width: variables.$small) {
+        padding: 48px 0;
+    }
+}
+
+.service-comparison-section__title {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto 64px;
+    color: var(--content-main-primary);
+    text-align: center;
+
+    @media screen and (max-width: variables.$medium) {
+        margin-bottom: 40px;
+    }
+
+    @media screen and (max-width: variables.$small) {
+        margin-bottom: 32px;
+    }
+}
+
+.service-comparison-section__details {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    width: 100%;
+}
+
+.service-comparison-section__desktop {
+    @media screen and (max-width: variables.$small) {
+        display: none;
+    }
+}
+
+.service-comparison-section__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1302px;
+    padding: 0 24px;
+}
+
+.service-comparison-section__label {
+    &--before {
+        color: var(--content-main-secondary);
+    }
+
+    &--after {
+        color: var(--content-solid-accent-2);
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Card
+// ---------------------------------------------------------------------------
+
+.service-comparison-section__card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 1302px;
+    // node 806:11686 — 1302×812 reference; aspect-ratio keeps the browser
+    // -chrome bar / image stage proportional at any viewport width
+    // instead of a fixed px height.
+    aspect-ratio: 1302 / 812;
+    padding: 8px;
+    background: var(--bg-main-surface-2);
+    border: 1px solid var(--outline-neutral);
+    border-radius: 20px;
+    box-shadow: 0 2px 24px 0 rgb(105 56 239 / 12%), 0 1px 2px 0 rgb(0 0 0 / 8%);
+}
+
+.service-comparison-section__frame {
+    position: relative;
+    display: flex;
+    flex: 1 0 0;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+    border: 1px solid var(--outline-neutral);
+    border-radius: 12px;
+}
+
+// node 806:11693 ("Progress bar") — decorative browser-chrome strip
+// ("both screenshots live in the same browser window"), not literal
+// window controls.
+.service-comparison-section__bar {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 8px;
+    height: 41px;
+    padding: 0 12px;
+    background: #060a15;
+    border-bottom: 1px solid #1b2233;
+}
+
+.service-comparison-section__dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+
+    &--red {
+        background: #ff5f57;
+    }
+
+    &--yellow {
+        background: #febc2e;
+    }
+
+    &--green {
+        background: #28c840;
+    }
+}
+
+.service-comparison-section__stage {
+    position: relative;
+    flex: 1 0 0;
+    min-height: 0;
+    overflow: hidden;
+    // Grabbing/dragging anywhere on the image itself moves the handle,
+    // not just on the thin handle line — see
+    // service_comparison_section.js's pointerdown listener (bound to
+    // .card, which contains this).
+    cursor: ew-resize;
+}
+
+.service-comparison-section__image {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+}
+
+.service-comparison-section__image--after {
+    // Reveals only the region right of the divider — updated per frame
+    // by service_comparison_section.js via this custom property (default
+    // 50%, matching the design's own resting state) rather than a
+    // scaled/re-cropped second element, so both images stay pixel-aligned
+    // regardless of drag position.
+    clip-path: inset(0 0 0 var(--comparison-reveal, 50%));
+}
+
+// ---------------------------------------------------------------------------
+// Handle — spans the full card height (crossing over the browser-chrome
+// bar too), same as node 806:11695's own placement as a sibling of
+// "Image comparison", not scoped inside just the image stage.
+// ---------------------------------------------------------------------------
+
+.service-comparison-section__handle {
+    position: absolute;
+    top: 8px;
+    bottom: 8px;
+    left: var(--comparison-reveal, 50%);
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    // Wide hit area for touch/pointer grabbing — the visible line
+    // (below) is much thinner, centered inside this.
+    width: 40px;
+    margin-left: -20px;
+    cursor: ew-resize;
+    touch-action: none;
+
+    &:focus-visible .service-comparison-section__handle-grip {
+        outline: 2px solid var(--content-solid-accent-2);
+        outline-offset: 2px;
+    }
+}
+
+.service-comparison-section__handle-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 10px;
+    background: var(--outline-neutral);
+    transform: translateX(-50%);
+    pointer-events: none;
+}
+
+.service-comparison-section__handle-grip {
+    position: relative;
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    background: var(--bg-main-surface-2);
+    border: 1px solid var(--outline-neutral);
+    border-radius: 46px;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 2px 8px 0 rgb(105 56 239 / 12%), 0 1px 2px 0 rgb(0 0 0 / 8%);
+    pointer-events: none;
+}
+
+.service-comparison-section__handle-grip-inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    color: var(--content-main-primary);
+    background: var(--content-solid-accent);
+    border: 1px solid var(--outline-neutral);
+    border-radius: 50%;
+}
+
+// ---------------------------------------------------------------------------
+// Mobile (≤$small/576px) — two plain stacked cards, no drag/overlay.
+// node 806:11856 ("Alternative"). See .service-comparison-section__desktop
+// above and the PHP template's header comment for why this is a separate
+// DOM tree rather than a reflow of the desktop markup.
+// ---------------------------------------------------------------------------
+
+.service-comparison-section__mobile {
+    display: none;
+    flex-direction: column;
+    // node 806:11856 — gap/section/gaps-m (32px) between title→before-card
+    // and before-card→after-card alike; .service-comparison-section__title
+    // already carries this same 32px as its own $small margin-bottom, so
+    // only the gap between the two cards needs it here.
+    gap: 32px;
+    width: 100%;
+
+    @media screen and (max-width: variables.$small) {
+        display: flex;
+    }
+}
+
+.service-comparison-section__stack-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+}
+
+.service-comparison-section__stack-label {
+    margin: 0;
+    color: var(--content-main-secondary);
+    text-align: center;
+
+    // node 806:11863/806:11864 — icon + text, NOT accent2 cyan like the
+    // desktop "after" label (node 806:11685) — confirmed via
+    // get_design_context, a real difference between the two frames, not
+    // an inconsistency to "fix".
+    &--after {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--content-main-primary);
+
+        img {
+            flex-shrink: 0;
+            width: 24px;
+            height: 24px;
+        }
+    }
+}
+
+.service-comparison-section__stack-frame {
+    position: relative;
+    width: 100%;
+    // node 806:11861/806:11868 — 772×482.5 reference. No padding here —
+    // the 4px inset is on .stack-image itself (position: absolute, so a
+    // padding declared on this element wouldn't apply to it anyway).
+    aspect-ratio: 772 / 482.5;
+    background: var(--bg-main-surface-2);
+    border: 1px solid var(--bg-main-surface-2);
+    border-radius: 16px;
+
+    // node 806:11868 — the "after" card gets a purple-tinted bezel + glow
+    // shadow the "before" one doesn't (content/solid/accent at 40%/80%
+    // alpha — no sitewide token matches this exact shade+alpha pairing,
+    // so it's hardcoded here rather than forced onto an unrelated token).
+    &--after {
+        background: rgb(137 54 204 / 40%);
+        border-color: rgb(137 54 204 / 80%);
+        box-shadow: 0 2px 24px 0 rgb(105 56 239 / 12%), 0 1px 2px 0 rgb(0 0 0 / 8%);
+    }
+}
+
+.service-comparison-section__stack-image {
+    position: absolute;
+    inset: 4px;
+    display: block;
+    width: calc(100% - 8px);
+    height: calc(100% - 8px);
+    object-fit: cover;
+    border-radius: 12px;
+}

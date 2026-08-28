@@ -20,7 +20,7 @@
             "label": "Show Header",
             "name": "show_header",
             "type": "true_false",
-            "instructions": "The question-mark icon + title row above the list.",
+            "instructions": "Post width: the question-mark icon + title row above the list, inside the card. Full width: a plain centered H2 above the card, matching every other page section's own heading (no icon) - node 806:11724.",
             "default_value": 1,
             "ui": 1
         },
@@ -83,6 +83,17 @@
                     }
                 }
             ]
+        },
+        {
+            "key": "field_faq_load_more",
+            "label": "Load More Button",
+            "name": "load_more",
+            "type": "link",
+            "return_format": "array",
+            "instructions": "Optional - a centered button below the card (node 806:11729). Leave empty to hide it.",
+            "wrapper": {
+                "width": "100"
+            }
         }
     ],
     "location": [

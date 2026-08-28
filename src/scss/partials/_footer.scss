@@ -17,6 +17,17 @@
 
   @media screen and (max-width: variables.$small) {
     padding: 120px 0;
+    // .footer__bg's own inset: 0 -9% is an intentional horizontal bleed
+    // (see its comment) that body's overflow-x: hidden is supposed to
+    // mask — but mobile Safari/Chrome can still rubber-band-scroll a few
+    // px into layout overflow that's merely hidden at the body level,
+    // even though nothing is actually visible there. That's the exact
+    // "small horizontal scroll on mobile" this clips. At this width the
+    // 9% bleed is only ~35px, already mostly dissolved by the 128px blur
+    // radius well before reaching the edge, so a hard clip here reads
+    // the same as the soft falloff — unlike on desktop, where the wider
+    // bleed (up to ~155px) still needs the true no-clip treatment.
+    overflow: hidden;
   }
 }
 

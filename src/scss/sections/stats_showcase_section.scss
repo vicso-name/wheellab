@@ -1,0 +1,461 @@
+@use "../partials/variables";
+
+// Source: WheelLab Website (Figma) — node 527:24777 ("Card") for the
+// static layout; motion reference is a separate Animation.mp4 export, not
+// itself in Figma. See stats_showcase_section.php's header comment and
+// stats_showcase_section.js for the full mechanics writeup. Desktop only
+// for this first iteration (mobile spec to follow).
+
+// Fixed aspect ratio, not content-driven height: every child here
+// (bg/circle/logos/orbit/.inner) is position: absolute, and the orbit's
+// center/radius (stats_showcase_section.js) plus .inner's own vertical
+// position (--stats-text-cy below) are both computed as ratios of this
+// section's OWN measured height — matching the design's fixed 1152×720
+// reference canvas keeps the dome/orbit/text arrangement identical at
+// any viewport width instead of drifting with however tall the text
+// content happens to make a content-driven box.
+.stats-showcase-section {
+    position: relative;
+    overflow: hidden;
+    // Explicit, not just the block-level default: aspect-ratio's
+    // automatic sizing re-derives width from height once max-height
+    // (below) clamps it — without a definite width here, the section
+    // shrinks to whatever 900px × (1152/720) works out to instead of
+    // staying full-bleed. width: 100% pins it to the containing block
+    // regardless of what aspect-ratio/max-height do to height.
+    width: 100%;
+    aspect-ratio: 1152 / 720;
+    min-height: 480px;
+    // aspect-ratio alone has no ceiling — height keeps growing with
+    // width forever, so on very wide viewports (a 2500px+ desktop) the
+    // section becomes far taller than the dome/orbit actually need,
+    // leaving a stretch of plain background to scroll through below
+    // the visible composition. Capping height here lets the section
+    // go wider-than-1152:720 on those screens instead of taller
+    // -than-720 — width stays 100% (full-bleed bg/logos), only height
+    // stops scaling past this point.
+    max-height: 900px;
+    background: var(--bg-main-background);
+
+    // Scoped-down sizes for the stat/title text — smaller than the
+    // sitewide --text-display-1/3 tokens they start from, so only this
+    // section is affected. .mask--stat/.mask--title-*'s own height and
+    // .stats-showcase-section__line's font-size both read from these,
+    // so the mask never falls out of sync with the text it's sized for.
+    //
+    // Fluid (clamp), not a $medium/$small step function: this section's
+    // own HEIGHT is tied to viewport WIDTH continuously via aspect-ratio
+    // above, but a discrete font-size breakpoint at 768px would keep
+    // full-size text active right up until 1px above that — at, e.g.,
+    // 800–970px wide the section has already shrunk close to its
+    // min-height floor while the text was still sized for the 1152px
+    // reference, and the description got clipped by this section's own
+    // overflow: hidden (confirmed live). Scaling continuously with the
+    // same vw the section's own height scales with means there's no
+    // width where text has outgrown the space aspect-ratio left for it.
+    // Values interpolate 56→140px (stat) and 32→84px (title) between
+    // 375px and 1400px viewport width; clamp()'s own min/max hold
+    // beyond that range, matching the section's min-height: 480px /
+    // max-height: 900px floor and ceiling.
+    --stats-stat-size: clamp(56px, 25.27px + 8.2vw, 140px);
+    --stats-title-size: clamp(32px, 12.98px + 5.07vw, 84px);
+}
+
+// ---------------------------------------------------------------------------
+// Background photo + fade — same 79.605% gradient stop used sitewide
+// (single_post_hero, case_study_hero, …). The asset itself already has
+// Figma's own blur baked in (exported pre-rendered, not a live CSS
+// filter) — cheaper than blur()-ing a full-bleed image at runtime.
+// ---------------------------------------------------------------------------
+
+.stats-showcase-section__bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+
+    img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+}
+
+.stats-showcase-section__bg-gradient {
+    position: absolute;
+    inset: 0;
+    // Two stacked fades: the bottom one (2nd layer, Figma's own "Overlay
+    // / Gradient vertical" component, node 527:24858) blends the photo
+    // into the section's own background color, into whatever comes
+    // after. The top one (1st layer) is the same idea mirrored — without
+    // it the photo starts at full strength right at this section's own
+    // top edge, a hard seam against whatever the PREVIOUS section ends
+    // on, instead of easing in from it the same way the bottom eases out.
+    background:
+        linear-gradient(to bottom, var(--bg-main-background) 0%, rgb(4 5 36 / 0%) 15%),
+        linear-gradient(to bottom, rgb(4 5 36 / 0%) 0%, var(--bg-main-background) 79.605%, var(--bg-main-background) 100%);
+}
+
+// node 527:24842 ("Ellipse 9") — the large dome/orbit-platform graphic.
+// Sized as a diameter (2 × orbit radius) and bottom-aligned to the orbit
+// center, both written as px custom properties by stats_showcase_section.js
+// (ResizeObserver-driven — see its header comment) so the dome's silhouette
+// always matches the actual circle the 4 icons travel around, at any
+// viewport size. Until JS has measured the section at least once, the
+// fallback values below approximate the same ~84%-of-height radius so
+// there's no flash of a wildly wrong size.
+.stats-showcase-section__circle {
+    position: absolute;
+    // Above the logo marquee (z-index 1 below) — the dome sits in FRONT
+    // of the scrolling logos, not the other way round.
+    z-index: 2;
+    left: 50%;
+    bottom: calc(100% - var(--stats-orbit-cy, 111%));
+    width: var(--stats-orbit-diameter, 150%);
+    transform: translateX(-50%);
+    pointer-events: none;
+
+    img {
+        display: block;
+        width: 100%;
+        height: auto;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Logo marquee — 4 columns, each rendering the same logo list TWICE back
+// to back so a translateY(0 → -50%) loop is seamless. Columns 1/3 climb,
+// 2/4 descend (the reverse keyframes just start from the opposite end so
+// both directions loop just as seamlessly).
+// ---------------------------------------------------------------------------
+
+.stats-showcase-section__logos {
+    position: absolute;
+    inset: 0;
+    // Behind .stats-showcase-section__circle (z-index 2) — the dome
+    // masks most of the marquee rather than the marquee floating over it.
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    overflow: hidden;
+    opacity: 0.35;
+    pointer-events: none;
+}
+
+.stats-showcase-section__logo-col {
+    display: flex;
+    flex: 1 0 0;
+    flex-direction: column;
+    min-width: 0;
+    // Without this, .logos' default align-items: normal (== stretch
+    // for a flex item with no intrinsic cross-size) stretches this
+    // column to the SECTION's height — the marquee-up/down keyframes'
+    // translateY(-50%) then resolves against THAT stretched box
+    // (percentages on transform: translate are relative to the
+    // element's own border-box, not its overflowing content), landing
+    // partway through a set instead of exactly at the seam between the
+    // two .logo-set copies every loop. flex-start lets the column size
+    // to its real (taller, intentionally overflowing — .logos itself
+    // clips it) content height instead, so -50% lands exactly on one
+    // full .logo-set's height and the loop has nothing to reset out of
+    // alignment on.
+    align-self: flex-start;
+
+    // node 527:24797/24827 ("Logo Group") — the 2nd/4th columns start
+    // offset half a row down, staggering the grid instead of every
+    // column lining up in strict rows.
+    &:nth-child(2),
+    &:nth-child(4) {
+        margin-top: -66px;
+    }
+
+    // 4 columns reads as too busy at mobile widths — keep only the
+    // first pair (one up, one down) instead of cramming all 4 into a
+    // narrow viewport.
+    @media screen and (max-width: variables.$medium) {
+        &:nth-child(3),
+        &:nth-child(4) {
+            display: none;
+        }
+    }
+}
+
+.stats-showcase-section__logo-col--up {
+    animation: stats-showcase-marquee-up 45s linear infinite;
+}
+
+.stats-showcase-section__logo-col--down {
+    animation: stats-showcase-marquee-down 50s linear infinite;
+}
+
+.stats-showcase-section__logo-set {
+    display: flex;
+    flex-shrink: 0;
+    flex-direction: column;
+    gap: 132px;
+    // Trailing space equal to the internal gap — without it, the seam
+    // between this set and the next .logo-set right after it (rendered
+    // back-to-back in .logo-col, for the translateY(0 → -50%) loop to
+    // be seamless — see stats_showcase_section.php's header comment)
+    // sits flush at 0px while every OTHER logo pairing is 132px apart.
+    // The animation itself never skips a frame; what reads as a single
+    // "jerk" once per ~32-36s loop is real content suddenly bunching up
+    // tighter at that one seam, each time it scrolls past. This makes
+    // the rhythm exactly as uniform at the seam as everywhere else, and
+    // keeps translateY(-50%) landing on precisely one set's own height
+    // (image height × 10 + gap × 10, gap counted once per image
+    // including the last) either way, so the wrap itself stays seamless.
+    padding-bottom: 132px;
+}
+
+.stats-showcase-section__logo {
+    display: block;
+    width: 220px;
+    height: auto;
+    flex-shrink: 0;
+}
+
+@keyframes stats-showcase-marquee-up {
+    from {
+        transform: translateY(0);
+    }
+
+    to {
+        transform: translateY(-50%);
+    }
+}
+
+@keyframes stats-showcase-marquee-down {
+    from {
+        transform: translateY(-50%);
+    }
+
+    to {
+        transform: translateY(0);
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Orbit — 4 fixed 3D icons (arrow/gear/coins/chart) sharing one circular
+// path around .stats-showcase-section__circle's center. Position is set
+// entirely by stats_showcase_section.js (translate3d per frame, computed
+// from one shared orbitAngle — see its header comment for the math) —
+// this file only owns each icon's box size. Never add a CSS transition
+// here: JS drives every frame itself (WAAPI/rAF), a competing CSS
+// transition on the same transform would fight it and lag behind.
+// ---------------------------------------------------------------------------
+
+.stats-showcase-section__orbit {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+}
+
+.stats-showcase-section__orbit-icon {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 210px;
+    height: auto;
+    opacity: 0;
+    will-change: transform;
+
+    @media screen and (max-width: variables.$medium) {
+        width: 130px;
+    }
+
+    @media screen and (max-width: variables.$small) {
+        width: 92px;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Content row — center stat/title/description only now; the 4 orbit
+// icons (above) are positioned independently across the full section
+// width, not confined to a column either side of this.
+//
+// Positioned via --stats-text-cy (px, written by stats_showcase_section.js
+// alongside the orbit's own --stats-orbit-cy/--stats-orbit-diameter —
+// same ResizeObserver measurement) rather than normal document flow, so
+// the text always sits at a fixed point relative to the DOME'S OWN
+// geometry — comfortably inside its visible upper arc — regardless of
+// how tall the text content itself happens to be at any given moment
+// (mid slide-transition, a longer/shorter description, …), instead of
+// drifting with the section's content-driven height the old
+// padding-based layout had.
+// ---------------------------------------------------------------------------
+
+.stats-showcase-section__inner {
+    position: absolute;
+    z-index: 4;
+    left: 0;
+    right: 0;
+    top: var(--stats-text-cy, 58%);
+    transform: translateY(-50%);
+    display: flex;
+    justify-content: center;
+    padding: 0 24px;
+}
+
+.stats-showcase-section__content {
+    position: relative;
+    // Explicit width, not just max-width: every descendant down to the
+    // .stats-showcase-section__line elements is position:absolute (out
+    // of flow, by design — see .stats-showcase-section__mask below), so
+    // there is no normal-flow content anywhere in this subtree left to
+    // size a shrink-to-fit flex item from. Without a definite width
+    // here, .content (and everything under it, since .mask's own
+    // width: 100% resolves against IT) collapses to 0.
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    // Applies uniformly between stat / title / description as direct
+    // flex children — deliberately the SMALLER of the two spacings
+    // (stat→title). Title→description gets extra breathing room back
+    // via .mask--description's own margin-top below, since flex gap
+    // can't have two different values on its own.
+    gap: 12px;
+    text-align: center;
+    max-width: 774px;
+}
+
+// Each of the 4 text roles (stat / title line 1 / title line 2 /
+// description) gets its own fixed-height, overflow:hidden mask holding
+// every slide's value for that role stacked absolutely inside —
+// stats_showcase_section.js moves .stats-showcase-section__line
+// elements through it (waiting-below → active → leaving-above) so a
+// slide change reads as a vertical wipe through a mask, never a
+// crossfade. Mask height matches exactly one line's own rendered
+// height (font-size × line-height) so no neighboring line is ever
+// partially visible.
+.stats-showcase-section__mask {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+
+.stats-showcase-section__mask--stat {
+    height: calc(var(--stats-stat-size) * var(--text-display-1-line-height));
+}
+
+.stats-showcase-section__mask--title-1,
+.stats-showcase-section__mask--title-2 {
+    height: calc(var(--stats-title-size) * var(--text-display-3-line-height));
+}
+
+.stats-showcase-section__mask--description {
+    // .content's own gap (12px) is sized for stat→title; this makes up
+    // the difference so title→description keeps its own, larger space
+    // (12px + 20px = the original uniform 32px both pairs used to share).
+    margin-top: 20px;
+
+    // On mobile the title→description gap reads as too loose relative
+    // to stat→title — pull it in closer, keeping just a little more
+    // than .content's own 12px gap instead of the desktop 32px total.
+    @media screen and (max-width: variables.$medium) {
+        margin-top: 4px;
+    }
+    // Two lines' worth on desktop — the description text itself wraps
+    // within the max-width set on .stats-showcase-section__line below.
+    height: calc(var(--text-body-m-size) * var(--text-body-m-line-height) * 2);
+
+    // The same copy commonly wraps to a 3rd line once the available
+    // width drops this far (narrower viewport, same font-size, no
+    // extra max-width squeeze) — a 2-line mask clips/overlaps that
+    // 3rd line against the next slide's incoming text otherwise.
+    @media screen and (max-width: variables.$medium) {
+        height: calc(var(--text-body-m-size) * var(--text-body-m-line-height) * 3);
+    }
+
+    // Below ~360px (iPhone SE / budget-Android class widths) the same
+    // 16px body copy wraps to a 4th line even with the $medium override
+    // above — measured against this section's actual slide copy, the
+    // wrap point sits right at 360px. A fixed line-count mask can never
+    // be proven safe for arbitrary ACF-editor text, but this keeps the
+    // shortest real devices from clipping the content that ships today.
+    @media screen and (width <= 360px) {
+        height: calc(var(--text-body-m-size) * var(--text-body-m-line-height) * 4);
+    }
+}
+
+.stats-showcase-section__title {
+    // Same reasoning as .stats-showcase-section__content's own width:
+    // 100% — a shrink-wrapped flex column whose only children are
+    // width: 100% masks (themselves full of position: absolute lines)
+    // has nothing to size itself from and collapses to 0 without this.
+    width: 100%;
+    margin: 0;
+    // The two masks stack directly (no gap) so lines 1/2 read as one
+    // normal heading's line rhythm — .stats-showcase-section__content's
+    // own gap only applies between stat / title / description as a
+    // whole, not between these two.
+    display: flex;
+    flex-direction: column;
+}
+
+.stats-showcase-section__line {
+    position: absolute;
+    inset: 0;
+    display: block;
+    margin: 0;
+    // Motion-only transition; nothing here changes opacity (see this
+    // rule's spec: the mask + transform alone is what hides a line,
+    // opacity stays 1 throughout).
+    transform: translateY(120%);
+
+    .stats-showcase-section__mask--stat & {
+        font-family: var(--font-family-display);
+        font-weight: var(--font-weight-regular);
+        font-size: var(--stats-stat-size);
+        line-height: var(--text-display-1-line-height);
+        letter-spacing: var(--text-display-1-letter-spacing);
+        color: var(--content-solid-accent-2);
+        text-transform: uppercase;
+    }
+
+    .stats-showcase-section__mask--title-1 &,
+    .stats-showcase-section__mask--title-2 & {
+        font-family: var(--font-family-display);
+        font-weight: var(--font-weight-bold);
+        font-size: var(--stats-title-size);
+        line-height: var(--text-display-3-line-height);
+        letter-spacing: var(--text-display-3-letter-spacing);
+        color: var(--content-main-primary);
+        text-transform: uppercase;
+    }
+
+    .stats-showcase-section__mask--description & {
+        max-width: 600px;
+        margin-inline: auto;
+        font-family: var(--font-family-body);
+        font-size: var(--text-body-m-size);
+        line-height: var(--text-body-m-line-height);
+        color: var(--content-main-secondary);
+    }
+
+    &.is-active {
+        transform: translateY(0);
+    }
+
+    &.is-leaving {
+        transform: translateY(-120%);
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Reduced motion — the marquee stops entirely; stats_showcase_section.js
+// itself checks the same media query to skip the orbit/mask animation
+// work and jump straight to the first state's resting values.
+// ---------------------------------------------------------------------------
+
+@media (prefers-reduced-motion: reduce) {
+    .stats-showcase-section__logo-col--up,
+    .stats-showcase-section__logo-col--down {
+        animation: none;
+    }
+}

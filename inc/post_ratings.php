@@ -20,6 +20,8 @@
  * new vote is actually written.
  */
 
+defined('ABSPATH') || exit;
+
 const WHEELLAB_RATINGS_DB_VERSION = '1.0';
 
 function wheellab_ratings_table_name(): string {

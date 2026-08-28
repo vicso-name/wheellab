@@ -18,6 +18,16 @@
   top: 16px;
   z-index: 100;
   isolation: isolate;
+  transition: transform var(--transition-base) ease;
+
+  // Toggled by stats_showcase_section.js while that section is in
+  // view — gives the section's dome/orbit a bit more headroom instead
+  // of the sticky header sitting over it the whole time. Slides back
+  // down the moment the section leaves the viewport. -120% (not -100%)
+  // clears the header's own box-shadow/glow too, not just its box.
+  &.is-hidden-for-stats-showcase {
+    transform: translateY(-120%);
+  }
 
   @media screen and (max-width: variables.$small) {
     top: 12px;
@@ -551,8 +561,18 @@
 .header__mobile-panel {
   position: fixed;
   inset: 0;
+  // inset: 0's top:0/bottom:0 pairing computes an initial height correctly,
+  // but on mobile Safari/Chrome that height doesn't reliably grow when the
+  // address bar/toolbar later collapses (or shrink when it expands) — the
+  // panel is left sized against a stale viewport snapshot, showing a gap
+  // at the bottom where the page behind it peeks through. An explicit
+  // height in dynamic-viewport units tracks the actual visual viewport
+  // instead and stays correct through that resize. vh first as a fallback
+  // for browsers without dvh support (dvh then overrides it everywhere
+  // that matters).
+  height: 100vh;
+  height: 100dvh;
   z-index: 1;
-  overflow-y: auto;
   // Translucent dark fill + a strong blur of whatever sits behind it.
   // Unlike .header__mega-inner (which dropped backdrop-filter because it
   // sits behind a `transform`-animated ancestor — a known
@@ -561,6 +581,14 @@
   background: var(--bg-inv-surface-2);
   backdrop-filter: blur(60px);
   -webkit-backdrop-filter: blur(60px);
+  // NOT the scrolling element — see .header__mobile-panel-inner below.
+  // Confirmed live: pairing this blur with overflow-y: auto on the SAME
+  // element leaves Chromium's composited paint under-extended near the
+  // bottom few dozen px (swapping the filtered background for a plain
+  // solid color painted the full height correctly; only the filtered
+  // version left a gap there, worse the longer/taller the open accordion
+  // content got). Keeping this element static and moving the scrolling
+  // to a plain, unfiltered child sidesteps the bug entirely.
 
   &[hidden] {
     display: none;
@@ -572,6 +600,8 @@
 }
 
 .header__mobile-panel-inner {
+  height: 100%;
+  overflow-y: auto;
   // top: clears the sticky header bar (top offset 12px + 4px bezel + 64px
   // bar + 4px bezel ≈ 84px, +12px breathing room) now that the panel's own
   // background extends full-screen behind it.
@@ -626,7 +656,10 @@
 }
 
 .header__accordion-panel {
-  padding: 8px 0 8px 8px;
+  // Symmetric — a left-only inset (the original 8px 0 8px 8px) reads as
+  // misaligned once the category pills below sit flush against the
+  // panel's own right edge but 8px shy of its left one.
+  padding: 8px;
 
   &[hidden] {
     display: none;

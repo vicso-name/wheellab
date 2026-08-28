@@ -29,7 +29,6 @@
     "gulp": "^5.0.0",
     "gulp-autoprefixer": "^9.0.0",
     "gulp-clean-css": "^4.3.0",
-    "gulp-concat": "^2.6.1",
     "gulp-if": "^3.0.0",
     "gulp-notify": "^5.0.0",
     "gulp-plumber": "^1.2.1",
@@ -42,8 +41,6 @@
   },
   "dependencies": {
     "del": "^6.1.1",
-    "glightbox": "^3.3.1",
-    "isotope-layout": "^3.0.6",
     "swiper": "^11.2.1"
   }
 }

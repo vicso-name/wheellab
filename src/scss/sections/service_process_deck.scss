@@ -1,0 +1,338 @@
+@use "../partials/variables";
+
+// Source: WheelLab Website (Figma) — node 806:11700 ("Frame"), via
+// get_design_context, cross-checked against a second, more detailed
+// component read (colors/blur-per-step) after the first pass
+// under-matched the source, then tuned once more after THAT pass's
+// added translate over-opened the fan versus the real screenshot (see
+// .service-process-deck__card's own comment). Fanned card deck: the
+// active card sits flat/sharp in front; every other card rotates and
+// blurs more per step away from active (capped at 4 — a 5th+ card
+// beyond that just reuses the same capped look, fully covered by the
+// ones in front anyway), driven entirely by one CSS custom property per
+// card (--deck-offset, written by service_process_deck.js) rather than
+// per-position classes, so the same rule works for any deck size.
+// Rotation is negative in CSS despite Figma's inspector showing positive
+// values — see the PHP template's header comment for why.
+//
+// The decorative corner texture is a simplified reuse of
+// service_feature_cards' own illustration asset, cropped down via a
+// large mask-size — see the PHP template's header comment. No mobile
+// Figma frame was sourced — below $small this drops the fan/rotation/
+// click interaction for a plain stacked list, matching the same
+// "no fancy interaction below 576px" decision already made twice on
+// this page (service_feature_cards, service_comparison_section).
+
+.service-process-deck {
+    position: relative;
+    padding: 96px 0;
+
+    @media screen and (max-width: variables.$medium) {
+        padding: 60px 0;
+    }
+
+    @media screen and (max-width: variables.$small) {
+        padding: 48px 0;
+    }
+}
+
+.service-process-deck__title {
+    max-width: 1000px;
+    margin: 0 0 120px;
+    color: var(--content-main-primary);
+
+    @media screen and (max-width: variables.$medium) {
+        margin-bottom: 64px;
+    }
+
+    @media screen and (max-width: variables.$small) {
+        margin-bottom: 32px;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Deck (desktop/tablet — dropped below $small in favor of __list)
+// ---------------------------------------------------------------------------
+
+.service-process-deck__stage {
+    display: flex;
+    justify-content: center;
+    // Generous side padding, not overflow: hidden — the most-rotated
+    // card's bounding box is noticeably wider than its own 563px (a
+    // rotated tall rectangle's horizontal extent grows with the
+    // rotation), so this needs real room either side rather than
+    // clipping the fan.
+    padding: 0 24px;
+
+    @media screen and (max-width: variables.$small) {
+        display: none;
+    }
+}
+
+.service-process-deck__deck {
+    position: relative;
+    width: 100%;
+    // node 806:11700's own card — 563×792 reference.
+    max-width: 563px;
+    aspect-ratio: 563 / 792;
+}
+
+.service-process-deck__card {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 8px;
+    color: inherit;
+    text-align: left;
+    // node 806:11700 — the OUTER bezel itself is translucent glass
+    // (rgba(255,255,255,0.1)) — this used to live on a separate
+    // absolutely-positioned .card-glass child instead of here, which
+    // read as ".service-process-deck__card has no background" when
+    // inspected directly (it didn't, the child painted it) — moved onto
+    // this element directly so the class that's actually named "card"
+    // is the one that's visibly translucent.
+    background: var(--bg-main-surface-2);
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    border: 1px solid var(--outline-neutral);
+    border-radius: 20px;
+    box-shadow: 0 2px 24px 0 rgb(105 56 239 / 12%), 0 1px 2px -0.5px rgb(0 0 0 / 8%);
+    cursor: pointer;
+    // Recession: rotates/blurs/fades more the further --deck-offset is
+    // from 0 (the active card). JS clamps --deck-offset at 4 before
+    // writing it, so this multiply never needs its own min()/clamp().
+    //
+    // Tuned against the live render (not just derived on paper) through
+    // several misses: pure center rotation alone barely peeks at all
+    // once blurred (the number badge stayed covered); a small ~-8%/step
+    // translateX + opacity fade then covered TOO MUCH of it (only a
+    // corner sliver showing, confirmed against the reference — the next
+    // card's badge needs to read as a whole shape, not a fragment).
+    // -18%/step translateX (close to Figma's own literal per-card
+    // position, X-only — no translateY, which is what actually caused
+    // the earlier "fan too open" look: the Y offset cascaded the whole
+    // stack diagonally downward, opening visible gaps between card
+    // BODIES even though X alone is what the badge needs to clear the
+    // front card's edge) — X-only reproduces the reference's full-badge
+    // peek without that diagonal drift.
+    transform:
+        translateX(calc(var(--deck-offset, 0) * -18%))
+        rotate(calc(var(--deck-offset, 0) * -4deg));
+    // The card immediately behind active (offset 1) stays fully sharp —
+    // no blur at all, per the reference — recession only starts from
+    // offset 2 onward, and gentler than before (1.5px/step, not 2px).
+    filter: blur(calc(max(0, var(--deck-offset, 0) - 1) * 1.5px));
+    opacity: calc(1 - var(--deck-offset, 0) * 0.08);
+    z-index: calc(100 - var(--deck-offset, 0));
+    transition: transform 0.5s cubic-bezier(0.65, 0, 0.35, 1), filter 0.5s cubic-bezier(0.65, 0, 0.35, 1),
+        opacity 0.5s cubic-bezier(0.65, 0, 0.35, 1), background 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+
+    // node 806:11700 — the active card's OUTER bezel tints accent-2 cyan
+    // instead of staying neutral glass.
+    &.is-active {
+        cursor: default;
+        background: var(--bg-ghost-accent-2);
+    }
+}
+
+.service-process-deck__card-inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+    padding: 32px;
+    overflow: hidden;
+    // Translucent, not solid #1d1e39 — a fully opaque fill here made
+    // both this panel AND its own backdrop-filter (below) pointless,
+    // since blurring whatever sits behind a 100%-opaque layer has no
+    // visible effect. This is meant to read as glass, same family as
+    // the outer bezel (.card-glass) it sits on top of.
+    background: rgb(29 30 57 / 85%);
+    backdrop-filter: blur(100px);
+    -webkit-backdrop-filter: blur(100px);
+    border-radius: 16px;
+}
+
+// Decorative corner texture — see the PHP template's header comment for
+// what this actually is (a cropped fragment of service_feature_cards'
+// own illustration asset, not a bespoke "circuit board" graphic).
+// Fixed crop/position on every card, unlike Figma's own per-instance
+// values.
+.service-process-deck__card-texture {
+    position: absolute;
+    z-index: 0;
+    width: 300px;
+    height: 300px;
+    background: var(--content-solid-accent-2);
+    opacity: 0.2;
+    mask-image: url("../../../assets/img/services/process-deck-texture.png");
+    mask-repeat: no-repeat;
+    mask-size: 900px auto;
+    -webkit-mask-image: url("../../../assets/img/services/process-deck-texture.png");
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-size: 900px auto;
+    pointer-events: none;
+
+    // .card-inner clips (overflow: hidden) — small negative offsets
+    // only, just enough to bleed naturally off the corner rather than
+    // sitting fully outside and getting clipped away entirely.
+    &--top {
+        top: -20px;
+        right: -20px;
+        mask-position: -560px -60px;
+        -webkit-mask-position: -560px -60px;
+        transform: rotate(8deg);
+    }
+
+    &--bottom {
+        bottom: -20px;
+        left: -20px;
+        // Same crop as --top (confirmed non-blank) mirrored via rotation
+        // rather than a second guessed offset.
+        mask-position: -560px -60px;
+        -webkit-mask-position: -560px -60px;
+        transform: rotate(188deg);
+    }
+}
+
+.service-process-deck__card-head {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    // node 806:11700 — gap-60 between the number badge and the
+    // title/description block.
+    gap: 60px;
+    width: 100%;
+}
+
+.service-process-deck__card-top,
+.service-process-deck__card-bottom {
+    position: relative;
+    z-index: 1;
+    display: flex;
+}
+
+.service-process-deck__card-top {
+    justify-content: flex-start;
+}
+
+.service-process-deck__card-bottom {
+    justify-content: flex-end;
+}
+
+// node 806:11700 — every number badge gets a subtle "glass" edge
+// highlight: a bright inset line along the top, a faint dark inset line
+// along the bottom. Flat solid fill underneath (NOT a gradient — a
+// prior pass here tried a diagonal gradient-border technique guessed
+// from a zoomed screenshot, which both misread the actual design AND
+// had a real bug: a plain color is only valid as the LAST layer of the
+// `background` shorthand, so putting the fill color first made the
+// whole declaration invalid and dropped — the badges rendered with no
+// background at all).
+.service-process-deck__card-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 80px;
+    padding: 8px 16px;
+    color: var(--content-main-tertiary);
+    text-align: center;
+    background: var(--outline-neutral);
+    border-radius: 12px;
+    box-shadow: inset 0 1px 1px rgb(255 255 255 / 10%), inset 0 -1px 1px rgb(0 0 0 / 5%);
+
+    // node 806:11700's bottom badge is always accent-2 tinted regardless
+    // of active state — only the top one switches on .is-active.
+    &--ghost {
+        color: var(--content-solid-accent-2);
+        background: var(--bg-ghost-accent-2);
+    }
+}
+
+.is-active .service-process-deck__card-top .service-process-deck__card-number {
+    color: var(--content-solid-accent-2);
+    background: var(--bg-ghost-accent-2);
+}
+
+.service-process-deck__card-text {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+}
+
+.service-process-deck__card-heading {
+    color: var(--content-main-primary);
+}
+
+.is-active .service-process-deck__card-heading {
+    color: var(--content-solid-accent-2);
+}
+
+.service-process-deck__card-description {
+    margin: 0;
+    color: var(--content-main-primary);
+}
+
+// ---------------------------------------------------------------------------
+// Mobile (≤$small/576px) — plain stacked list, no fan/rotation/click.
+// ---------------------------------------------------------------------------
+
+.service-process-deck__list {
+    display: none;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    @media screen and (max-width: variables.$small) {
+        display: flex;
+    }
+}
+
+.service-process-deck__list-item {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 24px;
+    background: #1d1e39;
+    border: 1px solid var(--outline-neutral);
+    border-radius: 16px;
+}
+
+.service-process-deck__list-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    color: var(--content-solid-accent-2);
+    background: var(--bg-ghost-accent-2);
+    border-radius: 12px;
+}
+
+.service-process-deck__list-text {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.service-process-deck__list-heading {
+    color: var(--content-solid-accent-2);
+}
+
+.service-process-deck__list-description {
+    margin: 0;
+    color: var(--content-main-primary);
+}
