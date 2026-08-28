@@ -1,20 +1,4 @@
 <?php
-/**
- * ===========================================================
- * ACF Gutenberg Blocks Registration + Early Assets Enqueue
- * ===========================================================
- *
- * Project structure:
- *  PHP: template-parts/sections/{block_name}.php
- *  CSS: build/css/sections/{block_name}.min.css
- *  JS:  build/js/sections/{block_name}.min.js
- *
- * IMPORTANT:
- * - Do NOT use enqueue_style/enqueue_script inside acf_register_block_type
- *   (they output <link> and <script> tags too late — after the <head> section).
- * - Section styles and scripts are enqueued EARLY, based on which blocks
- *   are actually present on the current page.
- */
 
 defined('ABSPATH') || exit;
 
@@ -22,9 +6,7 @@ add_action('acf/init', 'wheellab_register_acf_blocks');
 function wheellab_register_acf_blocks() {
     $blocks = [
         'hero_section',
-        // 'core_benefits',
-        // 'call_to_action',
-        // ...
+
         'reviews_section',
         'contact_section',
         'featured_posts_section',
@@ -46,6 +28,8 @@ function wheellab_register_acf_blocks() {
         'case_study_screens_section',
         'case_study_what_we_did_section',
         'service_hero',
+        'service_manifesto_section',
+        'service_tiles_section',
         'service_feature_cards',
         'service_comparison_section',
         'service_process_deck',
@@ -56,22 +40,13 @@ function wheellab_register_acf_blocks() {
     foreach ($blocks as $block_name) {
         acf_register_block_type([
             'name'            => $block_name,
-            // Converts snake_case slug to Title Case (e.g. hero_section → "Hero Section")
+
             'title'           => ucwords(str_replace('_', ' ', $block_name)),
             'render_template' => "template-parts/sections/{$block_name}.php",
             'category'        => 'smlfy',
             'icon'            => 'admin-customizer',
             'keywords'        => ['section', $block_name],
-            // These are page-section blocks — always full-bleed by design,
-            // never inline content. 'align' + supports.align === ['full']
-            // is what makes WP core wrap the saved block in an
-            // 'alignfull' class on the REAL frontend (not just the
-            // editor) — dropping this during the 2026-08-25 ACF Blocks v3
-            // migration (that cleanup was only ever meant to remove the
-            // now-retired live-preview canvas sizing, not this) silently
-            // shrank every section block down to the theme's normal
-            // (non-full-bleed) content width. Requires
-            // add_theme_support('align-wide') in functions.php.
+
             'align'           => 'full',
             'supports'        => [
                 'align' => ['full'],
@@ -159,11 +134,6 @@ function wheellab_enqueue_detected_block_assets() {
         }
     }
 
-    // template-parts/sections/blog_card.php is a shared partial, not a
-    // block of its own, so it's never in $map above — Featured Posts
-    // Section is its only ACF-block consumer, so piggyback its enqueue on
-    // that block's detection (or on the no-blocks-detected fallback, same
-    // as everything else above).
     $blog_card_css = 'build/css/sections/blog_card.min.css';
     if ((isset($used['acf/featured-posts-section']) || !$found_any)
         && file_exists(get_template_directory() . '/' . $blog_card_css)

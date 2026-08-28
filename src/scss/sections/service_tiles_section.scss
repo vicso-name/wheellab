@@ -1,0 +1,175 @@
+@use "../partials/variables";
+
+// Source: WheelLab Website (Figma) — node 806:11624 ("Tile section"),
+// reusing the same "Case study frame" component (Image variant + Text
+// variant, one Text instance in a highlighted/glow treatment) as
+// Case Study Section. See the PHP template's own header comment for
+// why the Text variant's arrow icon isn't reproduced here.
+
+.service-tiles-section {
+    padding: 120px 0;
+
+    @media screen and (max-width: variables.$medium) {
+        padding: 60px 0;
+    }
+}
+
+.service-tiles-section__header {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 1000px;
+    margin-bottom: 64px;
+
+    @media screen and (max-width: variables.$medium) {
+        margin-bottom: 40px;
+    }
+}
+
+.service-tiles-section__title {
+    color: var(--content-main-primary);
+}
+
+.service-tiles-section__description {
+    margin: 0;
+    color: var(--content-main-secondary);
+}
+
+.service-tiles-section__grid {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.service-tiles-section__row {
+    display: flex;
+    gap: 24px;
+
+    @media screen and (max-width: variables.$medium) {
+        flex-direction: column;
+    }
+}
+
+// Each side gets an equal share when both are present; if one is
+// missing (e.g. the highlighted card has no title yet, or no small
+// photo is uploaded), the remaining child's own flex: 1 0 0 just fills
+// the full row width on its own.
+.service-tiles-section__row--bottom > .service-tiles-section__tile {
+    flex: 1 0 0;
+    min-width: 0;
+}
+
+.service-tiles-section__stack {
+    display: flex;
+    flex: 1 0 0;
+    flex-direction: column;
+    gap: 24px;
+    min-width: 0;
+}
+
+// ---------------------------------------------------------------------------
+// Shared card shell — the outer "Case study frame" recipe reused by both
+// the photo tiles and the text tiles: 8px padding, surface-2 bg,
+// neutral outline, 20px radius. The highlighted card overrides the
+// background/border below.
+// ---------------------------------------------------------------------------
+
+.service-tiles-section__tile {
+    padding: 8px;
+    background: var(--bg-main-surface-2);
+    border: 1px solid var(--outline-neutral);
+    border-radius: 20px;
+}
+
+// ---------------------------------------------------------------------------
+// Photo tiles — node …;443:4335 ("Image"). Large = 756×584, small =
+// 756×236 (client rounded this to the outer frame's own 772px width —
+// "772×236"); both figures fill the row height together via the row's
+// own default align-items: stretch, so mismatched real-photo heights
+// still line up edge to edge (object-fit: cover absorbs the crop).
+// ---------------------------------------------------------------------------
+
+.service-tiles-section__tile--photo {
+    display: block;
+    margin: 0;
+
+    img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        background: var(--bg-main-surface-1);
+        border-radius: 12px;
+    }
+}
+
+.service-tiles-section__tile--large {
+    flex: 1 0 0;
+    min-width: 0;
+
+    img {
+        aspect-ratio: 756 / 584;
+    }
+}
+
+.service-tiles-section__tile--small img {
+    aspect-ratio: 756 / 236;
+}
+
+// ---------------------------------------------------------------------------
+// Text tiles — title + description, no icon/link (see PHP header
+// comment). Reuses the same title/description color recipe as the
+// sitewide Tile Section block (tile_section.scss).
+// ---------------------------------------------------------------------------
+
+.service-tiles-section__tile--text {
+    display: flex;
+}
+
+.service-tiles-section__tile-inner {
+    position: relative;
+    display: flex;
+    flex: 1 0 0;
+    flex-direction: column;
+    gap: 16px;
+    min-width: 0;
+    padding: 32px;
+    overflow: hidden;
+    background: var(--bg-main-surface-2-light);
+    border-radius: 16px;
+}
+
+.service-tiles-section__tile-title {
+    position: relative;
+    color: var(--content-solid-accent-2);
+}
+
+.service-tiles-section__tile-description {
+    position: relative;
+    margin: 0;
+    color: var(--content-main-primary);
+}
+
+// node …;806:11621 — the one Text-variant instance styled as a
+// highlighted callout: accent-tinted ghost background/border instead
+// of the plain surface-2 shell, plus a blurred ambient glow behind the
+// copy (same reused glow asset/recipe as Domains/Tile Section's own
+// card glow — card-glow.png via mix-blend-mode: lighten).
+.service-tiles-section__tile--accent {
+    background: var(--bg-ghost-accent-2);
+    border-color: var(--outline-accent-2);
+    box-shadow: 0 2px 24px 0 rgb(105 56 239 / 12%), 0 1px 2px -0.5px rgb(0 0 0 / 8%);
+}
+
+.service-tiles-section__tile-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 160%;
+    max-width: none;
+    opacity: 0.5;
+    mix-blend-mode: lighten;
+    filter: blur(40px);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}

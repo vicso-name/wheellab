@@ -1,0 +1,155 @@
+{
+    "key": "group_service_tiles_section",
+    "title": "Service Tiles Section",
+    "fields": [
+        {
+            "key": "field_sts_title",
+            "label": "Title",
+            "name": "title",
+            "type": "text",
+            "instructions": "Optional — hidden if left empty.",
+            "wrapper": {
+                "width": "100"
+            }
+        },
+        {
+            "key": "field_sts_description",
+            "label": "Description",
+            "name": "description",
+            "type": "textarea",
+            "rows": 3,
+            "instructions": "Optional — hidden if left empty.",
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_sts_title",
+                        "operator": "!=empty"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "100"
+            }
+        },
+        {
+            "key": "field_sts_tile_large",
+            "label": "Large Photo",
+            "name": "tile_large",
+            "type": "image",
+            "return_format": "array",
+            "preview_size": "medium",
+            "required": 1,
+            "instructions": "Top-left tile. Best-fit image ratio ~756×584 (landscape).",
+            "wrapper": {
+                "width": "50"
+            }
+        },
+        {
+            "key": "field_sts_tile_small",
+            "label": "Small Photo",
+            "name": "tile_small",
+            "type": "image",
+            "return_format": "array",
+            "preview_size": "medium",
+            "instructions": "Bottom-right tile. Best-fit image ratio ~772×236 (wide strip).",
+            "wrapper": {
+                "width": "50"
+            }
+        },
+        {
+            "key": "field_sts_card_1_title",
+            "label": "Card 1 Title",
+            "name": "card_1_title",
+            "type": "text",
+            "instructions": "Top-right column, stacked (1 of 3).",
+            "wrapper": {
+                "width": "50"
+            }
+        },
+        {
+            "key": "field_sts_card_1_description",
+            "label": "Card 1 Description",
+            "name": "card_1_description",
+            "type": "textarea",
+            "rows": 2,
+            "wrapper": {
+                "width": "50"
+            }
+        },
+        {
+            "key": "field_sts_card_2_title",
+            "label": "Card 2 Title",
+            "name": "card_2_title",
+            "type": "text",
+            "instructions": "Top-right column, stacked (2 of 3).",
+            "wrapper": {
+                "width": "50"
+            }
+        },
+        {
+            "key": "field_sts_card_2_description",
+            "label": "Card 2 Description",
+            "name": "card_2_description",
+            "type": "textarea",
+            "rows": 2,
+            "wrapper": {
+                "width": "50"
+            }
+        },
+        {
+            "key": "field_sts_card_3_title",
+            "label": "Card 3 Title",
+            "name": "card_3_title",
+            "type": "text",
+            "instructions": "Top-right column, stacked (3 of 3).",
+            "wrapper": {
+                "width": "50"
+            }
+        },
+        {
+            "key": "field_sts_card_3_description",
+            "label": "Card 3 Description",
+            "name": "card_3_description",
+            "type": "textarea",
+            "rows": 2,
+            "wrapper": {
+                "width": "50"
+            }
+        },
+        {
+            "key": "field_sts_accent_title",
+            "label": "Highlighted Card Title",
+            "name": "accent_title",
+            "type": "text",
+            "instructions": "Bottom-left, highlighted/glow card.",
+            "wrapper": {
+                "width": "50"
+            }
+        },
+        {
+            "key": "field_sts_accent_description",
+            "label": "Highlighted Card Description",
+            "name": "accent_description",
+            "type": "textarea",
+            "rows": 2,
+            "wrapper": {
+                "width": "50"
+            }
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "block",
+                "operator": "==",
+                "value": "acf/service-tiles-section"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "active": true
+}
