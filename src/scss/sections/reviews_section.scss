@@ -1,11 +1,5 @@
 @use "../partials/variables";
 
-// Source: WheelLab Website (Figma) — node 527:28152 (desktop), node
-// 758:47710 (mobile testimonial content — confirms the quote/meta
-// typography is identical to desktop at every size, only the slide width
-// changes). Section padding-y and the $large step aren't spec'd for
-// mobile/tablet — still a reasonable fallback, not a literal Figma value.
-
 .reviews-section {
     padding: 160px 0;
     overflow: hidden;
@@ -19,8 +13,6 @@
     }
 
     &__swiper {
-        // Full-bleed on purpose: Figma clips the peeking side slides at the
-        // section's own edges, not at .container's 1568px measure.
         margin-bottom: 80px;
 
         @media screen and (max-width: variables.$medium) {
@@ -39,10 +31,6 @@
         gap: 24px;
     }
 }
-
-// ---------------------------------------------------------------------------
-// Slide
-// ---------------------------------------------------------------------------
 
 .reviews-section__slide {
     display: flex;
@@ -64,9 +52,6 @@
         width: 600px;
     }
 
-    // node 758:47710's testimonial content is 353px wide inside a 393px
-    // mobile frame — a 20px gutter each side, not the previously guessed
-    // 48px.
     @media screen and (max-width: variables.$small) {
         width: calc(100vw - 40px);
     }
@@ -114,10 +99,6 @@
     background: var(--content-main-tertiary);
     transform: rotate(45deg);
 }
-
-// ---------------------------------------------------------------------------
-// Pagination arrows
-// ---------------------------------------------------------------------------
 
 .reviews-section__nav {
     display: flex;

@@ -1,8 +1,5 @@
 @use "../partials/variables";
 
-// Source: WheelLab Website (Figma) — node 527:31672 ("Container").
-// Desktop only for this first iteration (mobile spec to follow).
-
 .case-study-quote-section {
     padding: 160px 0;
 
@@ -21,15 +18,6 @@
     align-items: center;
     gap: 32px;
     text-align: center;
-
-    // ---------------------------------------------------------------
-    // Blur-in-on-scroll reveal — case_study_quote_section.js adds
-    // .is-visible via IntersectionObserver once ~30% of this block has
-    // scrolled into view (same pattern as Domains Section's own card
-    // reveal, domains_section.js). Skipped entirely for
-    // prefers-reduced-motion users — the script adds .is-visible
-    // immediately in that case, so this transition never actually runs.
-    // ---------------------------------------------------------------
     opacity: 0;
     filter: blur(20px);
     transform: translateY(24px);

@@ -1,10 +1,3 @@
-/*** Funnel Display ***/
-// Self-hosted from Google Fonts (OFL). Google does not publish a distinct
-// Bold static instance yet — FunnelDisplay-Bold.woff2 currently ships the
-// same bytes as Regular. No Cyrillic glyphs are available for this family;
-// swap in real files (e.g. exported from Figma) if the design needs true
-// Bold weight or Cyrillic display text.
-
 @font-face {
     font-family: 'Funnel Display';
     src: url('../../fonts/funnel-display/FunnelDisplay-Regular.woff2') format('woff2');
@@ -20,9 +13,6 @@
     font-style: normal;
     font-display: swap;
 }
-
-/*** Inter ***/
-// Self-hosted from Google Fonts (OFL), split by script via unicode-range.
 
 @font-face {
     font-family: 'Inter';

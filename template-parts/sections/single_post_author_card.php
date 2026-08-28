@@ -1,21 +1,4 @@
 <?php
-/**
- * Section: Single Post — Author + Taxonomy Card
- * Used by: single.php only (not an ACF block — reads post/taxonomy/user
- * data directly, same reasoning as single_post_hero.php).
- *
- * The taxonomy tags row loops every taxonomy registered for the 'post'
- * post type EXCEPT 'category' (post_tag, and any custom ones registered
- * later) — single_post_hero.php already shows categories up top, so
- * repeating them here would just duplicate those same pills; this
- * instead surfaces whatever else the post is tagged with. The whole row
- * (divider included) is omitted if the post has no terms in any of
- * those other taxonomies, per spec.
- *
- * Source: WheelLab Website (Figma) — node 581:15436 (desktop),
- * node 617:14281 (mobile).
- * Assets: build/css/sections/single_post_author_card.min.css
- */
 
 $post_id = get_the_ID();
 
@@ -97,7 +80,7 @@ $linkedin_icon_url  = esc_url(wheellab_asset_url('assets/img/icons/linkedin.svg'
                         <img class="svg single-post-author__stat-icon" src="<?php echo $clock_icon_url; ?>" alt="">
                         <?php
                         printf(
-                            /* translators: %d: reading time in minutes */
+
                             esc_html(_n('%d min', '%d min', $reading_time, 'wheellab')),
                             (int) $reading_time
                         );
@@ -108,7 +91,7 @@ $linkedin_icon_url  = esc_url(wheellab_asset_url('assets/img/icons/linkedin.svg'
                         <img class="svg single-post-author__stat-icon" src="<?php echo $eye_icon_url; ?>" alt="">
                         <?php
                         printf(
-                            /* translators: %s: formatted view count */
+
                             esc_html(_n('%s view', '%s views', $views, 'wheellab')),
                             esc_html(number_format_i18n($views))
                         );

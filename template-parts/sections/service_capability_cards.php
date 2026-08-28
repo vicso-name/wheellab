@@ -1,36 +1,4 @@
 <?php
-/**
- * Block: Service Capability Cards
- * Registered as: acf/service-capability-cards
- * Source: WheelLab Website (Figma) — node 806:11709 ("Frame").
- *
- * DOM/CSS is a direct copy of Solutions Section's own card recipe
- * (.solutions-section__card > __card-bezel > __card-inner > glow pair
- * + __card-info + __card-image), same class structure and nesting,
- * same hover targets/values, byte-identical corner arrow SVG — not
- * re-derived. Only real differences from Solutions Section: this is a
- * PLAIN wrapping row on this page, not a Swiper slider (no
- * slide/nav-group/swiper wrapper — the Figma "Container" itself is
- * flex-wrap), and card height is this design's own 640px, not
- * Solutions Section's 720px. No mobile Figma frame was given for this
- * node (unlike Solutions Section's sourced 758:61077), so mobile below
- * just collapses to a single auto-height column instead of replicating
- * that other block's specific mobile crop/tint treatment.
- *
- * Each card's illustration is a bespoke per-card upload (no shared
- * fallback, unlike service_industry_tiles' icon — these are real
- * commissioned art, not a generic repeated placeholder). Link is
- * optional: the corner arrow only renders when a link is set, and the
- * card itself is a plain <div> (not clickable) when it isn't.
- *
- * Ambient glow pair reuses this theme's existing shared glow texture
- * (assets/img/contact/glow.jpg — same one Solutions Section's own card
- * glow already uses) rather than the two new bg-up/bg-down assets
- * Figma exports for this node, matching the simplification precedent
- * used throughout this page's other decorative glows.
- *
- * Assets: build/css/sections/service_capability_cards.min.css
- */
 
 $title = get_field('title') ?: '';
 $cards = get_field('cards') ?: [];

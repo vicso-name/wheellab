@@ -1,13 +1,4 @@
 <?php
-/**
- * Section: Single Post Hero
- * Used by: single.php only (a real WP post, not an ACF block — reads
- * post/taxonomy/user data directly, same reasoning as author_hero.php).
- *
- * Source: WheelLab Website (Figma) — node 618:10350 (background +
- * gradient overlay), node 527:28732 (tags/title/author/meta content).
- * Assets: build/css/sections/single_post_hero.min.css
- */
 
 $post_categories = get_the_category();
 $tags = array_filter($post_categories, static fn($cat) => $cat->slug !== 'uncategorized');
@@ -84,7 +75,7 @@ $eye_icon_url       = esc_url(wheellab_asset_url('assets/img/icons/eye.svg'));
                             <img class="svg single-post-hero__meta-icon" src="<?php echo $clock_icon_url; ?>" alt="">
                             <?php
                             printf(
-                                /* translators: %d: reading time in minutes */
+
                                 esc_html(_n('%d min', '%d min', $reading_time, 'wheellab')),
                                 (int) $reading_time
                             );
@@ -95,7 +86,7 @@ $eye_icon_url       = esc_url(wheellab_asset_url('assets/img/icons/eye.svg'));
                             <img class="svg single-post-hero__meta-icon" src="<?php echo $eye_icon_url; ?>" alt="">
                             <?php
                             printf(
-                                /* translators: %s: formatted view count */
+
                                 esc_html(_n('%s view', '%s views', $views, 'wheellab')),
                                 esc_html(number_format_i18n($views))
                             );

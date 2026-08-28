@@ -1,11 +1,5 @@
 @use "../partials/variables";
 
-// Structurally/visually the same slider shell as featured_posts_section.scss
-// (node 527:24951) — this is a deliberate copy, not a shared partial, same
-// reasoning as that file's own "kept as its own copy" notes (.header__cta /
-// .btn-gradient, .reviews-section__nav). The only real difference is no
-// description text under the title.
-
 .single-post-related {
     position: relative;
     overflow: hidden;
@@ -101,10 +95,6 @@
     }
 }
 
-// ---------------------------------------------------------------------------
-// Slider
-// ---------------------------------------------------------------------------
-
 .single-post-related__swiper {
     $inset: max(var(--container-padding), calc((100% - var(--container-max-width)) / 2 + var(--container-padding)));
 
@@ -124,8 +114,6 @@
         width: calc(100vw - 88px);
     }
 
-    // Same fixed-3-lines title reasoning as .featured-posts-section__slide
-    // — scoped to the slider only, blog_card.scss stays untouched.
     .blog-card__title {
         display: -webkit-box;
         min-height: 108px;

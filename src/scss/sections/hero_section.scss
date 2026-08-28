@@ -1,34 +1,10 @@
 @use "../partials/variables";
 
-// Source: WheelLab Website (Figma) — node 527:24692 ("Card", desktop),
-// node 527:24696 ("Content", desktop text + buttons), node 758:48269
-// ("Header item", mobile — only its "Center" content block, 758:48274,
-// is this section's concern; the floating header bar above it belongs to
-// the site's persistent header component, not this block), via
-// get_design_context + get_variable_defs.
-//
-// The background is video-first per explicit instruction, not sourced
-// from Figma (which only has a static 3D render as a placeholder) — see
-// the PHP template's header comment. $medium (768px, tablet) has no
-// sourced frame, so it's a reasonable transitional fallback between the
-// desktop and the sourced $small(576px)/393px mobile mock — chosen so no
-// width in between snaps awkwardly, per explicit instruction to check
-// every intermediate screen too.
-
 .hero {
     position: relative;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    // .header (_header.scss) is `position: sticky` and reserves its own
-    // ~96px of flow height above this section by default (8px bezel
-    // padding × 2 + .header__bar-inner's 80px) — that gap read as a hard
-    // seam between the header and the video instead of the header
-    // floating transparently over it. Pulling the section up by that same
-    // amount (and growing min-height to match, so the bottom edge lands
-    // back where it started) puts the video's own top edge flush with
-    // the true viewport top, with the header's glass pill stacking above
-    // it via z-index (_header.scss) instead of sitting in its own band.
     margin-top: -96px;
     min-height: calc(100vh + 96px);
     padding: 24px 0 64px;
@@ -38,12 +14,7 @@
         padding: 24px 0 40px;
     }
 
-    // node 758:48274 ("Center") — a uniform 20px inset on every side,
-    // replacing both this section's own vertical padding and .container's
-    // global horizontal-only padding.
     @media screen and (max-width: variables.$small) {
-        // Header shrinks to a 72px reserved height at this breakpoint
-        // (.header__bar-inner: 64px + .header__bar padding: 4px × 2).
         margin-top: -72px;
         min-height: calc(100vh + 72px);
         padding: 0;
@@ -53,10 +24,6 @@
         }
     }
 }
-
-// ---------------------------------------------------------------------------
-// Background (video-first; poster/image fallback)
-// ---------------------------------------------------------------------------
 
 .hero__background {
     position: absolute;
@@ -73,9 +40,6 @@
     object-fit: cover;
 }
 
-// node 527:24695 ("Background Element") — bottom-anchored fade into the
-// page background so the content stays readable over the video/image
-// and the section blends into whatever follows it.
 .hero__background-overlay {
     position: absolute;
     right: 0;
@@ -85,20 +49,11 @@
     background: linear-gradient(to bottom, transparent 0%, var(--bg-main-background) 79.605%, var(--bg-main-background) 100%);
     pointer-events: none;
 
-    // node 758:48271 (mobile "Gradient") — the same 0%/79.605%/100% fade
-    // stretches across the FULL image height here, not just the bottom
-    // half like desktop, confirmed via get_design_context (inset-0
-    // instead of a bottom-anchored box) — a taller, narrower crop needs
-    // the whole frame darkened, not just its lower half.
     @media screen and (max-width: variables.$small) {
         top: 0;
         height: 100%;
     }
 }
-
-// ---------------------------------------------------------------------------
-// Content
-// ---------------------------------------------------------------------------
 
 .hero__content {
     position: relative;
@@ -113,9 +68,6 @@
         align-items: flex-start;
     }
 
-    // node 758:48274 ("Center") — a single flat 20px rhythm between
-    // title/description/buttons, instead of desktop's 24px text-block
-    // gap plus a separate 24px gap to the button group.
     @media screen and (max-width: variables.$small) {
         gap: 20px;
     }
@@ -135,28 +87,13 @@
 
 .hero__title {
     margin: 0;
-    // Overrides the global `h1,h2,h3,h4 { color: var(--c-text); }` rule in
-    // _general.scss — that's the boilerplate's leftover dark placeholder
-    // color (#333333), not usable on this dark theme. Only the first
-    // (white) span needs this; .hero__title-accent below sets its own.
     color: var(--content-main-primary);
-    // Fluid scale between the two sourced sizes instead of a hard
-    // breakpoint jump — get_variable_defs confirms 40px/40px at the
-    // 393px mobile mock (node 758:48279) vs display-2's 120px/120px on
-    // desktop, so every width in between scales smoothly rather than
-    // snapping. line-height (1, unitless) and letter-spacing (-1px,
-    // fixed) already match at both ends per the same lookup, so neither
-    // needs its own override here.
     font-size: clamp(40px, 6vw + 16px, 120px);
 }
 
 .hero__title-accent {
     color: var(--content-solid-accent-2);
 
-    // node 758:48279 (mobile "Title big") — the whole headline is plain
-    // white here, confirmed via get_design_context (one uncolored text
-    // node, not the two desktop spans) — not a cropped-out accent color,
-    // an intentional mobile simplification.
     @media screen and (max-width: variables.$small) {
         color: inherit;
     }
@@ -166,9 +103,7 @@
     max-width: 673px;
     margin: 0;
     color: var(--content-main-secondary);
-    // .body-m's own $small override (16px/24px, in _tokens.scss) already
-    // matches node 758:48331's resolved mobile size exactly — confirmed
-    // via get_variable_defs, no extra override needed here.
+
 }
 
 .hero__buttons {
@@ -181,32 +116,16 @@
         width: 100%;
     }
 
-    // node 758:48913 ("Actions Group") — buttons go from side-by-side to
-    // a full vertical stack, each full-width.
     @media screen and (max-width: variables.$small) {
         flex-flow: column nowrap;
     }
 
-    // Both button components are shared/reused elsewhere (.btn-gradient
-    // by the header CTA and blog's "View more"; .button-text-m
-    // globally), so their mobile-only sizing is scoped through this
-    // ancestor rather than touching those classes directly.
     @media screen and (max-width: variables.$small) {
         .btn-gradient,
         .hero__btn-secondary {
             width: 100%;
         }
 
-        // node 758:48923 — the primary button's outer frame is forced to
-        // 56px here (unlike its own content-driven ~64px, which is what
-        // the secondary button next to it still naturally comes out to)
-        // — align-items: stretch (the flex default, already in play via
-        // .btn-gradient's display: inline-flex) compresses
-        // .btn-gradient__inner's height to fit with no extra rule, but
-        // width along the main axis doesn't auto-grow the same way — the
-        // outer frame stretching to 100% left the inner gradient pill at
-        // its own natural content width otherwise, showing the dark hero
-        // background through the gap.
         .btn-gradient {
             height: 56px;
         }
@@ -221,13 +140,6 @@
         }
     }
 }
-
-// ---------------------------------------------------------------------------
-// Secondary button ("See our Services") — same two-layer glass-frame
-// recipe as .btn-gradient (src/scss/partials/_general.scss), but without
-// its shine-line pseudo-elements (Figma's secondary variant doesn't have
-// them) and with its own bordered, tinted inner pill.
-// ---------------------------------------------------------------------------
 
 .hero__btn-secondary {
     display: inline-flex;
@@ -255,11 +167,6 @@
     padding: 16px 24px;
     color: var(--label-accent);
     white-space: nowrap;
-    // Figma stacks the purple-alpha gradient on top of a solid white
-    // fill (exported as its own flat `linear-gradient(90deg, white,
-    // white)` layer) — background-color underneath achieves the same
-    // pale lavender-white pill. Without it, this showed the dark hero
-    // background bleeding through the semi-transparent gradient instead.
     background-color: #fff;
     background-image: linear-gradient(180deg, var(--color-primary-alpha-30) 0%, var(--color-primary-alpha-10) 100%);
     border: 1px solid rgb(255 255 255 / 32%);

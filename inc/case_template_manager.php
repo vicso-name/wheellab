@@ -1,27 +1,6 @@
 <?php
-/**
- * Case Study CPT — Default Block Template Manager
- *
- * Lets whoever manages the site define the default Gutenberg block
- * structure for new Case Study posts via a settings page, instead of an
- * editor having to remember and re-add all 11 blocks by hand every time.
- * Pattern ported from the lionwood project's own *_template_manager.php
- * files (inc/case_template_manager.php, inc/service_template_manager.php,
- * etc.) — same shape, wheellab_ prefixed, one CPT (case_study) for now.
- *
- * A hidden "template post" (its own, non-public `case_template` CPT) is
- * edited in the normal block editor; its blocks are parsed and injected
- * into case_study's own `template` registration argument via
- * register_post_type_args — the same native WP mechanism the block
- * editor already uses to pre-fill a brand new post.
- */
 
 defined('ABSPATH') || exit;
-
-
-/* ─────────────────────────────────────────────
-   1. Hidden CPT to store the template
-   ───────────────────────────────────────────── */
 
 add_action('init', function () {
     register_post_type('case_template', [
@@ -39,11 +18,6 @@ add_action('init', function () {
     ]);
 });
 
-
-/* ─────────────────────────────────────────────
-   2. Settings page under Case Studies menu
-   ───────────────────────────────────────────── */
-
 add_action('admin_menu', function () {
     add_submenu_page(
         'edit.php?post_type=case_study',
@@ -54,7 +28,6 @@ add_action('admin_menu', function () {
         'wheellab_render_case_template_settings_page'
     );
 });
-
 
 function wheellab_render_case_template_settings_page(): void {
     $template_post_id = wheellab_get_or_create_case_template_post();
@@ -183,11 +156,6 @@ function wheellab_render_case_template_settings_page(): void {
     <?php
 }
 
-
-/* ─────────────────────────────────────────────
-   3. Get or create the template post
-   ───────────────────────────────────────────── */
-
 function wheellab_get_or_create_case_template_post(): int {
     $post_id = (int) get_option('wheellab_case_template_post_id', 0);
 
@@ -207,15 +175,6 @@ function wheellab_get_or_create_case_template_post(): int {
     return $post_id;
 }
 
-
-/* ─────────────────────────────────────────────
-   4. Hardcoded default — single case block order
-   Matches the block order built out on the Royalbet case study
-   (post 135) 2026-08-27/28: Hero, About, Quote, Showcase, CTA Banner,
-   Tabs, Screens, What We Did, Stats Showcase, then the "other cases"
-   slider and Contact to close the page out.
-   ───────────────────────────────────────────── */
-
 function wheellab_get_case_default_template_content(): string {
     return <<<'BLOCKS'
 <!-- wp:acf/case-study-hero {"mode":"edit"} /-->
@@ -231,11 +190,6 @@ function wheellab_get_case_default_template_content(): string {
 <!-- wp:acf/contact-section {"mode":"edit"} /-->
 BLOCKS;
 }
-
-
-/* ─────────────────────────────────────────────
-   5. Parse block content → template array
-   ───────────────────────────────────────────── */
 
 function wheellab_case_blocks_to_template_array(string $content): array {
     $parsed   = parse_blocks($content);
@@ -264,11 +218,6 @@ function wheellab_case_blocks_to_template_array(string $content): array {
     return $template;
 }
 
-
-/* ─────────────────────────────────────────────
-   6. Inject template into Case Study CPT args
-   ───────────────────────────────────────────── */
-
 add_filter('register_post_type_args', function (array $args, string $post_type): array {
     if ($post_type !== 'case_study') {
         return $args;
@@ -290,11 +239,6 @@ add_filter('register_post_type_args', function (array $args, string $post_type):
     return $args;
 }, 20, 2);
 
-
-/* ─────────────────────────────────────────────
-   7. Allow all blocks in the template editor
-   ───────────────────────────────────────────── */
-
 add_filter('allowed_block_types_all', function ($allowed, $ctx) {
     if (isset($ctx->post) && $ctx->post->post_type === 'case_template') {
         return true;
@@ -302,22 +246,12 @@ add_filter('allowed_block_types_all', function ($allowed, $ctx) {
     return $allowed;
 }, 10, 2);
 
-
-/* ─────────────────────────────────────────────
-   8. Force edit mode on every save of the template post
-   ───────────────────────────────────────────── */
-
 add_filter('wp_insert_post_data', function (array $data): array {
     if ($data['post_type'] === 'case_template' && !empty($data['post_content'])) {
         $data['post_content'] = wheellab_inject_edit_mode($data['post_content']);
     }
     return $data;
 }, 10, 1);
-
-
-/* ─────────────────────────────────────────────
-   8b. Auto-fix existing template post on admin init
-   ───────────────────────────────────────────── */
 
 add_action('admin_init', function (): void {
     $tid = (int) get_option('wheellab_case_template_post_id', 0);
@@ -334,11 +268,6 @@ add_action('admin_init', function (): void {
     }
 });
 
-
-/* ─────────────────────────────────────────────
-   9. Restrict template editing to admins only
-   ───────────────────────────────────────────── */
-
 add_filter('user_has_cap', function (array $allcaps, array $caps, array $args): array {
     if (
         isset($args[0]) &&
@@ -353,14 +282,6 @@ add_filter('user_has_cap', function (array $allcaps, array $caps, array $args): 
     }
     return $allcaps;
 }, 10, 3);
-
-
-/* ─────────────────────────────────────────────
-   10. Shared helper — force every acf/* block (recursively, through
-   inner blocks) into "edit" mode, so a post pre-filled from this
-   template shows each block's real edit form immediately instead of
-   ACF Blocks v3's collapsed preview card.
-   ───────────────────────────────────────────── */
 
 function wheellab_inject_edit_mode(string $content): string {
     $blocks = parse_blocks($content);
@@ -379,11 +300,6 @@ function wheellab_inject_edit_mode(string $content): string {
 
     return serialize_blocks($add_edit_mode($blocks));
 }
-
-
-/* ─────────────────────────────────────────────
-   11. Backfill helpers
-   ───────────────────────────────────────────── */
 
 function wheellab_get_empty_case_post_ids(): array {
     $posts = get_posts([

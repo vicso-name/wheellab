@@ -1,27 +1,4 @@
 <?php
-/**
- * Section: Single Post — Read More (related posts)
- * Used by: single.php only. Not an ACF block — a per-post settings
- * group on the post edit screen instead (acf-json/group_single_post_related.json),
- * since this always renders automatically rather than being manually
- * inserted into the content, matching single_post_rating.php /
- * single_post_author_card.php's reasoning.
- *
- * Structurally and visually the same component as
- * template-parts/sections/featured_posts_section.php (node 527:24951) —
- * same header/nav/swiper/blog_card markup and CSS — just without a
- * description field, and sourced from per-post fields instead of block
- * fields. Sits BELOW .single-post-body as its own full-width section
- * (.container, 1568px), not inside the article/sidebar layout.
- *
- * "show_related_posts" defaults to true even for posts saved before this
- * field existed — ACF's own default_value only pre-fills the admin form,
- * get_field() returns '' (not the default) for a value that was never
- * actually saved, so that has to be handled explicitly below.
- *
- * Assets: build/css/sections/single_post_related.min.css
- *         build/js/sections/single_post_related.min.js
- */
 
 $post_id = get_the_ID();
 
@@ -87,7 +64,7 @@ $chevron_right_url = esc_url(wheellab_asset_url('assets/img/icons/chevron-right.
         </div>
     </div>
 
-    <?php // Full-bleed on purpose, same reasoning as .featured-posts-section__swiper. ?>
+    <?php ?>
     <div class="single-post-related__swiper swiper">
         <div class="swiper-wrapper">
             <?php while ($posts_query->have_posts()) : $posts_query->the_post(); ?>

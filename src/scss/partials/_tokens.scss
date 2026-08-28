@@ -1,53 +1,16 @@
-// =============================================================
-// Design Tokens — single source of truth for all design values
-// =============================================================
-//
-// All values are derived from actual usage in the codebase.
-// Do NOT add values that are not yet used — add them when you need them.
-//
-// Usage in CSS:   color: var(--color-primary);
-// Usage in SCSS:  Use $variables from _variables.scss, which now
-//                 reference these custom properties for compatibility.
-//
-// To add a new token:
-//   1. Add the CSS custom property here under the appropriate section
-//   2. If a SCSS $variable alias is needed, add it to _variables.scss
-//   3. Reference var(--token-name) in component SCSS files
-// =============================================================
-
 @use "variables";
 
 :root {
-
-  // ---------------------------------------------------------------------------
-  // Colors
-  // ---------------------------------------------------------------------------
-  // Sourced from: $primary-color, $text-color etc. in _variables.scss,
-  // and --c-* usage in _general.scss.
-
-  --color-primary:        #007bff;   // was $primary-color
-  --color-text:           #333333;   // was $text-color; consumed as var(--c-text)
-  --color-text-muted:     #6c757d;   // was $secondary-color
-  --color-background:     #f8f9fa;   // was $background-color
-  --color-background-alt: #f0f0f0;   // UNUSED — was the ACF block toggle panel background (src/scss/acf-block-toggle.scss, removed 2026-08-25, see ACF-BLOCKS-V3-WP71-MIGRATION-GUIDE.md)
-  --color-border:         #007cba;   // ACF block toggle accent (WordPress admin blue)
+  --color-primary:        #007bff;
+  --color-text:           #333333;
+  --color-text-muted:     #6c757d;
+  --color-background:     #f8f9fa;
+  --color-background-alt: #f0f0f0;
+  --color-border:         #007cba;
   --color-white:          #ffffff;
   --color-black:          #000000;
-
-  // Aliases consumed by _general.scss — do not remove or rename these.
-  // They bridge the existing CSS custom property references to the named tokens above.
   --c-text:  var(--color-text);
   --c-color: var(--color-primary);
-
-  // ---------------------------------------------------------------------------
-  // Colors — Figma brand palette
-  // ---------------------------------------------------------------------------
-  // Source: WheelLab Website (Figma) — "UI Kit" canvas > Colors, node 783:35639.
-  // Primitive scales (50–950) + alpha ramps (5–95), then semantic tokens aliased
-  // to the primitives below them. Not yet wired into components — the legacy
-  // tokens above remain the active palette until components are migrated.
-
-  // Primary
   --color-primary-50:  #faf6fe;
   --color-primary-100: #f3eafd;
   --color-primary-200: #ead9fb;
@@ -78,8 +41,6 @@
   --color-primary-alpha-85: #9543dad9;
   --color-primary-alpha-90: #9543dae5;
   --color-primary-alpha-95: #9543daf2;
-
-  // Secondary
   --color-secondary-50:  #f5feff;
   --color-secondary-100: #ebfdff;
   --color-secondary-200: #c8f9ff;
@@ -110,8 +71,6 @@
   --color-secondary-alpha-85: #31f2ffd9;
   --color-secondary-alpha-90: #31f2ffe5;
   --color-secondary-alpha-95: #31f2fff2;
-
-  // Positive
   --color-positive-50:  #f0fdfa;
   --color-positive-100: #cbfbf1;
   --color-positive-200: #96f7e4;
@@ -142,8 +101,6 @@
   --color-positive-alpha-85: #00bba7d9;
   --color-positive-alpha-90: #00bba7e5;
   --color-positive-alpha-95: #00bba7f2;
-
-  // Negative
   --color-negative-50:  #fff1f2;
   --color-negative-100: #ffe4e6;
   --color-negative-200: #ffccd3;
@@ -174,8 +131,6 @@
   --color-negative-alpha-85: #ff637ed9;
   --color-negative-alpha-90: #ff637ee5;
   --color-negative-alpha-95: #ff637ef2;
-
-  // Warning
   --color-warning-50:  #fffbeb;
   --color-warning-100: #ffedd4;
   --color-warning-200: #ffd6a7;
@@ -206,8 +161,6 @@
   --color-warning-alpha-85: #ff6900d9;
   --color-warning-alpha-90: #ff6900e5;
   --color-warning-alpha-95: #ff6900f2;
-
-  // Pink
   --color-pink-50:  #fdf2f8;
   --color-pink-100: #fce7f3;
   --color-pink-200: #fccee8;
@@ -238,8 +191,6 @@
   --color-pink-alpha-85: #f6339ad9;
   --color-pink-alpha-90: #f6339ae5;
   --color-pink-alpha-95: #f6339af2;
-
-  // Yellow
   --color-yellow-50:  #fefce8;
   --color-yellow-100: #fef9c2;
   --color-yellow-200: #fff085;
@@ -270,8 +221,6 @@
   --color-yellow-alpha-85: #f0b100d9;
   --color-yellow-alpha-90: #f0b100e5;
   --color-yellow-alpha-95: #f0b100f2;
-
-  // White (scale has no shades — alpha ramp only)
   --color-white-alpha-5:  #ffffff0d;
   --color-white-alpha-10: #ffffff1a;
   --color-white-alpha-15: #ffffff26;
@@ -291,8 +240,6 @@
   --color-white-alpha-85: #ffffffd9;
   --color-white-alpha-90: #ffffffe5;
   --color-white-alpha-95: #fffffff2;
-
-  // Alpha Dark — near-black (#040524) opacity ramp, used for dark overlays/masks
   --color-alpha-dark-5:  #0405240d;
   --color-alpha-dark-10: #0405241a;
   --color-alpha-dark-15: #04052426;
@@ -312,81 +259,65 @@
   --color-alpha-dark-85: #040524d9;
   --color-alpha-dark-90: #040524e5;
   --color-alpha-dark-95: #040524f2;
-
-  // Semantic tokens — aliased to the primitives above (Figma group names in comments)
-  --bg-ghost-accent-1:      var(--color-primary-alpha-20);    // BG/Ghost/Accent 1
-  --bg-ghost-accent-2:      var(--color-secondary-alpha-15);  // BG/Ghost/Accent 2
-  --bg-ghost-negative:      var(--color-negative-alpha-40);   // BG/Ghost/Negative
-  --bg-ghost-pink:          var(--color-pink-alpha-20);       // BG/Ghost/Pink
-  --bg-ghost-positive:      var(--color-positive-alpha-20);   // BG/Ghost/Positive
-  --bg-ghost-warning:       var(--color-warning-alpha-20);    // BG/Ghost/Warning
-  --bg-ghost-yellow:        var(--color-yellow-alpha-20);     // BG/Ghost/Yellow
-  --bg-inv-surface-2:       var(--color-alpha-dark-20);       // BG/Inv/Surface 2
-  --bg-inv-surface-2-light: var(--color-alpha-dark-10);       // BG/Inv/Surface 2 - Light
-  --bg-main-background:     var(--color-primary-950);         // BG/Main/Background
-  --bg-main-disabled:       var(--color-white-alpha-5);       // BG/Main/Disabled
-  --bg-main-surface-1:      var(--color-primary-900);         // BG/Main/Surface 1
-  --bg-main-surface-2:      var(--color-white-alpha-10);      // BG/Main/Surface 2
-  --bg-main-surface-2-light: var(--color-white-alpha-5);      // BG/Main/Surface 2 - Light
-  --bg-header-mega-open:    #2B2B31;                          // Not in Figma — explicit request: .header__bar background while a mega menu is open
-  --bg-solid-accent:        var(--color-primary-600);         // BG/Solid/Accent
-  --bg-solid-accent-2:      var(--color-secondary-600);       // BG/Solid/Accent2
-  --bg-solid-negative:      var(--color-negative-600);        // BG/Solid/Negative
-  --bg-solid-positive:      var(--color-positive-600);        // BG/Solid/Positive
-  --bg-solid-warning:       var(--color-warning-600);         // BG/Solid/Warning
-  --card-blue:   var(--color-secondary-alpha-15);  // Cards/Blue
-  --card-green:  var(--color-positive-alpha-15);   // Cards/Green
-  --card-orange: var(--color-warning-alpha-15);    // Cards/Orange
-  --card-pink:   var(--color-negative-alpha-15);   // Cards/Pink
-  --card-purple: var(--color-primary-alpha-15);    // Cards/Purple
-  --card-yellow: var(--color-yellow-alpha-15);     // Cards/Yellow
-  --content-inv-disabled:    var(--color-alpha-dark-40);    // Content/Inv/Disabled
-  --content-inv-primary:     var(--color-primary-950);      // Content/Inv/Primary
-  --content-inv-secondary:   var(--color-alpha-dark-80);    // Content/Inv/Secondary
-  --content-inv-tertiary:    var(--color-alpha-dark-50);    // Content/Inv/Teritary
-  --content-main-primary:    var(--color-white);            // Content/Main/Primary
-  --content-main-disabled:   var(--color-white-alpha-40);   // Content/Main/Disabled
-  --content-main-secondary:  var(--color-white-alpha-80);   // Content/Main/Secondary
-  --content-main-tertiary:   var(--color-white-alpha-50);   // Content/Main/Teritary
-  --content-solid-accent:    var(--color-primary-500);      // Content/Solid/Accent
-  --content-solid-accent-2:  var(--color-secondary-500);    // Content/Solid/Accent2
-  --content-solid-negative:  var(--color-negative-500);     // Content/Solid/Negative
-  --content-solid-pink:      var(--color-pink-400);         // Content/Solid/Pink
-  --content-solid-positive:  var(--color-positive-500);     // Content/Solid/Positive
-  --content-solid-warning:   var(--color-warning-500);      // Content/Solid/Warning
-  --content-solid-yellow:    var(--color-yellow-500);       // Content/Solid/Yellow
-  --divider-main: var(--color-white-alpha-20);   // Divider/Main
-  --label-accent: var(--color-primary-800);      // Label/Accent
-  --label-main:   var(--color-white);            // Label/Main
-  --mask-hover:   var(--color-white-alpha-25);   // Mask/Hover
-  --mask-pressed: var(--color-alpha-dark-25);    // Mask/Pressed
-  --outline-accent-1: var(--color-primary-alpha-80);    // Outline/Accent 1
-  --outline-accent-2: var(--color-secondary-alpha-25);  // Outline/Accent 2
-  --outline-disabled: var(--color-white-alpha-5);       // Outline/Disabled
-  --outline-neutral:  var(--color-white-alpha-10);      // Outline/Neutral
-  --overlay-primary: var(--color-alpha-dark-50);   // Overlay/Primary
-
-  // ---------------------------------------------------------------------------
-  // Typography
-  // ---------------------------------------------------------------------------
-  // Font stacks declared in _fonts.scss (Funnel Display + Inter, self-hosted
-  // from Google Fonts — see _fonts.scss for the Cyrillic/weight caveats).
-  // Type scale below is sourced from the Figma "Type Styles" reference sheet
-  // (Display / Heading / Paragraph / Other / System) — consumed by
-  // _typography.scss. Base (desktop) sizes only; no responsive spec was given.
-
+  --bg-ghost-accent-1:      var(--color-primary-alpha-20);
+  --bg-ghost-accent-2:      var(--color-secondary-alpha-15);
+  --bg-ghost-negative:      var(--color-negative-alpha-40);
+  --bg-ghost-pink:          var(--color-pink-alpha-20);
+  --bg-ghost-positive:      var(--color-positive-alpha-20);
+  --bg-ghost-warning:       var(--color-warning-alpha-20);
+  --bg-ghost-yellow:        var(--color-yellow-alpha-20);
+  --bg-inv-surface-2:       var(--color-alpha-dark-20);
+  --bg-inv-surface-2-light: var(--color-alpha-dark-10);
+  --bg-main-background:     var(--color-primary-950);
+  --bg-main-disabled:       var(--color-white-alpha-5);
+  --bg-main-surface-1:      var(--color-primary-900);
+  --bg-main-surface-2:      var(--color-white-alpha-10);
+  --bg-main-surface-2-light: var(--color-white-alpha-5);
+  --bg-header-mega-open:    #2B2B31;
+  --bg-solid-accent:        var(--color-primary-600);
+  --bg-solid-accent-2:      var(--color-secondary-600);
+  --bg-solid-negative:      var(--color-negative-600);
+  --bg-solid-positive:      var(--color-positive-600);
+  --bg-solid-warning:       var(--color-warning-600);
+  --card-blue:   var(--color-secondary-alpha-15);
+  --card-green:  var(--color-positive-alpha-15);
+  --card-orange: var(--color-warning-alpha-15);
+  --card-pink:   var(--color-negative-alpha-15);
+  --card-purple: var(--color-primary-alpha-15);
+  --card-yellow: var(--color-yellow-alpha-15);
+  --content-inv-disabled:    var(--color-alpha-dark-40);
+  --content-inv-primary:     var(--color-primary-950);
+  --content-inv-secondary:   var(--color-alpha-dark-80);
+  --content-inv-tertiary:    var(--color-alpha-dark-50);
+  --content-main-primary:    var(--color-white);
+  --content-main-disabled:   var(--color-white-alpha-40);
+  --content-main-secondary:  var(--color-white-alpha-80);
+  --content-main-tertiary:   var(--color-white-alpha-50);
+  --content-solid-accent:    var(--color-primary-500);
+  --content-solid-accent-2:  var(--color-secondary-500);
+  --content-solid-negative:  var(--color-negative-500);
+  --content-solid-pink:      var(--color-pink-400);
+  --content-solid-positive:  var(--color-positive-500);
+  --content-solid-warning:   var(--color-warning-500);
+  --content-solid-yellow:    var(--color-yellow-500);
+  --divider-main: var(--color-white-alpha-20);
+  --label-accent: var(--color-primary-800);
+  --label-main:   var(--color-white);
+  --mask-hover:   var(--color-white-alpha-25);
+  --mask-pressed: var(--color-alpha-dark-25);
+  --outline-accent-1: var(--color-primary-alpha-80);
+  --outline-accent-2: var(--color-secondary-alpha-25);
+  --outline-disabled: var(--color-white-alpha-5);
+  --outline-neutral:  var(--color-white-alpha-10);
+  --overlay-primary: var(--color-alpha-dark-50);
   --font-family-display: 'Funnel Display', sans-serif;
   --font-family-body:    'Inter', sans-serif;
-  --font-primary:        var(--font-family-body);   // base html font
-  --font-size-base: 16px;   // html
-
-  // Line heights are unitless (matches the existing h1–h3 percentage convention).
-  --line-height-base: 1.5;    // html
+  --font-primary:        var(--font-family-body);
+  --font-size-base: 16px;
+  --line-height-base: 1.5;
   --font-weight-regular:  400;
   --font-weight-semibold: 600;
   --font-weight-bold:     700;
-
-  // Type scale — token names match the Figma style names.
   --text-display-1-size:           160px;
   --text-display-1-line-height:    1;
   --text-display-1-letter-spacing: -1px;
@@ -412,14 +343,6 @@
   --text-body-s-size:        16px;
   --text-body-s-line-height: 1.5;
 
-  // Mobile overrides — sourced from the Figma "Mobile" footer frame
-  // (node 590:15857), the Contact Section mobile frame (node 758:47732),
-  // the Reviews Section mobile frame (node 758:47710/758:47713), and the
-  // blog/featured-posts card mobile frame (node 758:62169).
-  // --text-h1-* is NOT here — Solutions Section's mobile card title has its
-  // own 1024px breakpoint, scoped to .solutions-section only (see that
-  // file), not the site-wide $small(576px) used everywhere else.
-  // Add more here as other mobile frames are checked against.
   @media screen and (max-width: variables.$small) {
     --text-h2-size:            24px;
     --text-h2-line-height:     1.333;
@@ -444,37 +367,15 @@
   --text-button-s-line-height: 1.571;
   --text-table-content-size:        14px;
   --text-table-content-line-height: 1.429;
-  --text-mega-card-desc-size:        14px;   // Not in the Figma type scale — dedicated size for .header__mega-card-desc (smaller than body-s reads better at that spot)
+  --text-mega-card-desc-size:        14px;
   --text-mega-card-desc-line-height: 1.429;
-
-  // ---------------------------------------------------------------------------
-  // Spacing (4px base scale)
-  // ---------------------------------------------------------------------------
-  // Only values that appear in the codebase are included.
-  // Values like 30px, 36px, 50px, 60px, 140px (section paddings) are hardcoded
-  // in _general.scss and not yet represented on this scale — add tokens when
-  // those values are refactored.
-
-  --space-2:  8px;   // grid margins: margin: 0 8px 16px
-  --space-3:  12px;  // grid responsive: margin: 0 8px 12px
-  --space-4:  16px;  // p margin-bottom; grid item margins; container padding (mobile)
-  --space-6:  24px;  // container padding; .m-top-s; .m-top-m (mobile)
-
-  // ---------------------------------------------------------------------------
-  // Layout
-  // ---------------------------------------------------------------------------
-  // Sourced from .container and section rules in _general.scss
-
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-6:  24px;
   --container-max-width: 1568px;
-  --container-padding:    24px;   // reduced to 16px on mobile (hardcoded in _general.scss)
-  --section-padding-y:    60px;   // reduced to 30px on mobile (hardcoded in _general.scss)
-
-  // ---------------------------------------------------------------------------
-  // Transitions
-  // ---------------------------------------------------------------------------
-  // --transition-base: only value in use (a, path in _general.scss)
-  // --transition-fast:  not yet used; defined here for consistency when needed
-
+  --container-padding:    24px;
+  --section-padding-y:    60px;
   --transition-base: 0.3s;
   --transition-fast: 0.15s;
 }

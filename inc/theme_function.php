@@ -1,13 +1,9 @@
 <?php
-/**
- * Theme tweaks & helpers
- */
 
 defined('ABSPATH') || exit;
 
 add_filter('widget_text', 'do_shortcode', 11);
 remove_action('wp_head', 'wp_generator');
-
 
 remove_action('wp_head', 'print_emoji_detection_script', 7);
 remove_action('admin_print_scripts', 'print_emoji_detection_script');
@@ -120,7 +116,7 @@ add_action('wp_head', 'wheellab_opengraph_meta_tags', 5);
 
 function wheellab_custom_body_classes( $classes ) {
     if ((is_archive() || is_author() || is_category() || is_home() || is_tag()) && get_post_type() === 'post') {
-        // $classes[] = 'is-blog';
+
     }
     if (is_post_type_archive('project') || is_tax('project_category') || is_singular('project')) {
         $classes[] = 'color-theme-black';
@@ -154,7 +150,6 @@ function wheellab_allow_svg_upload_mimes( $mimes ) {
 }
 add_filter('upload_mimes', 'wheellab_allow_svg_upload_mimes');
 
-
 function wheellab_login_logo_css() {
     $url = get_stylesheet_directory_uri() . '/assets/img/login-logo.jpg';
     echo '<style>
@@ -168,7 +163,6 @@ function wheellab_login_logo_css() {
 add_action('login_head', 'wheellab_login_logo_css');
 add_filter('jpeg_quality', function($arg){ return 100; });
 add_filter('big_image_size_threshold', '__return_false');
-
 
 add_filter( 'rank_math/frontend/breadcrumb/args', function( $args ) {
   $args['delimiter']   = '&nbsp;/&nbsp;';
@@ -211,15 +205,6 @@ function wheellab_is_blog() {
     return ( is_archive() || is_author() || is_category() || is_home() || is_tag() ) && get_post_type() === 'post';
 }
 
-/**
- * Top-level items of the "primary" nav menu, in menu order.
- * Sub-menus (Appearance > Menus parent/child) are ignored on purpose —
- * the "Services" mega-menu is driven entirely by ACF fields on the menu
- * item itself (see acf-json/group_menu_item_mega_menu.json), not by
- * nested WP menu items.
- *
- * @return WP_Post[]
- */
 function wheellab_get_primary_menu_items(): array {
     $locations = get_nav_menu_locations();
     if ( empty( $locations['primary'] ) ) {
@@ -237,13 +222,6 @@ function wheellab_get_primary_menu_items(): array {
     return array_values( $items );
 }
 
-/**
- * Mega-menu categories/cards attached to a primary nav menu item via ACF
- * (location: Menu Item). Returns [] if the toggle is off or no categories
- * are configured.
- *
- * @return array<int, array{name: string, cards: array}>
- */
 function wheellab_get_menu_item_mega_menu( int $menu_item_id ): array {
     if ( ! function_exists( 'get_field' ) || ! get_field( 'has_mega_menu', $menu_item_id ) ) {
         return [];
@@ -252,23 +230,6 @@ function wheellab_get_menu_item_mega_menu( int $menu_item_id ): array {
     return get_field( 'mega_menu_categories', $menu_item_id ) ?: [];
 }
 
-/**
- * Inline an uploaded SVG attachment as markup, with every fill/stroke
- * normalized to `currentColor` so it always renders in a single,
- * CSS-controllable color — regardless of what color the uploaded file
- * itself was exported with (e.g. mega-menu card icons, which admins can
- * upload in any color, but must always read as a plain white glyph on
- * their category-tinted chip).
- *
- * SVG uploads are already gated to `manage_options` users in
- * wheellab_allow_svg_upload_mimes(), but a light strip of <script> tags
- * and inline event handlers is applied anyway as defense in depth before
- * this unescaped markup is echoed.
- *
- * Returns '' (and the caller should fall back to a plain <img>) when the
- * attachment isn't an SVG, doesn't exist, or fails to parse — e.g. an
- * admin uploaded a PNG/JPG icon instead.
- */
 function wheellab_inline_svg( int $attachment_id, string $class = '' ): string {
     if ( ! $attachment_id || get_post_mime_type( $attachment_id ) !== 'image/svg+xml' ) {
         return '';
@@ -284,12 +245,9 @@ function wheellab_inline_svg( int $attachment_id, string $class = '' ): string {
         return '';
     }
 
-    // Defense in depth: strip <script> blocks and on*="" event handlers.
     $svg = (string) preg_replace( '#<script\b[^>]*>.*?</script>#is', '', $svg );
     $svg = (string) preg_replace( '/\son\w+="[^"]*"/i', '', $svg );
 
-    // Force a single color so it always reads clearly on the icon chip,
-    // whatever color the source file happened to use.
     $svg = (string) preg_replace( '/\bfill="(?!none")[^"]*"/i', 'fill="currentColor"', $svg );
     $svg = (string) preg_replace( '/\bstroke="(?!none")[^"]*"/i', 'stroke="currentColor"', $svg );
 
@@ -300,17 +258,6 @@ function wheellab_inline_svg( int $attachment_id, string $class = '' ): string {
     return $svg;
 }
 
-/**
- * Injects id="" anchors into every <h2> in already-rendered post HTML
- * (skipping any that already have one) and returns both the modified
- * markup and a flat list describing them — single source of truth for
- * both, so the sidebar Table of Contents (template-parts/sections/
- * single_post_toc.php) can never link to a heading that doesn't
- * actually carry that id. Only h2 is considered, per the TOC's Figma
- * spec (node 527:29045) — h3+ aren't included.
- *
- * @return array{0: string, 1: array<int, array{text: string, anchor: string}>}
- */
 function wheellab_add_heading_anchors_and_toc( string $content ): array {
     if ( trim( $content ) === '' || stripos( $content, '<h2' ) === false ) {
         return [ $content, [] ];
@@ -318,9 +265,7 @@ function wheellab_add_heading_anchors_and_toc( string $content ): array {
 
     $dom = new DOMDocument();
     $prev_errors = libxml_use_internal_errors( true );
-    // NOIMPLIED/NODEFDTD: load the fragment as-is, without DOMDocument
-    // wrapping it in an implied <html><body> (which saveHTML() would
-    // then also emit back out).
+
     $dom->loadHTML(
         '<?xml encoding="utf-8" ?>' . $content,
         LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD
@@ -331,9 +276,6 @@ function wheellab_add_heading_anchors_and_toc( string $content ): array {
     $toc  = [];
     $used = [];
 
-    // Snapshot into a plain array first — getElementsByTagName() returns
-    // a live list, and mutating attributes on nodes while iterating a
-    // live NodeList is a common source of skipped items.
     $headings = iterator_to_array( $dom->getElementsByTagName( 'h2' ) );
 
     foreach ( $headings as $node ) {
@@ -342,11 +284,6 @@ function wheellab_add_heading_anchors_and_toc( string $content ): array {
             continue;
         }
 
-        // Skip h2s that belong to an embedded ACF block (Reviews, FAQ,
-        // etc.) rather than the article's own outline — every block in
-        // this theme renders as <section class="...">, unlike a plain
-        // core/heading block's bare <h2>, so an ancestor <section> is a
-        // reliable signal either way.
         $ancestor    = $node->parentNode;
         $inside_block = false;
         while ( $ancestor ) {
@@ -383,11 +320,6 @@ function wheellab_add_heading_anchors_and_toc( string $content ): array {
     return [ $html, $toc ];
 }
 
-/**
- * Estimated reading time in whole minutes (minimum 1) — WordPress has no
- * built-in equivalent. ~200 words/minute, a commonly used average
- * reading speed. Used by the single post hero (node 527:28732, "6 min").
- */
 function wheellab_reading_time( int $post_id = 0 ): int {
     $post_id = $post_id ?: get_the_ID();
     $text    = wp_strip_all_tags( strip_shortcodes( get_post_field( 'post_content', $post_id ) ) );
@@ -395,14 +327,6 @@ function wheellab_reading_time( int $post_id = 0 ): int {
     return max( 1, (int) ceil( $words / 200 ) );
 }
 
-/**
- * Simple post view counter stored as post meta. Not unique-visitor
- * aware (a refresh or a bot both count) — deliberately basic, matching
- * the "963 views" stat in the single post hero rather than building
- * out real analytics. Not hooked automatically: call
- * wheellab_track_post_view() once per page load from single.php only,
- * so admin screens, AJAX and REST requests never increment it.
- */
 function wheellab_get_post_views( int $post_id = 0 ): int {
     $post_id = $post_id ?: get_the_ID();
     return (int) get_post_meta( $post_id, 'wheellab_views', true );
@@ -421,7 +345,6 @@ function wheellab_track_post_view( int $post_id = 0 ): void {
 
 add_action('init', function(){
 
-    // Disable Comments
     if ( function_exists('get_field') && get_field('disable_comments','option') ) {
 
         add_action('admin_init', function () {
@@ -459,7 +382,6 @@ add_action('init', function(){
         }, 999);
     }
 
-    // Hide default widgets
     if ( function_exists('get_field') && get_field('disable_widgets','option') ) {
 
         add_action('wp_dashboard_setup', function () {
@@ -500,7 +422,6 @@ add_action('init', function(){
         });
     }
 
-    // Disable jQuery
     if ( function_exists('get_field') && get_field('disable_jquery','option') ) {
         add_action('wp_enqueue_scripts', function () {
             if ( !is_admin() ) {
@@ -510,10 +431,6 @@ add_action('init', function(){
     }
 }, 20);
 
-// A post can't be manually related to itself in the "Read More" section's
-// relationship field (acf-json/group_single_post_related.json) — $post_id
-// here is the post the field group is attached to (the one being edited),
-// not the field's stored value.
 add_filter('acf/fields/relationship/query/key=field_spr_manual', function ($args, $field, $post_id) {
     $args['post__not_in'] = [(int) $post_id];
     return $args;

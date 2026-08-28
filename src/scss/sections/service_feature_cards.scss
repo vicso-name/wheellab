@@ -1,29 +1,8 @@
 @use "../partials/variables";
 
-// Source: WheelLab Website (Figma) — node 806:11625 ("Container", full
-// block), node 806:11626 ("Content container", header), node 806:11635
-// ("Card row"), node 806:11654 ("Feature card"), via get_design_context.
-// Header/nav/full-bleed-swiper recipe reused verbatim from
-// solutions_section.scss / case_study_section.scss (same $inset formula,
-// same 44px chevron nav button) rather than re-derived — see those files
-// for why each piece of that shared recipe is there.
-//
-// No mobile Figma frame was sourced for this block — mobile behavior
-// here comes from explicit instruction instead: below 576px the slider
-// is dropped entirely (service_feature_cards.js never initializes Swiper
-// under that width) and .service-feature-cards__swiper/__wrapper fall
-// back to a plain stacked column, one card per row, full width.
-
 .service-feature-cards {
     position: relative;
     overflow: hidden;
-    // node 806:11625 ("Container") — py-96. Its own px-80 is NOT a
-    // literal padding to reproduce: at the Figma canvas's 1728px
-    // reference width, 1728 − 80×2 = 1568px, exactly this theme's
-    // sitewide --container-max-width — i.e. that "80px" is just how the
-    // existing .container component happens to render at that specific
-    // frame width, not a value of its own. Plain .container (used below)
-    // reproduces it correctly.
     padding: 96px 0;
 
     @media screen and (max-width: variables.$medium) {
@@ -40,7 +19,6 @@
     align-items: flex-end;
     justify-content: space-between;
     gap: 24px;
-    // node 806:11625 — gap-64 between the header and the card row.
     margin-bottom: 64px;
 
     @media screen and (max-width: variables.$medium) {
@@ -58,18 +36,10 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
-    // node 806:11627 ("Text block") — fixed 1000px on the Figma canvas;
-    // max-width instead of width so it still shrinks on narrower
-    // viewports rather than forcing horizontal overflow.
     max-width: 1000px;
 }
 
 .service-feature-cards__title {
-    // Size/weight/family/line-height/letter-spacing/uppercase already
-    // come from the global `h2, .h2` rule (_typography.scss), which
-    // matches this node's own spec exactly (44px/52px/-1px/uppercase) —
-    // this only overrides its light-theme placeholder color for this
-    // dark section, same as every other section title in this codebase.
     color: var(--content-main-primary);
 }
 
@@ -84,25 +54,15 @@
     align-items: center;
     gap: 12px;
 
-    // Once .service-feature-cards__header wraps (below $medium), this is
-    // the only item on its own flex line, so justify-content:
-    // space-between on the parent has nothing to push against anymore —
-    // margin-left: auto keeps it pinned right, same fix as every other
-    // slider section's nav group.
     @media screen and (max-width: variables.$medium) {
         margin-left: auto;
     }
 
-    // No slider below 576px (explicit instruction — see
-    // service_feature_cards.js), so there's nothing left for these
-    // buttons to control.
     @media screen and (max-width: variables.$small) {
         display: none;
     }
 }
 
-// Same 44px/mask-free (plain currentColor svg) recipe as
-// .solutions-section__nav / .case-study-section__nav.
 .service-feature-cards__nav {
     display: flex;
     flex-shrink: 0;
@@ -136,39 +96,17 @@
     }
 }
 
-// ---------------------------------------------------------------------------
-// Slider
-// ---------------------------------------------------------------------------
-
 .service-feature-cards__swiper {
-    // Full-bleed so the peeking next card clips at the section's own
-    // edge — same technique as .solutions-section__swiper.
     $inset: max(var(--container-padding), calc((100% - var(--container-max-width)) / 2 + var(--container-padding)));
 
     padding: 0 $inset;
 
-    // Explicit instruction: below 576px there is no slider at all —
-    // service_feature_cards.js never constructs the Swiper instance
-    // under this width, so .swiper-wrapper here is just a plain block
-    // container with no Swiper-applied inline transform/flex-nowrap.
-    // These rules give it its OWN stacked-column look for that case,
-    // matching .container's own inset instead of the desktop full-bleed
-    // one (nothing to peek at once every card is full width).
     @media screen and (max-width: variables.$small) {
         padding: 0 16px;
     }
 }
 
 .service-feature-cards__swiper .swiper-wrapper {
-    // Equal-height row: Swiper's `slidesPerView: 'auto'` sizes each
-    // slide's WIDTH to its content but does not itself equalize height —
-    // align-items: stretch (cross-axis, since the wrapper is a row flex
-    // container) makes every .service-feature-cards__slide match the
-    // tallest one's height instead of each hugging its own card's
-    // content height. Combined with .card/.card-inner below (both
-    // height: 100% / flex: 1 down the chain), a short card's text simply
-    // leaves blank space at the bottom of an equal-height card instead
-    // of every card in the row sitting at a different height.
     align-items: stretch;
 
     @media screen and (max-width: variables.$small) {
@@ -180,7 +118,6 @@
 
 .service-feature-cards__slide {
     display: flex;
-    // node 806:11654 — fixed 506.667px card width (desktop/tablet).
     width: 506.667px;
 
     @media screen and (max-width: variables.$small) {
@@ -188,16 +125,9 @@
     }
 }
 
-// ---------------------------------------------------------------------------
-// Card
-// ---------------------------------------------------------------------------
-
 .service-feature-cards__card {
     display: flex;
     width: 100%;
-    // Fills the slide's stretched height (see .swiper-wrapper above) —
-    // without this, the slide box itself is equal-height but invisible,
-    // since this card is what actually paints the border/shadow/bg.
     height: 100%;
     padding: 8px;
     background: var(--bg-main-surface-2);
@@ -222,10 +152,6 @@
     }
 }
 
-// Fixed, theme-bundled "wireframe → mockup" glyph, mask-tinted accent-2
-// cyan — same technique as .case-study-section__card-stat-icon-glyph,
-// just applied directly here (not via inline style) since this image is
-// the same on every card, not per-item ACF data.
 .service-feature-cards__card-image {
     flex-shrink: 0;
     width: 100%;

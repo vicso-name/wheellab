@@ -1,23 +1,4 @@
 <?php
-/**
- * Section: Blog Subscribe (newsletter banner)
- * Used by: template-parts/sections/blog_filter.php only — rendered inline
- * inside .blog-filter__grid, after the 6th card, so it reads as a full-width
- * row breaking up the two 3-card rows above it from the two below (node
- * 527:28142, desktop; node 620:11682, mobile 393px). Not a standalone
- * get_template_part() call from template-blog.php, and not an ACF block —
- * see blog_filter.php for why it only appears once, on the initial
- * (non-AJAX, uncategorized) grid render.
- *
- * Fields live on the "Blog" page template (acf-json/group_template_blog.json,
- * "Subscribe Block" + "Mailchimp" tabs), same as Blog Hero. Explicit post ID
- * here (not a bare get_field()) because this template part can run while a
- * DIFFERENT WP_Query's the_post() loop is active (blog_filter.php's own
- * $initial_query, mid-iteration over post cards) — a bare get_field() would
- * resolve against whatever post that loop is currently on instead of the
- * Blog page itself. Same class of bug already hit once on Case Study
- * Section — see that template's own header comment.
- */
 
 $page_id = get_queried_object_id();
 

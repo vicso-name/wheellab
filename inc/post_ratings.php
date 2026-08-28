@@ -1,24 +1,4 @@
 <?php
-/**
- * Post Ratings
- *
- * Backs template-parts/sections/single_post_rating.php (the "Rate this
- * article" widget on single.php). Votes live in a dedicated DB table
- * rather than postmeta/comments, since we need one row per (post,
- * rater) with a UNIQUE constraint the database itself enforces — that's
- * the actual guard against a rater voting twice, not the disabled
- * button state in the template (that's just UX; a duplicate POST straight
- * to admin-ajax.php would otherwise be able to skip past a JS-only check).
- *
- * Rater identity: logged-in user ID, or an opaque per-browser cookie for
- * guests, set lazily on their first vote. Deliberately NOT IP-based —
- * shared/NAT'd IPs (offices, cafes) would false-reject unrelated visitors.
- *
- * Average/count are cached into postmeta (_wheellab_rating_average,
- * _wheellab_rating_count) so pages that just display them (if any, later)
- * don't need a table read + AVG() on every load — only recomputed when a
- * new vote is actually written.
- */
 
 defined('ABSPATH') || exit;
 
@@ -53,22 +33,12 @@ function wheellab_create_ratings_table(): void {
 }
 add_action('after_switch_theme', 'wheellab_create_ratings_table');
 
-// Safety net for installs where this file shipped after the theme was
-// already active (after_switch_theme won't fire again on its own).
 add_action('init', static function () {
     if (get_option('wheellab_ratings_db_version') !== WHEELLAB_RATINGS_DB_VERSION) {
         wheellab_create_ratings_table();
     }
 });
 
-/**
- * Identifies the current visitor for duplicate-vote checks.
- *
- * @param bool $allow_cookie_set Whether a guest cookie may be created
- *                                right now (only during the actual vote
- *                                request — read-only page renders must
- *                                not start setting cookies from a GET).
- */
 function wheellab_get_rater_key(bool $allow_cookie_set = false): string {
     if (is_user_logged_in()) {
         return 'user_' . get_current_user_id();
@@ -95,11 +65,6 @@ function wheellab_get_rater_key(bool $allow_cookie_set = false): string {
     return 'guest_' . $token;
 }
 
-/**
- * The rating this visitor already gave $post_id, or null if they haven't
- * (or if they're an anonymous guest with no rater cookie yet, in which
- * case a DB lookup isn't even needed — they can't have a row).
- */
 function wheellab_get_user_post_rating(int $post_id): ?int {
     if (!is_user_logged_in() && empty($_COOKIE['wheellab_rater'])) {
         return null;
@@ -116,10 +81,6 @@ function wheellab_get_user_post_rating(int $post_id): ?int {
     return $rating !== null ? (int) $rating : null;
 }
 
-/**
- * Cached read — recomputes from the table only when the cache is empty
- * (i.e. never written yet, including "zero votes").
- */
 function wheellab_get_post_rating_stats(int $post_id): array {
     $average = get_post_meta($post_id, '_wheellab_rating_average', true);
     $count   = get_post_meta($post_id, '_wheellab_rating_count', true);
@@ -187,9 +148,6 @@ function wheellab_ajax_rate_post(): void {
         'created_at' => current_time('mysql'),
     ], ['%d', '%s', '%d', '%s']);
 
-    // The UNIQUE KEY is the real guard — a near-simultaneous duplicate
-    // (double-click, two tabs) lands here instead of the $existing check
-    // above winning the race.
     if (!$inserted) {
         $stats = wheellab_get_post_rating_stats($post_id);
         wp_send_json_error([

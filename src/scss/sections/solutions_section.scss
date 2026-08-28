@@ -1,16 +1,5 @@
 @use "../partials/variables";
 
-// Source: WheelLab Website (Figma) — node 527:24748 (desktop), node
-// 758:61068/758:61069/758:61077 (mobile — section title/description, card).
-// The mobile card bezel is genuinely accent-1/purple (bg/ghost/accent-1,
-// outline/accent-1 — confirmed twice, via get_design_context and
-// get_variable_defs), not accent-2/cyan like the desktop card — flagged to
-// the user as a real Figma difference, not assumed to be a mistake.
-//
-// Mobile kicks in at 1024px for this section specifically (explicit
-// instruction — NOT the site-wide $small/$large breakpoints everything
-// else uses), so all the mobile rules below share one $mobile variable
-// instead of variables.$small/$large.
 $mobile: 1024px;
 
 .solutions-section {
@@ -18,9 +7,6 @@ $mobile: 1024px;
     overflow: hidden;
     padding: 100px 0;
 
-    // Scoped to this section only — redefining the custom property here
-    // (rather than in _tokens.scss's :root block) leaves the site-wide h1
-    // token, and Domains Section's own card title, untouched.
     @media screen and (max-width: $mobile) {
         padding: 60px 0;
 
@@ -64,11 +50,6 @@ $mobile: 1024px;
     align-items: center;
     gap: 12px;
 
-    // Once .solutions-section__header wraps (below $mobile), this is the
-    // only item on its own flex line, so justify-content: space-between on
-    // the parent has nothing to push against anymore — margin-left:auto
-    // keeps it pinned to the right, same fix as
-    // .featured-posts-section__nav-group.
     @media screen and (max-width: $mobile) {
         margin-left: auto;
     }
@@ -107,13 +88,7 @@ $mobile: 1024px;
     }
 }
 
-// ---------------------------------------------------------------------------
-// Slider
-// ---------------------------------------------------------------------------
-
 .solutions-section__swiper {
-    // Full-bleed so the peeking next card clips at the section's own edge —
-    // same technique as .featured-posts-section__swiper.
     $inset: max(var(--container-padding), calc((100% - var(--container-max-width)) / 2 + var(--container-padding)));
 
     padding: 0 $inset;
@@ -127,10 +102,6 @@ $mobile: 1024px;
         width: calc(100vw - 88px);
     }
 }
-
-// ---------------------------------------------------------------------------
-// Card
-// ---------------------------------------------------------------------------
 
 .solutions-section__card {
     display: flex;
@@ -151,11 +122,6 @@ $mobile: 1024px;
     box-shadow: 0 2px 24px 0 rgb(105 56 239 / 12%), 0 1px 2px 0 rgb(0 0 0 / 8%);
     transition: background 0.4s ease-out, border-color 0.4s ease-out;
 
-    // No fixed height here, unlike desktop — node 758:61077's mobile card
-    // isn't a magic-number height, it's just the sum of its content (16
-    // padding + title/desc block + 16 gap + 280 image + 16 padding). Forcing
-    // an arbitrary height (480px, smaller than that sum) is what caused the
-    // image to blow up/overlap the text in the first place.
     @media screen and (max-width: $mobile) {
         height: auto;
         padding: 4px;
@@ -182,9 +148,6 @@ $mobile: 1024px;
     }
 }
 
-// Decorative ambient glow (node 164:9204 / 164:9264) — simplified from
-// Figma's rotated-blob math to two corner/top anchors, same recipe as
-// .blog-card__glow.
 .solutions-section__card-glow {
     position: absolute;
     max-width: none;
@@ -220,18 +183,8 @@ $mobile: 1024px;
     left: 0;
     height: 396px;
     pointer-events: none;
-    // bottom: 0 is already fixed, so growing height alone pushes the top
-    // edge up — matches the hover state's own top/height pair (308→298,
-    // 396→406: same net effect, one property instead of two).
     transition: height 0.4s ease-out;
 
-    // node 758:61077's mobile image sits below the text in normal flow,
-    // but must still reach the card's true left/right edges — .card-inner
-    // has its own 16px padding, so breaking out with a negative margin here
-    // (rather than just oversizing the img and hoping the bleed math beats
-    // the padding) guarantees zero gap instead of a computed one.
-    // position: relative (not static) so it still reserves its 280px in
-    // the flex column while also being the containing block for the img.
     @media screen and (max-width: $mobile) {
         position: relative;
         right: auto;
@@ -242,11 +195,6 @@ $mobile: 1024px;
         margin-left: -16px;
     }
 
-    // The illustration bleeds off the bottom edge of the card (node
-    // 133:7477), clipped away by .card-inner's overflow: hidden. height and
-    // bottom move together (height = 100% + |bottom|) so the top of the
-    // image stays flush with the top of this box with no gap — only the
-    // bottom keeps sliding further out of frame.
     img {
         position: absolute;
         bottom: -45%;
@@ -254,17 +202,9 @@ $mobile: 1024px;
         display: block;
         width: 100%;
         height: 145%;
-        // contain, not cover — Figma hand-crops each illustration
-        // individually, which can't generalize to arbitrary admin-uploaded
-        // images, so this just centers whatever aspect ratio is uploaded.
         object-fit: contain;
         object-position: bottom center;
 
-        // Exact node 758:61077 geometry: the 478×478 image sits in a
-        // 313×280 slot at x:-82, y:0 — i.e. horizontally centered
-        // (width/height % below) but flush with the slot's TOP edge, so
-        // 100% of the overflow bleeds downward only, none upward. Not the
-        // desktop bottom-anchor recipe — top:0 here, not bottom.
         @media screen and (max-width: $mobile) {
             top: 0;
             bottom: auto;
@@ -272,12 +212,6 @@ $mobile: 1024px;
             width: 152.72%;
             height: 170.71%;
             transform: translateX(-50%);
-            // cover here, not contain — contain only guarantees the whole
-            // image is visible, not that it fills this (deliberately
-            // oversized) box; any letterboxing is invisible against the
-            // dark background, so the image read as too small even though
-            // the box itself was already sized correctly. The point on
-            // mobile specifically IS to crop, so cover is the right call.
             object-fit: cover;
             object-position: top center;
         }
@@ -292,12 +226,6 @@ $mobile: 1024px;
     min-width: 0;
 }
 
-// Title + external-link arrow, side by side — arrow stays top-aligned with
-// the title regardless of whether the description sits inside this row or
-// (as here) as its own sibling below, so this nesting reproduces desktop's
-// look unchanged while also matching mobile's actual grouping (node
-// 758:61077: the arrow sits next to the title only, not the full card
-// info block).
 .solutions-section__card-title-row {
     display: flex;
     align-items: flex-start;
@@ -314,10 +242,6 @@ $mobile: 1024px;
     min-width: 0;
     color: var(--content-solid-accent-2);
 
-    // Clamp + reserve the space for exactly 2 lines (node 758:61077's own
-    // title box is 72px = 2 × 36px line-height) so every card comes out
-    // the same height on mobile regardless of how long its title is,
-    // instead of each slide sizing to its own content.
     @media screen and (max-width: $mobile) {
         display: -webkit-box;
         min-height: 72px;
@@ -332,8 +256,6 @@ $mobile: 1024px;
     color: var(--content-main-secondary);
     transition: color 0.4s ease-out;
 
-    // Same reasoning as the title above — node 758:61077's description box
-    // is 96px = 4 × 24px line-height.
     @media screen and (max-width: $mobile) {
         display: -webkit-box;
         min-height: 96px;
@@ -355,12 +277,6 @@ $mobile: 1024px;
     }
 }
 
-// ---------------------------------------------------------------------------
-// Hover (Smart Animate, Ease Out, 400ms — desktop card only; the mobile
-// card is a completely different bento layout with no hover state of its
-// own, and touch devices don't have a meaningful :hover to begin with).
-// ---------------------------------------------------------------------------
-
 @media screen and (min-width: $mobile + 1px) {
     .solutions-section__card:hover {
         .solutions-section__card-bezel {
@@ -380,12 +296,6 @@ $mobile: 1024px;
             height: 406px;
         }
 
-        // Figma's own hover state grows/shifts the two much-larger source
-        // blobs this is simplified from (~2015×1116→2078×1152 and
-        // ~977×562→1196×688 — a ~3% and ~22% scale-up respectively); a
-        // matching scale() on each of our own corner-anchored circles
-        // reproduces the same "background coming alive" effect without
-        // depending on their unrelated absolute pixel geometry.
         .solutions-section__card-glow--a {
             transform: scale(1.03);
         }

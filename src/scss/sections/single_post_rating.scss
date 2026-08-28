@@ -1,22 +1,9 @@
 @use "../partials/variables";
 
-// Source: WheelLab Website (Figma) — node 618:9919 ("Rate card", mobile),
-// node 581:15393 ("Rate card", desktop).
-
 .single-post-rating {
-  // Flex item of .single-post-body__footer (display:flex; column) — an
-  // auto side margin on the cross axis overrides align-items:stretch, so
-  // without an explicit width this shrinks to its own content size
-  // instead of filling the line before max-width caps it.
-  // No margin:auto here on purpose — this sits directly under the
-  // article, flush with its left edge (same as .single-post-body__content
-  // and the FAQ card above), not centered in the wider container that
-  // also spans where the now-absent sidebar used to be.
   width: 100%;
   max-width: 1031px;
-  padding: 8px; // gap/card-padding/focus
-  // Not a named token — Figma gives this card its own one-off 8% white,
-  // distinct from --bg-main-surface-2 (10%) used by the star buttons below.
+  padding: 8px;
   background: rgb(255 255 255 / 8%);
   border: 1px solid rgb(255 255 255 / 8%);
   border-radius: 20px;
@@ -30,26 +17,17 @@
 .single-post-rating__inner {
   display: flex;
   flex-direction: column;
-  gap: 24px; // Center's own gap — 16px on mobile, see below
-  padding: 40px; // gap/card-padding/m (desktop)
+  gap: 24px;
+  padding: 40px;
   background: rgb(255 255 255 / 2%);
   border-radius: 16px;
 
   @media screen and (max-width: variables.$small) {
-    // Figma's own mobile value — not the 20px other post-bottom cards
-    // use, deliberately kept as given rather than unified.
     padding: 16px;
     gap: 16px;
   }
 }
 
-// ---------------------------------------------------------------------------
-// "Rate this article" + star buttons
-// ---------------------------------------------------------------------------
-
-// Desktop: title and buttons share one row (title left, buttons right).
-// Mobile: stacked — title on its own line, buttons in a full-width row
-// below it (node 618:9919 vs. node 581:15393).
 .single-post-rating__header {
   display: flex;
   align-items: center;
@@ -119,10 +97,6 @@
   width: 20px;
   height: 20px;
 }
-
-// ---------------------------------------------------------------------------
-// Average summary ("★ 5.0 ⬥ 15 people rated")
-// ---------------------------------------------------------------------------
 
 .single-post-rating__summary {
   display: flex;

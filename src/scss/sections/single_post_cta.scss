@@ -1,27 +1,10 @@
-// Source: WheelLab Website (Figma) — node 527:29055 ("Banner"), detailed
-// spec supplied directly (297×520 outer, 281×504 inner, exact shadow/
-// gradient/blend values). Used only by single.php (sidebar) — not an
-// ACF block. The button reuses .btn-gradient/.btn-gradient__inner
-// (src/scss/partials/_general.scss) — same opaque gradient pill used
-// site-wide, including its decorative shine lines (pure CSS
-// pseudo-elements there, nothing to replicate here).
-
 .single-post-cta {
-  // Figma gives 297×520 for one specific (sidebar) instance; width stays
-  // fluid here since this already lives inside a width-constrained
-  // sidebar column (single_post_body.scss) that's itself fluid below
-  // $medium — a hardcoded 297px would stop adapting there. Height is
-  // intentionally fixed either way, per spec.
   width: 100%;
   height: 520px;
-  padding: 8px; // gap/card-padding/focus
+  padding: 8px;
   background: rgb(137 54 204 / 40%);
   border: 1px solid rgb(137 54 204 / 80%);
   border-radius: 20px;
-  // Figma: (0,1) blur 2 spread -0.5 black 8%, (0,2) blur 24 spread 0
-  // purple #6938EF 12% — same two-shadow recipe as the author-hero and
-  // FAQ cards, just confirming it's intentional here too, not a copy
-  // that drifted.
   box-shadow: 0 2px 24px 0 rgb(105 56 239 / 12%), 0 1px 2px -0.5px rgb(0 0 0 / 8%);
 }
 
@@ -32,13 +15,6 @@
   height: 100%;
   padding: 24px;
   overflow: hidden;
-  // Figma's own flattened export of "Banner Container" (node 527:29056)
-  // — the blur(100px) + mix-blend-mode: lighten glow baked in as pixels
-  // instead of reproduced live, so it renders identically everywhere
-  // without leaning on a CSS effect that's finicky to match exactly and
-  // costs a compositing layer per card. background-color is the same
-  // dark navy the source frame sits on, showing at the (rare) edges the
-  // image's own cover-fit doesn't quite reach.
   background-color: var(--bg-main-surface-1);
   background-image: url("../../../assets/img/single-post/cta-bg.png");
   background-repeat: no-repeat;
@@ -46,11 +22,6 @@
   background-size: cover;
   border-radius: 16px;
 }
-
-// ---------------------------------------------------------------------------
-// Decorative 3D render on top of the flattened glow background, purely
-// visual (z-index 0 vs. content's 1).
-// ---------------------------------------------------------------------------
 
 .single-post-cta__bg-sphere {
   position: absolute;
@@ -61,20 +32,11 @@
   mix-blend-mode: luminosity;
 }
 
-// ---------------------------------------------------------------------------
-// Content
-// ---------------------------------------------------------------------------
-
 .single-post-cta__content {
   position: relative;
   z-index: 1;
   display: flex;
   flex-direction: column;
-  // Figma's own value (149px) is really just "push these as far apart
-  // as the fixed-height card allows" — space-between does that directly
-  // and stays correct if the description ever wraps to a different
-  // number of lines, instead of a gap that would leave a stale, too-big
-  // or too-small gap.
   justify-content: space-between;
   height: 100%;
 }
@@ -86,10 +48,6 @@
 }
 
 .single-post-cta__title {
-  // Same values as .h4 (_typography.scss's Heading/H4 — Funnel Display
-  // Bold 28/36) but set directly rather than relying on that class,
-  // since the global h1-h4 color rule in _general.scss is a stale
-  // boilerplate default this needs to override anyway.
   margin: 0;
   font-family: var(--font-family-display);
   font-weight: var(--font-weight-bold);

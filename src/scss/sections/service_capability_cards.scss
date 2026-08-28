@@ -1,24 +1,5 @@
 @use "../partials/variables";
 
-// Source: WheelLab Website (Figma) — node 806:11709 ("Frame"). This is
-// a direct copy of Solutions Section's own card recipe
-// (.solutions-section__card* — same bezel/inner/glow/info/image
-// nesting, same hover targets and values, byte-identical corner arrow
-// SVG) — not re-derived. Real differences: this is a PLAIN wrapping
-// row here, not a Swiper slider (no nav/slide wrapper — cards just
-// wrap onto new lines); card height is this design's own 640px, not
-// Solutions Section's 720px; no mobile Figma frame was given for this
-// node, so mobile below is a plain single-column collapse rather than
-// Solutions Section's own sourced mobile crop/tint treatment; and
-// unlike Solutions Section's own illustrations, these cards' images
-// are pre-cropped/extracted assets meant to sit flush at the bottom
-// edge (bottom: 0, no bleed), not Figma-hand-cropped originals needing
-// the bottom:-45%/height:145% overflow trick.
-//
-// Each card's illustration is shown via object-fit: contain so it
-// scales down to fit an arbitrary admin-uploaded image without
-// distortion.
-
 .service-capability-cards {
     position: relative;
     padding: 96px 0;
@@ -46,14 +27,6 @@
     }
 }
 
-// ---------------------------------------------------------------------------
-// Grid — plain flex-wrap row (node 806:11709's own "Container" is itself
-// flex-wrap), NOT a slider. 3 cards fill one row at the reference
-// 1568px content width (506.67px each, gap 24) — flex-basis 480px lets
-// any repeater length wrap naturally at that width instead of hardcoding
-// "3 columns".
-// ---------------------------------------------------------------------------
-
 .service-capability-cards__grid {
     display: flex;
     flex-wrap: wrap;
@@ -75,8 +48,6 @@
     display: flex;
     flex: 1 0 0;
     width: 100%;
-    // node 806:11709 — 640px reference height (Solutions Section's own
-    // card is 720px — a real difference, not copied blindly).
     height: 640px;
     padding: 8px;
     background: var(--bg-ghost-accent-2);
@@ -185,14 +156,6 @@
     right: 0;
     bottom: 0;
     left: 0;
-    // Smaller than Solutions Section's own 396px — that recipe's
-    // illustrations bleed off the card edge (bottom:-45%), so 396px of
-    // box only ever showed part of a much taller source image. These
-    // are pre-cropped, shown in full via object-fit: contain, so the
-    // same 396px box let a tall/dense icon read as visually bigger and
-    // crowd the text above it. 320px keeps the image clearly smaller
-    // than the text's own reserved space regardless of description
-    // length (see the ACF field's own maxlength for that).
     height: 320px;
     pointer-events: none;
     transition: height 0.4s ease-out;
@@ -215,14 +178,6 @@
         width: 100%;
         height: 100%;
         object-fit: contain;
-        // Right, not center — these icon renders aren't symmetric
-        // compositions (e.g. service_coins.png's second coin is
-        // already cropped at its own right edge, in the source file
-        // itself). Anchoring right puts that existing edge flush
-        // against the card's own right edge instead of stranding it
-        // mid-card with empty space on both sides — reads as the art
-        // intentionally bleeding off the frame, same convention as
-        // Solutions Section's own card illustrations.
         object-position: bottom right;
 
         @media screen and (max-width: variables.$medium) {
@@ -231,11 +186,6 @@
         }
     }
 }
-
-// ---------------------------------------------------------------------------
-// Hover (Smart Animate, Ease Out, 400ms — desktop only, clickable cards
-// only). Same recipe as .solutions-section__card:hover.
-// ---------------------------------------------------------------------------
 
 @media screen and (min-width: variables.$medium + 1px) {
     a.service-capability-cards__card:hover {

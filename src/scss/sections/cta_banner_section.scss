@@ -1,20 +1,11 @@
 @use "../partials/variables";
 
-// Source: WheelLab Website (Figma) — node 527:28993 ("Banner", original
-// single-button layout) and node 806:11708 ("Banner", two-button layout),
-// via get_design_context on both — genuinely different structures, not
-// one superseding the other: 527:28993 stacks its one button directly
-// below the text in a single column; 806:11708 puts text and buttons
-// side by side as separate flex children instead. See
-// .cta-banner-section__content--split below and the PHP template's own
-// header comment for how both stay intact off one block.
-
 .cta-banner-section {
   background: var(--bg-ghost-accent-1);
   border: 1px solid var(--outline-accent-1);
   border-radius: 20px;
   box-shadow: 0 2px 24px 0 rgb(105 56 239 / 12%), 0 1px 2px 0 rgb(0 0 0 / 8%);
-  padding: 8px; // gap/card-padding/focus
+  padding: 8px;
 }
 
 .cta-banner-section__inner {
@@ -24,18 +15,13 @@
   overflow: hidden;
   background-color: var(--bg-main-surface-1);
   border-radius: 16px;
-  padding: 40px; // gap/card-padding/m
+  padding: 40px;
 
   @media screen and (max-width: variables.$small) {
     padding: 24px;
   }
 }
 
-// Same reasoning as ai_highlight_section.scss's ::before — a flattened
-// export of this glow drifted once composited against a different real
-// background than Figma's own canvas, so this reproduces it live instead:
-// an oversized crop of the source texture, blurred and screened on with
-// mix-blend-mode so it always blends correctly with whatever's behind it.
 .cta-banner-section__inner::before {
   content: "";
   position: absolute;
@@ -58,10 +44,6 @@
   gap: 24px;
   max-width: 575px;
 
-  // node 806:11708 — text and buttons as side-by-side flex children
-  // instead of one stacked column, only when a secondary button exists
-  // (see the PHP template's header comment for why this is a modifier,
-  // not the block's only layout).
   &--split {
     flex-direction: row;
     align-items: center;
@@ -70,10 +52,6 @@
     max-width: none;
     width: 100%;
 
-    // No sourced mobile frame for this two-button layout — reverts to
-    // the same stacked column as the single-button case below $medium,
-    // same "collapse a side-by-side banner to a column on narrower
-    // screens" adaptation used throughout this page.
     @media screen and (max-width: variables.$medium) {
       flex-direction: column;
       align-items: flex-start;
@@ -87,8 +65,6 @@
   flex-direction: column;
   gap: 12px;
 
-  // node 806:11708 — 711px reference width for the text column when
-  // side by side with the button group.
   .cta-banner-section__content--split & {
     flex: 1 0 0;
     max-width: 711px;
@@ -101,11 +77,6 @@
 }
 
 .cta-banner-section__title {
-  // Same values as .h4 (_typography.scss's Heading/H4 — Funnel Display
-  // Bold 28/36) but set directly rather than relying on that class,
-  // same reasoning as single_post_cta.scss's title: the global h1-h4
-  // color rule in _general.scss is a stale boilerplate default this
-  // needs to override anyway.
   margin: 0;
   font-family: var(--font-family-display);
   font-weight: var(--font-weight-bold);
@@ -116,8 +87,6 @@
 
 .cta-banner-section__description {
   margin: 0;
-  // Figma's own value here (20/30) — not --text-body-m-line-height
-  // (1.4 = 28), kept as given rather than unified.
   font-family: var(--font-family-body);
   font-size: 20px;
   line-height: 30px;
@@ -139,12 +108,6 @@
 .cta-banner-section__button {
   flex-shrink: 0;
 
-  // node 806:11704 — fixed 200px only applies when this is the ONLY
-  // button (the original single-button banner every existing usage of
-  // this block still is). Once a secondary button is added, the primary
-  // reverts to its natural content-hugging width instead — Figma's own
-  // "Start a design brief" primary button is wider than 200px and would
-  // wrap awkwardly forced into that width.
   &:only-child {
     width: 200px;
 
@@ -154,9 +117,6 @@
   }
 }
 
-// This block's own copy of the glass-frame + tinted-pill secondary
-// button recipe (see this file's header comment for why it's a copy,
-// not a shared class).
 .cta-banner-section__button-secondary {
   display: inline-flex;
   flex-shrink: 0;

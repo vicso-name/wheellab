@@ -1,13 +1,4 @@
 <?php
-/**
- * 404 — Not Found
- *
- * Source: WheelLab Website (Figma) — node 527:32652 ("Main content").
- * Styles live in src/scss/partials/_errors.scss (part of the global
- * style.min.css bundle, not a conditionally-enqueued section) since
- * this is a foundational site template, not a block or page-specific
- * layout.
- */
 
 get_header();
 ?>

@@ -1,18 +1,4 @@
 <?php
-/**
- * Block: Solutions Section
- * Registered as: acf/solutions-section
- * Source: WheelLab Website (Figma) — node 527:24748 (desktop), node
- * 758:61068/758:61069/758:61077 (mobile — title, description, card).
- * Assets: build/css/sections/solutions_section.min.css
- *         build/js/sections/solutions_section.min.js
- *
- * Plain repeater for now (per explicit instruction) — no options-page
- * default/override split like Reviews Section. Each card's illustration is
- * shown via object-fit: contain rather than Figma's per-image hand-tuned
- * cropping, since that positioning can't generalize to arbitrary
- * admin-uploaded images.
- */
 
 $title       = get_field('title')       ?: '';
 $description = get_field('description') ?: '';
@@ -59,7 +45,7 @@ $chevron_right_url = esc_url(wheellab_asset_url('assets/img/icons/chevron-right.
         </div>
     </div>
 
-    <?php // Full-bleed on purpose, same reasoning as .featured-posts-section__swiper. ?>
+    <?php ?>
     <div class="solutions-section__swiper swiper">
         <div class="swiper-wrapper">
             <?php foreach ($cards as $card) :
@@ -77,10 +63,9 @@ $chevron_right_url = esc_url(wheellab_asset_url('assets/img/icons/chevron-right.
                                 <img class="solutions-section__card-glow solutions-section__card-glow--a" src="<?php echo $glow_url; ?>" alt="" aria-hidden="true">
                                 <img class="solutions-section__card-glow solutions-section__card-glow--b" src="<?php echo $glow_url; ?>" alt="" aria-hidden="true">
 
-                                <?php // Text before image in the DOM on purpose: desktop positions the
-                                // image absolutely so source order doesn't matter there, but mobile
-                                // renders it in normal flow (node 758:61077), where source order IS
-                                // the visual order — text first, image last. ?>
+                                <?php
+
+                                ?>
                                 <div class="solutions-section__card-info">
                                     <div class="solutions-section__card-title-row">
                                         <h3 class="solutions-section__card-title h1"><?php echo esc_html($card_title); ?></h3>

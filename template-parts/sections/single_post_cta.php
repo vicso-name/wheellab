@@ -1,18 +1,4 @@
 <?php
-/**
- * Section: Single Post — Sidebar CTA
- * Used by: single.php only. Not an ACF block — the title/description
- * are fixed copy (matching the Figma source exactly) rather than admin
- * fields, since this is a small, generic, sitewide prompt rather than
- * per-post content. Links wherever Theme Options > Header's "Book a
- * Call" link points (get_field('book_a_call', 'option')) — the theme
- * has no dedicated Contact page/anchor of its own to link to instead,
- * so this mirrors the site's one existing "primary contact action"
- * link rather than inventing a second, possibly-inconsistent one.
- *
- * Source: WheelLab Website (Figma) — node 527:29055.
- * Assets: build/css/sections/single_post_cta.min.css
- */
 
 $cta = get_field( 'book_a_call', 'option' ) ?: null;
 if ( empty( $cta['url'] ) ) {

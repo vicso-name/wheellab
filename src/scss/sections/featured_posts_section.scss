@@ -1,13 +1,5 @@
 @use "../partials/variables";
 
-// Source: WheelLab Website (Figma) — node 527:24951. Cards are the same
-// component as the blog page (blog_card.php / node 235:4331) — no new card
-// styles here, only the slider shell around it.
-//
-// Not spec'd for mobile/tablet in Figma (only a 1728px desktop frame
-// exists) — the slide-width step-downs below are a reasonable fallback,
-// mirroring the pattern already used for .reviews-section__slide.
-
 .featured-posts-section {
     position: relative;
     overflow: hidden;
@@ -52,17 +44,9 @@
     flex-shrink: 0;
     align-items: center;
     gap: 24px;
-    // Once .featured-posts-section__header wraps (below $medium), this is
-    // the only item on its own flex line, so justify-content: space-between
-    // on the parent has nothing to push against anymore — margin-left:auto
-    // keeps it pinned to the right regardless. No-op above $medium, since
-    // space-between already puts it there.
     margin-left: auto;
 }
 
-// Same 36px arrow-button recipe as .reviews-section__nav — kept as its own
-// copy rather than shared, matching how .header__cta / .btn-gradient were
-// deliberately left un-merged elsewhere in this codebase.
 .featured-posts-section__nav {
     display: flex;
     flex-shrink: 0;
@@ -86,9 +70,6 @@
         pointer-events: none;
     }
 
-    // Mobile (node 758:62165) swaps to a smaller, thinner chevron in a
-    // bigger 44px tap target — same recipe as .solutions-section__nav, not
-    // a scaled version of the desktop icon.
     @media screen and (max-width: variables.$small) {
         width: 44px;
         height: 44px;
@@ -125,15 +106,7 @@
     }
 }
 
-// ---------------------------------------------------------------------------
-// Slider
-// ---------------------------------------------------------------------------
-
 .featured-posts-section__swiper {
-    // Full-bleed so the peeking next card clips at the section's own edge
-    // (like .reviews-section__swiper) — but slide 1 still lines up with
-    // .container's left edge via this padding, instead of Swiper's usual
-    // centered treatment.
     $inset: max(var(--container-padding), calc((100% - var(--container-max-width)) / 2 + var(--container-padding)));
 
     padding: 0 $inset;
@@ -152,14 +125,6 @@
         width: calc(100vw - 88px);
     }
 
-    // Reserve a fixed 3 lines of height for the title so every card is the
-    // same height regardless of how long its post title is — otherwise a
-    // 2-line title sits noticeably shorter than a 3-line one and the row
-    // looks jagged. line-clamp alone only caps the *max* (truncates long
-    // titles with an ellipsis) — it doesn't reserve space for short ones,
-    // so min-height (3 lines × the h4 36px line-height) does that half.
-    // Scoped to the slider only; the blog page's CSS grid already
-    // equalizes row height on its own, so blog_card.scss stays untouched.
     .blog-card__title {
         display: -webkit-box;
         min-height: 108px;

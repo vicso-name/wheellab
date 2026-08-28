@@ -1,42 +1,4 @@
 <?php
-/**
- * Block: Service Comparison Section
- * Registered as: acf/service-comparison-section
- * Source: WheelLab Website (Figma) — node 806:11678 ("Container").
- *
- * Draggable before/after image reveal — plain Pointer Events + clip-path,
- * no third-party slider library (matches this codebase's own convention
- * of hand-rolling one-off interactions in vanilla JS — see faq_section.js
- * / case_study_tabs_section.js — rather than pulling in a dependency for
- * a UI this small; confirmed with the user explicitly for this block
- * given the handle itself is fully custom-styled regardless of library).
- *
- * The browser-chrome bar (3 dots) is decorative context ("both
- * screenshots live inside the same browser window"), not literal window
- * controls — same "traffic lights" motif some macOS-mockup sections
- * elsewhere on the site use.
- *
- * Mobile (≤576px) is a genuinely different layout, not a CSS reflow of
- * the same markup — node 806:11856 ("Alternative") drops the drag/
- * overlay/chrome-bar mechanic entirely in favor of two plain stacked
- * image cards, each with its own label above it and its own border/bg
- * treatment (the "after" card gets a purple-tinted bezel + glow shadow
- * the "before" one doesn't). Reusing one DOM tree for both would mean
- * un-clipping/repositioning absolutely-positioned elements and moving
- * labels out of the shared header row via CSS alone — this renders both
- * variants and toggles which is visible per breakpoint in CSS instead
- * (see service_comparison_section.scss's __desktop/__mobile rules). The
- * mobile markup carries none of the JS-targeted classes, so
- * service_comparison_section.js simply never touches it — no matchMedia
- * gating needed on the JS side.
- *
- * Ambient background glow (Figma's own hand-rotated nebula crop) is
- * dropped for now per explicit instruction — everything else in this
- * block matches the source design.
- *
- * Assets: build/css/sections/service_comparison_section.min.css
- *         build/js/sections/service_comparison_section.min.js
- */
 
 $title        = get_field('title')        ?: '';
 $before_label = get_field('before_label') ?: '';
@@ -59,7 +21,7 @@ $id     = !empty($block['anchor'])    ? ' id="' . esc_attr($block['anchor']) . '
     <div class="container">
         <h2 class="service-comparison-section__title"><?php echo esc_html($title); ?></h2>
 
-        <?php // Desktop/tablet — draggable overlay reveal (node 806:11678). ?>
+        <?php ?>
         <div class="service-comparison-section__details service-comparison-section__desktop">
             <?php if ($before_label || $after_label) : ?>
                 <div class="service-comparison-section__header">
@@ -95,7 +57,7 @@ $id     = !empty($block['anchor'])    ? ' id="' . esc_attr($block['anchor']) . '
             </div>
         </div>
 
-        <?php // Mobile (≤576px) — two plain stacked cards, no drag/overlay (node 806:11856 "Alternative"). ?>
+        <?php ?>
         <div class="service-comparison-section__stack service-comparison-section__mobile">
             <div class="service-comparison-section__stack-item">
                 <?php if ($before_label) : ?>

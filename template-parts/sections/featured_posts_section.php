@@ -1,19 +1,4 @@
 <?php
-/**
- * Block: Featured Posts Section
- * Registered as: acf/featured-posts-section
- * Source: WheelLab Website (Figma) — node 527:24951. Cards reuse the same
- * markup as the blog page (template-parts/sections/blog_card.php, node
- * 235:4331 — identical bezel/inner/tag/title/meta styling and tokens).
- * Assets: build/css/sections/featured_posts_section.min.css
- *         build/js/sections/featured_posts_section.min.js
- *
- * "Posts Source" lets an editor choose between the 10-latest-posts default
- * and a hand-picked, hand-ordered list (ACF relationship field — chosen
- * over a multi Post Object field because it gives editors search/filter
- * and drag-to-reorder for free, which is exactly what "pick a few posts to
- * feature, in a specific order" needs).
- */
 
 $title       = get_field('title')       ?: '';
 $description = get_field('description') ?: '';
@@ -48,10 +33,6 @@ $id     = !empty($block['anchor'])    ? ' id="' . esc_attr($block['anchor']) . '
 $arrow_left_url  = esc_url(wheellab_asset_url('assets/img/icons/arrow-left.svg'));
 $arrow_right_url = esc_url(wheellab_asset_url('assets/img/icons/arrow-right.svg'));
 
-// Mobile (node 758:62165) uses a different, smaller nav button — same
-// 44px/mask-icon recipe as .solutions-section__nav, not the desktop
-// bare-icon style — toggled via CSS like the header's logo-full/-mobile
-// swap (see src/scss/sections/featured_posts_section.scss).
 $chevron_left_url  = esc_url(wheellab_asset_url('assets/img/icons/chevron-left.svg'));
 $chevron_right_url = esc_url(wheellab_asset_url('assets/img/icons/chevron-right.svg'));
 ?>
@@ -89,10 +70,9 @@ $chevron_right_url = esc_url(wheellab_asset_url('assets/img/icons/chevron-right.
         </div>
     </div>
 
-    <?php // Full-bleed on purpose, same reasoning as .reviews-section__swiper
-    // — the peeking next card is clipped at the section's own edge, not
-    // .container's 1568px measure. Padding keeps slide 1 aligned with the
-    // title above. ?>
+    <?php
+
+    ?>
     <div class="featured-posts-section__swiper swiper">
         <div class="swiper-wrapper">
             <?php while ($posts_query->have_posts()) : $posts_query->the_post(); ?>

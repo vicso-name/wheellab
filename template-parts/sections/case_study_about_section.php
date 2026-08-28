@@ -1,24 +1,4 @@
 <?php
-/**
- * Block: Case Study About Section
- * Registered as: acf/case-study-about-section
- * Source: WheelLab Website (Figma) — node 527:31544 ("Main Container"),
- * node 719:17212 ("Content Section" — title/description/logo), node
- * 697:6024 ("Icon Section" — challenge cards).
- *
- * Challenges render two-per-row ("Icon Row"), each row's first card
- * fixed-width (905px row 1, 638px row 2 — see case_study_about_section.scss)
- * and its second card filling the rest, matching Figma exactly. A 5th+
- * challenge starts a 3rd row that falls back to two equal FILL cards —
- * Figma's own spec only defines widths for the first two rows. Card
- * numbers are assigned by loop position rather than stored on each
- * repeater row — Figma's own mock actually mislabels two cards "3".
- *
- * Client Logo is optional; the text column renders full-width alone
- * when it's empty rather than leaving a blank flex column.
- *
- * Assets: build/css/sections/case_study_about_section.min.css
- */
 
 $title       = get_field('title')       ?: '';
 $description = get_field('description') ?: '';

@@ -1,14 +1,5 @@
 @use "../partials/variables";
 
-// No Figma spec exists for the case_study archive template — it reuses
-// Case Study Section's own card component classes
-// (.case-study-section__card-bezel/-inner/-image/-text/-stats, loaded
-// alongside this file — see inc/enqueue.php) for visual consistency
-// instead of inventing a new card look from scratch.
-//
-// single-case_study.php has no fixed section of its own (2026-08-28) —
-// it's entirely block-driven via the_content(), same as any other page.
-
 .case-study-archive {
     padding: 100px 0;
 

@@ -1,18 +1,4 @@
 <?php
-/**
- * Block: Case Study Quote Section
- * Registered as: acf/case-study-quote-section
- * Source: WheelLab Website (Figma) — node 527:31672 ("Container").
- *
- * The blur-in-on-scroll reveal (src/js/sections/case_study_quote_section.js)
- * follows the same IntersectionObserver pattern as Domains Section's own
- * card reveal (domains_section.js/.scss) — .is-visible added once ~30%
- * of the quote has scrolled into view, skipped entirely for
- * prefers-reduced-motion users.
- *
- * Assets: build/css/sections/case_study_quote_section.min.css
- *         build/js/sections/case_study_quote_section.min.js
- */
 
 $quote  = get_field('quote')  ?: '';
 $author = get_field('author') ?: '';

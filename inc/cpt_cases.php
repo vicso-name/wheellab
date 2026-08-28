@@ -1,12 +1,4 @@
 <?php
-/**
- * Case Study CPT
- *
- * Backs Case Study Section (acf/case-study-section) the same way regular
- * WP posts back Featured Posts Section — the block queries this post type
- * (latest N or a manual relationship pick, see case_study_section.php)
- * instead of holding case data in its own repeater field.
- */
 
 defined('ABSPATH') || exit;
 

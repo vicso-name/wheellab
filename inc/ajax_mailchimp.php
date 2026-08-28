@@ -1,18 +1,4 @@
 <?php
-/**
- * AJAX-powered Mailchimp sign-up for the Blog page's Subscribe banner
- * (template-parts/sections/blog_subscribe.php). Plain admin-ajax (not
- * REST), same reasoning as inc/ajax_blog.php — a public, unauthenticated
- * endpoint doesn't need extra routing/auth surface.
- *
- * Talks to the Mailchimp Marketing API v3 directly (no plugin dependency):
- * https://mailchimp.com/developer/marketing/api/list-members/add-member-to-list/
- * The API key and Audience ID are ACF fields on the Blog page template
- * itself (acf-json/group_template_blog.json, "Mailchimp" tab) — the data
- * center (e.g. "us21") is parsed from the key's own "-us21" suffix rather
- * than asking for it separately, since that's the one thing Mailchimp
- * keys always encode.
- */
 
 defined('ABSPATH') || exit;
 
@@ -47,13 +33,6 @@ function wheellab_ajax_mailchimp_subscribe(): void {
     wp_send_json_error(['message' => $result['message']], $result['status']);
 }
 
-/**
- * Finds the page assigned to the Blog page template. AJAX requests have no
- * main WP_Query / queried object of their own (unlike blog_filter.php,
- * which reads get_queried_object_id() directly during the real page
- * render) — this is the admin-ajax equivalent, cached per-request since
- * it's only ever looked up once per subscribe attempt.
- */
 function wheellab_get_blog_template_page_id(): int {
     static $page_id = null;
 
@@ -75,9 +54,6 @@ function wheellab_get_blog_template_page_id(): int {
     return $page_id;
 }
 
-/**
- * @return array{success: bool, message: string, status?: int}
- */
 function wheellab_mailchimp_subscribe(string $api_key, string $audience_id, string $email, bool $double_optin): array {
     if (!preg_match('/-([a-z0-9]+)$/i', $api_key, $matches)) {
         return [
@@ -93,15 +69,13 @@ function wheellab_mailchimp_subscribe(string $api_key, string $audience_id, stri
     $response = wp_remote_post($endpoint, [
         'timeout' => 15,
         'headers' => [
-            // Mailchimp accepts any string as the Basic auth username —
-            // only the API key (the password half) is actually checked.
+
             'Authorization' => 'Basic ' . base64_encode('wheellab:' . $api_key),
             'Content-Type'  => 'application/json',
         ],
         'body' => wp_json_encode([
             'email_address' => $email,
-            // "pending" triggers Mailchimp's own double opt-in confirmation
-            // email instead of subscribing the address outright.
+
             'status'        => $double_optin ? 'pending' : 'subscribed',
         ]),
     ]);
@@ -127,8 +101,6 @@ function wheellab_mailchimp_subscribe(string $api_key, string $audience_id, stri
 
     $body = json_decode(wp_remote_retrieve_body($response), true);
 
-    // Mailchimp's own "already on this list" error — a distinct message
-    // rather than the generic fallback below.
     if (($body['title'] ?? '') === 'Member Exists') {
         return [
             'success' => false,

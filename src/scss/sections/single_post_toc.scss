@@ -1,6 +1,3 @@
-// Source: WheelLab Website (Figma) — node 527:29045 ("Controls").
-// Used only by single.php (sidebar) — not an ACF block.
-
 .single-post-toc {
   display: flex;
   flex-direction: column;
@@ -42,9 +39,6 @@
     color: var(--content-main-primary);
   }
 
-  // Scroll-spy state (single_post_toc.js) — a smaller radius than the
-  // resting state (8px vs. 12px) and a filled background is how Figma
-  // marks "currently in view", not just a color change.
   &.is-active {
     color: var(--content-main-primary);
     background: var(--bg-ghost-accent-2);

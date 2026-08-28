@@ -1,5 +1,5 @@
-<?php 
-// Redirect to front page if a static front page is set
+<?php
+
 if (is_front_page() && !is_home()) {
     wp_safe_redirect(get_permalink(get_option('page_on_front')));
     exit();

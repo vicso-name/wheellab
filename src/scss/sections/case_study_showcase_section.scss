@@ -1,11 +1,5 @@
 @use "../partials/variables";
 
-// Source: WheelLab Website (Figma) — node 697:6970 ("Highlights
-// Section", desktop), node 783:5247 ("Highlights Section", mobile).
-// See case_study_showcase_section.php's header comment for why each
-// card is just a plain image (Full/Half Width) instead of Figma's own
-// bespoke device-mockup illustrations.
-
 .case-study-showcase-section {
     padding: 120px 0;
 
@@ -17,8 +11,6 @@
         padding: 64px 0;
     }
 
-    // Same 20px mobile inset as the other Case Study blocks (vs. the
-    // sitewide .container mobile padding of 16px — _general.scss).
     > .container {
         @media screen and (max-width: variables.$small) {
             padding-left: 20px;
@@ -37,13 +29,6 @@
     }
 }
 
-// ---------------------------------------------------------------------------
-// Images — flex-wrap does all the Full/Half pairing on its own: two
-// consecutive Half Width items land side by side because together they
-// fill one row; an odd one out simply wraps alone. No PHP grouping
-// needed to match Figma's own layout.
-// ---------------------------------------------------------------------------
-
 .case-study-showcase-section__images {
     display: flex;
     flex-wrap: wrap;
@@ -56,15 +41,6 @@
     background: var(--bg-main-surface-2);
     border: 1px solid var(--outline-neutral);
     border-radius: 20px;
-
-    // ---------------------------------------------------------------
-    // Scroll-into-view reveal — case_study_showcase_section.js adds
-    // .is-visible via IntersectionObserver, threshold 0.15 (see that
-    // file's own comment for why the delay is index % 2 rather than
-    // domains_section's plain per-index stagger). Skipped entirely for
-    // prefers-reduced-motion users — the script adds .is-visible
-    // immediately in that case, so this transition never actually runs.
-    // ---------------------------------------------------------------
     opacity: 0;
     transform: translateY(40px);
     transition: opacity 0.6s ease-out, transform 0.6s ease-out;
@@ -88,7 +64,6 @@
     flex: 1 1 100%;
 
     img {
-        // node 697:6028 ("Case study frame") — inner image ratio.
         aspect-ratio: 1552 / 970;
     }
 }
@@ -98,10 +73,6 @@
     min-width: 0;
 
     img {
-        // node 697:6982 ("Container") — inner image ratio. Unchanged at
-        // any width, including the $small override below — the image
-        // just renders taller as its own container narrows, not a
-        // different crop.
         aspect-ratio: 756 / 991;
     }
 

@@ -1,24 +1,4 @@
 <?php
-/**
- * Block: Service Hero
- * Registered as: acf/service-hero
- * Source: WheelLab Website (Figma) — node 806:11598 ("Container", desktop
- * full block incl. background), node 806:11602 ("Content", desktop text +
- * buttons), node 806:11762 ("Frame", mobile 393px full block). The
- * floating header visible in both frames is the site's own persistent
- * header (header.php) — not part of this block.
- *
- * Same "pull up behind the sticky header" full-bleed hero shape as
- * hero_section.php / case_study_hero.php, but a static image background
- * (no video) and its own shorter/later bottom fade on desktop (mobile
- * reverts to the sitewide standard fade) — see service_hero.scss for the
- * exact gradient math. Background Image is optional — falls back to the
- * theme's bundled default (a casino chips/dice render, the same asset
- * used as the field's own preview default) so most Service posts never
- * have to upload one.
- *
- * Assets: build/css/sections/service_hero.min.css
- */
 
 $bg_image         = get_field('background_serv_image') ?: null;
 $heading           = get_field('heading')               ?: '';

@@ -1,14 +1,5 @@
 @use "../partials/variables";
 
-// Source: WheelLab Website (Figma) — node 783:27431 ("Tile section"), via
-// get_design_context.
-//
-// The first row is asymmetric (905px / 639px, ≈7:5), every row after it
-// an even 50/50 split (772px / 772px in the 4-card Figma mock) — a
-// 12-column grid reproduces that: the first two cards get a 7/5 span
-// (≈1.4, within ~1% of the true 905:639 ratio), everything else defaults
-// to a plain 6/6 so it still generalizes to any repeater length.
-
 .tile-section {
     position: relative;
     overflow: hidden;
@@ -19,9 +10,6 @@
     }
 }
 
-// node 783:27546 — same shared glow texture as Domains Section's card
-// glow (confirmed byte-identical asset), just centered on the section
-// itself instead of anchored/rotated per-card.
 .tile-section__glow {
     position: absolute;
     top: 50%;
@@ -57,10 +45,6 @@
     color: var(--content-main-secondary);
 }
 
-// ---------------------------------------------------------------------------
-// Cards
-// ---------------------------------------------------------------------------
-
 .tile-section__grid {
     position: relative;
     display: grid;
@@ -79,18 +63,11 @@
     background: var(--bg-main-surface-2);
     border: 1px solid var(--outline-neutral);
     border-radius: 20px;
-    // No explicit height anywhere in this card — CSS Grid's default
-    // align-items: stretch already equalizes every card in a row to the
-    // tallest one's natural content height, so the min-height/line-clamp
-    // trick used for the sliders elsewhere isn't needed here.
 
     @media screen and (max-width: variables.$medium) {
         grid-column: 1 / -1;
     }
 
-    // node 792:9727 ("Feature Group") — the first row's two cards, wider
-    // (span 7) then narrower (span 5) instead of the plain 6/6 every
-    // other row gets.
     &:nth-child(1) {
         grid-column: span 7;
 
@@ -156,8 +133,5 @@
 
 .tile-section__card-description {
     margin: 0;
-    // Content/Main/Primary (full white), not the ...secondary used
-    // elsewhere — confirmed via get_design_context, a deliberate
-    // difference from Solutions/Domains card body text.
     color: var(--content-main-primary);
 }

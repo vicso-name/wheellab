@@ -1,23 +1,4 @@
 <?php
-/**
- * Block: Hero Section
- * Registered as: acf/hero-section
- * Source: WheelLab Website (Figma) — node 527:24692 ("Card", full block),
- * node 527:24696 ("Content", text + buttons).
- *
- * Background is video-first per explicit instruction (not sourced from
- * Figma, which only has a static render): an uploaded video plays on
- * loop behind the content when set, falling back to a plain poster image,
- * then to the bare background color if neither is set. The bottom fade
- * (node 527:24695) sits above either one so the content stays readable
- * and the section blends into whatever comes after it.
- *
- * Primary button reuses .btn-gradient/.btn-gradient__inner (src/scss/
- * partials/_general.scss) — the same "glass frame + gradient pill + two
- * shine lines" component already shared by the header CTA and the blog
- * page's "View more" button, not a new copy.
- * Assets: build/css/sections/hero_section.min.css
- */
 
 $title_white      = get_field('title_white')      ?: '';
 $title_accent     = get_field('title_accent')     ?: '';

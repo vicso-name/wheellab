@@ -1,10 +1,4 @@
 <?php
-/**
- * Search form
- *
- * Custom markup (rather than the WP default input[type=submit]) so it
- * matches the header search panel styles/JS in _header.scss / general.js.
- */
 
 $unique_id = wp_unique_id('search-form-');
 ?>

@@ -1,12 +1,5 @@
 @use "../partials/variables";
 
-// Source: WheelLab Website (Figma) — node 527:31650 ("Frame"). Desktop
-// only for this first iteration (mobile spec to follow). See
-// case_study_screens_section.php's header comment for the Full/Half
-// Width + flex-wrap reasoning (same as case_study_showcase_section) and
-// why each item gets its own aspect-ratio rather than Figma's one
-// shared 947px inner height.
-
 .case-study-screens-section {
     padding: 120px 0;
 
@@ -43,18 +36,6 @@
     color: var(--content-main-secondary);
 }
 
-// ---------------------------------------------------------------------------
-// Grid — same flex-wrap auto-pairing as .case-study-showcase-section__images:
-// two consecutive Half Width items land side by side, an odd one out
-// wraps alone at full width. Figma's own gap between the half-pair row
-// and the full-width item below it measures 64px rather than this
-// section's own 24px item gap — read as a Figma component-boundary
-// artifact rather than a deliberate rule (nothing distinguishes "gap
-// after the last half-pair" from any other gap for a flexible repeater),
-// so this keeps one uniform 24px value, consistent with
-// case_study_showcase_section.
-// ---------------------------------------------------------------------------
-
 .case-study-screens-section__grid {
     display: flex;
     flex-wrap: wrap;
@@ -86,18 +67,10 @@
 
 .case-study-screens-section__frame {
     padding: 8px;
-    background: rgb(255 255 255 / 8%); // Figma's own untokenized value
+    background: rgb(255 255 255 / 8%);
     border: 1px solid rgb(255 255 255 / 8%);
     border-radius: 20px;
     box-shadow: 0 2px 24px 0 rgb(105 56 239 / 12%), 0 1px 2px 0 rgb(0 0 0 / 8%);
-
-    // ---------------------------------------------------------------
-    // Scroll-into-view reveal — case_study_screens_section.js adds
-    // .is-visible via IntersectionObserver, threshold 0.15, staggered
-    // by DOM index — same pattern as Domains Section's own card reveal
-    // (domains_section.js) and Case Study Showcase Section's own image
-    // reveal. Skipped entirely for prefers-reduced-motion users.
-    // ---------------------------------------------------------------
     opacity: 0;
     transform: translateY(40px);
     transition: opacity 0.6s ease-out, transform 0.6s ease-out;
@@ -118,13 +91,9 @@
 }
 
 .case-study-screens-section__item--full .case-study-screens-section__frame img {
-    // node 697:15431 ("Image group") — inner image ratio.
     aspect-ratio: 1552 / 947;
 }
 
 .case-study-screens-section__item--half .case-study-screens-section__frame img {
-    // node 527:31658 ("Image group") — inner image ratio. Unchanged at
-    // any width — the image just renders taller as its own container
-    // narrows once stacked on mobile, not a different crop.
     aspect-ratio: 756 / 947;
 }

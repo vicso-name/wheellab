@@ -1,22 +1,4 @@
 <?php
-/**
- * Block: Case Study Screens Section
- * Registered as: acf/case-study-screens-section
- * Source: WheelLab Website (Figma) — node 527:31650 ("Frame").
- *
- * Same Full/Half Width + flex-wrap auto-pairing architecture as
- * case_study_showcase_section.php (see that file's own header comment
- * for the full reasoning) — this is the same "just an image showcase"
- * pattern, the only real difference being a text label above each
- * screen. Figma's own mock happens to size every card (half or full) to
- * the same 947px inner height, but that's this one desktop canvas, not
- * a deliberate cross-breakpoint spec — each width gets its own
- * aspect-ratio instead (case_study_screens_section.scss), same
- * reasoning as the showcase section's own image ratios.
- *
- * Assets: build/css/sections/case_study_screens_section.min.css
- *         build/js/sections/case_study_screens_section.min.js
- */
 
 $title       = get_field('title')       ?: '';
 $description = get_field('description') ?: '';

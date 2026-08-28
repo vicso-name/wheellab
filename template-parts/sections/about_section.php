@@ -1,23 +1,4 @@
 <?php
-/**
- * Block: About Section
- * Registered as: acf/about-section
- * Source: WheelLab Website (Figma) — node 527:24707 ("Content Group").
- *
- * The Figma frame gives no outer section wrapper (no title/description
- * header sits above this card, unlike Solutions/Domains/Tile), so this is
- * the section's entire content — wrapped in the standard 100px vertical
- * section padding + .container used everywhere else.
- *
- * The divider (node 527:24724) always renders once there's a title, so
- * the 96px/96px gap above and below it holds even with no logos yet. The
- * logo row itself (node 527:24725, annotated "Running line with trusted
- * companies") is an infinite marquee — the Figma mock uses placeholder
- * logos, so this renders whatever the admin uploads to the Logos gallery,
- * duplicated once in the markup for a seamless CSS loop regardless of
- * count — and stays hidden until at least one is uploaded.
- * Assets: build/css/sections/about_section.min.css
- */
 
 $label       = get_field('label')       ?: '';
 $title       = get_field('title')       ?: '';

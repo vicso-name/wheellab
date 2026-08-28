@@ -1,16 +1,4 @@
 <?php
-/**
- * Section: Author Hero
- * Used by: author.php only (WP's native author archive — not an ACF
- * block, not a Page, so there's no block/page context to pull fields
- * from). Author data lives on the WP user profile itself:
- * acf-json/group_author_fields.json (job_title, photo, social_instagram,
- * social_linkedin) plus WP core's own "Biographical Info" (description).
- *
- * Source: WheelLab Website (Figma) — node 625:17738 (desktop), node
- * 625:17890 (mobile).
- * Assets: build/css/sections/author_hero.min.css
- */
 
 $author    = get_queried_object();
 $author_id = $author instanceof WP_User ? $author->ID : 0;

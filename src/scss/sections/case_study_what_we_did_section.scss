@@ -1,15 +1,7 @@
 @use "../partials/variables";
 
-// Source: WheelLab Website (Figma) — node 697:15561 ("Tile section").
-// Desktop only for this first iteration (mobile spec to follow).
-
 .case-study-what-we-did-section {
     padding: 120px 0;
-    // The image deliberately bleeds past its own flex column, right up
-    // to (and slightly past) .container's own edge — see
-    // .case-study-what-we-did-section__image below. This is what clips
-    // that overflow at the section's own boundary instead of it
-    // spilling into whatever comes visually next.
     overflow: hidden;
 
     @media screen and (max-width: variables.$medium) {
@@ -28,13 +20,6 @@
     }
 }
 
-// ---------------------------------------------------------------------------
-// Row — text left, image right. Figma's own text column (876px tall) and
-// image (789px) are different heights in this one example, so unlike
-// .case-study-tabs-section__frame this deliberately doesn't stretch the
-// image to match — each side keeps its own natural height.
-// ---------------------------------------------------------------------------
-
 .case-study-what-we-did-section__row {
     display: flex;
     align-items: flex-start;
@@ -47,9 +32,6 @@
 
 .case-study-what-we-did-section__text {
     display: flex;
-    // Figma's own fixed 790px, not flex: 1 0 0 — the image next to it
-    // needs a predictable remaining column width to bleed correctly
-    // (see .case-study-what-we-did-section__image below).
     width: 790px;
     flex-shrink: 0;
     flex-direction: column;
@@ -85,34 +67,14 @@
 .case-study-what-we-did-section__section-description {
     margin: 0;
     font-family: var(--font-family-body);
-    // var(), not a literal 16px/24px — --text-body-s-* already steps
-    // (slightly) at $small (_tokens.scss) sitewide, so this follows for
-    // free.
     font-size: var(--text-body-s-size);
     line-height: var(--text-body-s-line-height);
     color: var(--content-main-primary);
 }
 
-// ---------------------------------------------------------------------------
-// Image — unlike Showcase/Screens Section's images, this one is a
-// single transparent-PNG device composite (iPhone + desktop mockup,
-// dark background already baked in) that's meant to bleed off the right
-// edge rather than sit in a card frame. Fixed at Figma's own 834×789
-// display size (uploaded @2x, 1668×1578) — max-width: none so it never
-// shrinks to fit its own flex column; .row's fixed-width text column
-// (790px) is what makes the overflow amount predictable, and the
-// section's own overflow: hidden (above) clips it at the section edge
-// instead of it spilling further. .container's own max-width already
-// keeps this fully inside the layout again on very wide viewports —
-// no separate ">1728px" rule needed.
-// ---------------------------------------------------------------------------
-
 .case-study-what-we-did-section__image {
     position: relative;
     flex: 1 0 0;
-    // Absolutely-positioned children don't contribute to a parent's
-    // height, so without this the column would collapse to 0 — set to
-    // match the image's own fixed display height exactly.
     height: 789px;
     min-width: 0;
 
@@ -125,11 +87,6 @@
         max-width: none;
     }
 
-    // No mobile/tablet spec yet for this bleed effect — once .row
-    // stacks to a column, a fixed-position 834px-wide image would
-    // either overflow narrower viewports or sit oddly detached from
-    // flow, so this falls back to a plain in-flow, full-width image
-    // instead (refine once a real mobile frame is provided).
     @media screen and (max-width: variables.$medium) {
         height: auto;
 

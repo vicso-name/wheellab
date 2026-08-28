@@ -1,11 +1,4 @@
 <?php
-/**
- * ACF Options pages.
- *
- * Global, non-block content (footer, and future header/SEO defaults) lives
- * here instead of in a Gutenberg block. Field groups are attached via their
- * location rules in acf-json/ — see docs/acf-block-patterns.md § Footer.
- */
 
 defined('ABSPATH') || exit;
 

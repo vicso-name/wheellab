@@ -1,15 +1,4 @@
 <?php
-/**
- * Block: Reviews Section
- * Registered as: acf/reviews-section
- * Source: WheelLab Website (Figma) — node 527:28152.
- * Assets: build/css/sections/reviews_section.min.css
- *         build/js/sections/reviews_section.min.js
- *
- * Reviews come from ACF Options → Reviews (acf-json/group_reviews_settings.json)
- * by default. A block can opt into its own list via "Use Custom Reviews"
- * (acf-json/group_reviews_section.json) instead of editing the global one.
- */
 
 $use_custom     = (bool) get_field('use_custom_reviews');
 $custom_reviews = $use_custom ? (get_field('custom_reviews') ?: []) : [];
@@ -27,9 +16,9 @@ $arrow_right_url = esc_url(wheellab_asset_url('assets/img/icons/arrow-right.svg'
 
 <?php if ($reviews) : ?>
 <section class="<?php echo esc_attr($class); ?>"<?php echo $id; ?>>
-    <?php // Full-bleed on purpose — Figma clips the peeking side slides at the
-    // section's own edges, not at .container's 1568px measure. Only the
-    // pagination row below is constrained to .container. ?>
+    <?php
+
+    ?>
     <div class="reviews-section__swiper swiper">
         <div class="swiper-wrapper">
             <?php foreach ($reviews as $review) :

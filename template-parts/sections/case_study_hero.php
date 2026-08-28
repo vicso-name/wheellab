@@ -1,25 +1,4 @@
 <?php
-/**
- * Block: Case Study Hero
- * Registered as: acf/case-study-hero
- * Source: WheelLab Website (Figma) — node 527:31519 ("Background
- * Container", desktop) and node 782:13725 / 782:13728 ("Gradient" /
- * "Center", mobile).
- *
- * Structurally a near-copy of single_post_hero.php's own section: same
- * full-bleed image + bottom-heavy gradient + "pull up behind the sticky
- * header" trick (see case_study_hero.scss). Meant to be inserted at the
- * top of a case_study post's content in the editor, same as any other
- * block — title still reads from the post itself (the_title()) since
- * one case study only ever needs one hero, but background/tags/
- * highlights are the block's own fields so the same post could power
- * more than one hero variant if ever needed.
- *
- * Background Image is optional on the block — falls back to the post's
- * Featured Image when empty, so most editors never have to set it twice.
- *
- * Assets: build/css/sections/case_study_hero.min.css
- */
 
 $background_image = get_field('background_image') ?: null;
 $hero_tags         = get_field('hero_tags')        ?: [];

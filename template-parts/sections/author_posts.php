@@ -1,17 +1,4 @@
 <?php
-/**
- * Section: Author Posts
- * Used by: author.php only. "N articles from this author" (node
- * 527:30095) + a 12-per-page grid of the author's posts + AJAX "load
- * more" (node 527:30115) — same query shape, card partial and
- * load-more mechanics as the Blog page grid (template-parts/sections/
- * blog_filter.php), just author-scoped instead of category-scoped, so
- * it reuses that section's CSS classes (blog_filter.scss) and posts
- * through the same inc/ajax_blog.php endpoint with an `author` id
- * instead of a `category` slug.
- *
- * Source: WheelLab Website (Figma) — node 527:30074.
- */
 
 $author    = get_queried_object();
 $author_id = $author instanceof WP_User ? $author->ID : 0;

@@ -1,13 +1,4 @@
 <?php
-/**
- * Archive: Case Study (case_study CPT)
- * URL: /cases/ (has_archive => 'cases', see inc/cpt_cases.php)
- *
- * No Figma spec exists for this page — reuses Case Study Section's own
- * card component styles (see src/scss/sections/case_study_archive.scss)
- * for visual consistency instead of a new design. This is what the
- * "View all cases" button links to by default.
- */
 
 get_header();
 ?>

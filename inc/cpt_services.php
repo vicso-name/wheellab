@@ -1,16 +1,4 @@
 <?php
-/**
- * Service CPT
- *
- * Backs upcoming service-detail blocks (see acf_blocks.php) the same way
- * case_study backs the Case Study Section — blocks will query this post
- * type instead of holding service data in their own repeater fields.
- *
- * No archive template is planned for this CPT (unlike case_study, which
- * has archive-case_study.php) — the "Service" nav item is a mega-menu
- * trigger, not a link to a listing page. has_archive is off so /services/
- * doesn't resolve to the theme's empty archive.php fallback.
- */
 
 defined('ABSPATH') || exit;
 

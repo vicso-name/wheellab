@@ -1,34 +1,4 @@
 <?php
-/**
- * Block: Service Feature Cards
- * Registered as: acf/service-feature-cards
- * Source: WheelLab Website (Figma) — node 806:11625 ("Container", full
- * block), node 806:11626 ("Content container", header text + slider
- * nav), node 806:11635 ("Feature cards" / "Card row"), node 806:11654
- * ("Feature card", single card).
- *
- * Same header + full-bleed Swiper + chevron-nav recipe as Solutions
- * Section / Case Study Section (see those files) — reused verbatim
- * rather than re-derived. Plain ACF repeater for cards, each holding its
- * own title/description/features list (no CPT backing — unlike Case
- * Study Section, these aren't independent content, just a fixed-purpose
- * list for this one block instance).
- *
- * Card illustration is a fixed, theme-bundled graphic (mask-tinted
- * accent-2 cyan via CSS, see service_feature_cards.scss), NOT a per-card
- * upload — the Figma mock shows the exact same "wireframe → mockup"
- * glyph on every card, matching this codebase's existing "shared fixed
- * icon" precedent (stats_showcase_section's orbit icons) rather than
- * the "per-item image field" one.
- *
- * Mobile (≤576px, explicit instruction): no slider at all — Swiper is
- * never initialized below that width (see service_feature_cards.js) and
- * .service-feature-cards__swiper/__wrapper fall back to a plain stacked
- * column via CSS, one card per row.
- *
- * Assets: build/css/sections/service_feature_cards.min.css
- *         build/js/sections/service_feature_cards.min.js
- */
 
 $title       = get_field('title')       ?: '';
 $description = get_field('description') ?: '';
@@ -70,7 +40,7 @@ $id     = !empty($block['anchor'])    ? ' id="' . esc_attr($block['anchor']) . '
         </div>
     </div>
 
-    <?php // Full-bleed on purpose, same reasoning as .solutions-section__swiper. ?>
+    <?php ?>
     <div class="service-feature-cards__swiper swiper">
         <div class="swiper-wrapper">
             <?php foreach ($cards as $card) :

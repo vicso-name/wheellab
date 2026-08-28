@@ -1,22 +1,4 @@
 <?php
-/**
- * Block: Case Study Tabs Section
- * Registered as: acf/case-study-tabs-section
- * Source: WheelLab Website (Figma) — node 527:31714 ("Tile section").
- *
- * Tabs on the left, one image on the right — clicking a tab crossfades
- * the image (case_study_tabs_section.js) instead of swapping the <img>
- * src directly, so there's no reload flash mid-transition: every tab's
- * image is already in the DOM, absolutely stacked, and only the active
- * one is opacity: 1 (case_study_tabs_section.scss).
- *
- * Figma's own mock has no real image in the "Image" slot (a bare
- * surface-1 placeholder) — each tab's image is genuinely just whatever
- * the editor uploads via its own Image field.
- *
- * Assets: build/css/sections/case_study_tabs_section.min.css
- *         build/js/sections/case_study_tabs_section.min.js
- */
 
 $title       = get_field('title')       ?: '';
 $description = get_field('description') ?: '';

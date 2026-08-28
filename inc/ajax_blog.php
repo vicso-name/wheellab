@@ -1,25 +1,9 @@
 <?php
-/**
- * AJAX-powered category filter + "load more" pagination for the Blog page
- * template (template-blog.php), reused (author-scoped, no category filter)
- * by author.php's "load more" too. Plain admin-ajax (not REST) — matches
- * the theme's existing conventions, no extra routing/auth surface needed
- * for a public, read-only query.
- */
 
 defined('ABSPATH') || exit;
 
-const WHEELLAB_BLOG_POSTS_PER_PAGE = 12; // 3 columns x 4 rows
+const WHEELLAB_BLOG_POSTS_PER_PAGE = 12;
 
-/**
- * Single source of truth for the query args, used by both the initial
- * (PHP-rendered) page and every AJAX "load more" / filter request, so the
- * two can never drift out of sync with each other.
- *
- * $author_id scopes to one author's posts (author.php's "load more" —
- * see template-parts/sections/author_posts.php) — 0 means unscoped, same
- * as the Blog page's use of this function.
- */
 function wheellab_blog_query_args(string $category_slug, int $paged, int $author_id = 0): array {
     $args = [
         'post_type'      => 'post',
@@ -29,8 +13,6 @@ function wheellab_blog_query_args(string $category_slug, int $paged, int $author
         'ignore_sticky_posts' => true,
     ];
 
-    // Ignore unknown/tampered slugs rather than silently returning zero
-    // results for what looks like a valid filter.
     if ($category_slug && $category_slug !== 'all' && term_exists($category_slug, 'category')) {
         $args['category_name'] = $category_slug;
     }

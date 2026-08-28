@@ -1,21 +1,4 @@
 <?php
-/**
- * Block: Stats Showcase Section
- * Registered as: acf/stats-showcase-section
- * Source: WheelLab Website (Figma) — node 527:24777 ("Card") for the
- * static layout (bg/logos/circle/text), reference motion from a separate
- * Animation.mp4 export not itself in Figma — see stats_showcase_section.js's
- * header comment for the full mechanics writeup.
- *
- * Four fixed 3D icons (arrow/gear/coins/chart — theme assets, not
- * per-slide uploads) sit on one shared circular orbit behind the text.
- * Each slide advance rotates that orbit ~90°, swapping which two icons
- * are visible (left/right) — see stats_showcase_section.js for the orbit
- * math and stats_showcase_section.scss for the orbit/mask layout.
- *
- * Assets: build/css/sections/stats_showcase_section.min.css
- *         build/js/sections/stats_showcase_section.min.js
- */
 
 $logo   = get_field('logo')   ?: null;
 $slides = get_field('slides') ?: [];
@@ -36,8 +19,6 @@ $id     = !empty($block['anchor'])    ? ' id="' . esc_attr($block['anchor']) . '
 $bg_url     = esc_url(wheellab_asset_url('assets/img/stats-showcase/bg.webp'));
 $circle_url = esc_url(wheellab_asset_url('assets/img/stats-showcase/circle.png'));
 
-// Fixed icon set + orbit order. The key is also the base-angle lookup
-// stats_showcase_section.js uses (ICON_BASE_ANGLES) — keep both in sync.
 $orbit_icons = [
     'coins' => 'Coins',
     'arrow' => 'Arrow',
@@ -45,15 +26,8 @@ $orbit_icons = [
     'chart' => 'Chart',
 ];
 
-// Enough repeats to fill any reasonable viewport height twice over
-// (doubled below for a seamless -50% loop) — not tied to Figma's own
-// 7-per-column count, which was just however many fit its one canvas.
 $logo_repeats = 10;
 
-// Title is always exactly two words (see the ACF field's own
-// instructions) — split into its two independently-masked lines. A
-// title with only one word just leaves the second line empty rather
-// than erroring; more than two words folds the remainder onto line two.
 $title_lines = array_map(static function ($slide) {
     $parts = explode(' ', trim((string) $slide['title']), 2);
     return [$parts[0] ?? '', $parts[1] ?? ''];

@@ -1,17 +1,4 @@
 <?php
-/**
- * Block: Domains Section
- * Registered as: acf/domains-section
- * Source: WheelLab Website (Figma) — node 527:24726 ("Features List",
- * desktop only so far). Same card language as Solutions Section (node
- * 527:24748) but laid out as a grid instead of a slider, and in the
- * accent-1/purple bezel rather than Solutions' accent-2/cyan one — that's
- * a real difference in the Figma tokens, not a copy-paste slip.
- *
- * The first card is a single dedicated ACF group field (full-width,
- * larger illustration) — everything after it is a plain repeater.
- * Assets: build/css/sections/domains_section.min.css
- */
 
 $title        = get_field('title')        ?: '';
 $description  = get_field('description')  ?: '';
@@ -23,10 +10,6 @@ $class .= !empty($block['className']) ? ' ' . $block['className']  : '';
 $class .= !empty($block['align'])     ? ' align' . $block['align'] : '';
 $id     = !empty($block['anchor'])    ? ' id="' . esc_attr($block['anchor']) . '"' : '';
 
-// node 514:10399 — the actual glow texture used by this section's cards
-// (both the wide featured card and the grid cards share the same source
-// asset, just cropped/positioned differently), not the generic glow.jpg
-// reused from Contact Section.
 $glow_url = esc_url(wheellab_asset_url('assets/img/domains/card-glow.png'));
 
 $has_featured = !empty($featured['title']) && !empty($featured['link']['url']);
@@ -35,8 +18,6 @@ if (!$has_featured && !$cards) {
     return;
 }
 
-// Shared markup for both the featured card and the grid cards — only the
-// --featured modifier and image size differ between them.
 $render_card = function ($card, $is_featured) use ($glow_url) {
     $card_title       = $card['title'] ?? '';
     $card_description = $card['description'] ?? '';

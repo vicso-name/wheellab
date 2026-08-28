@@ -1,7 +1,6 @@
 </main><!-- main -->
 <?php
-// Footer content lives on the ACF Options page (Theme Options > Footer),
-// never in a Gutenberg block. See docs/acf-block-patterns.md § Footer.
+
 $footer_link_groups  = get_field('link_groups', 'option')        ?: [];
 $footer_instagram    = get_field('social_instagram', 'option')   ?: '';
 $footer_linkedin     = get_field('social_linkedin', 'option')    ?: '';

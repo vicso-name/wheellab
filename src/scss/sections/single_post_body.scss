@@ -1,22 +1,5 @@
 @use "../partials/variables";
 
-// Source: WheelLab Website (Figma) — post frame grid markup supplied
-// directly (node names read "Reviews" in that file, a mislabeled/reused
-// frame — content: 1031px fixed, gap: 80px, sidebar: 297px hug).
-// content(1031) + gap(80) + sidebar(297) = 1408, which is exactly what's
-// left of a 1728px frame after 160px padding each side — narrower than
-// the sitewide .container (1568px), so this uses its own max-width
-// rather than .container, to match that math instead of the general
-// site grid.
-// The .single-post-body__* grid/layout rules below are used only by
-// single.php. The article-content-typography block further down
-// (.single-post-content h2/h3/p/ul/img/etc., scoped with :where() so it
-// never overrides a nested ACF block's own styling) is reused as-is by
-// template-privacy-policy.php too — same long-form heading+paragraph
-// content, just in a narrower single-column page instead of the
-// content+sidebar layout, so loading this whole file there is simpler
-// and safer than forking that typography into a second copy.
-
 .single-post-body {
   padding: 64px 0;
 
@@ -26,14 +9,6 @@
 }
 
 .single-post-body__container {
-  // 1408px (content 1031 + gap 80 + sidebar 297) is the space actually
-  // needed INSIDE this container's own padding — with box-sizing:
-  // border-box (global reset), a max-width of 1408 here would have that
-  // padding eat directly into the 1408 budget instead of sitting outside
-  // it, leaving only 1360px for the grid and shortchanging content by
-  // 48px (983px instead of 1031px — narrower than single-post-rating/
-  // single-post-author, which sit outside this grid and reach the full
-  // 1031 unaffected). +48px (2 × 24px padding) restores the intended 1408.
   max-width: 1456px;
   margin: 0 auto;
   padding: 0 24px;
@@ -56,14 +31,6 @@
   min-width: 0;
   max-width: 1031px;
 
-  // .single-post-body__grid's align-items:flex-start (needed on desktop
-  // so content/sidebar top-align instead of stretching to equal height)
-  // doesn't reset back to stretch once the grid switches to
-  // flex-direction:column below — without an explicit width here, this
-  // column sizes to its own content's natural width instead of filling
-  // the stacked layout, which stayed invisible until a wide, unshrinkable
-  // child (table_section's table) exposed it. Mirrors the equivalent
-  // fix already on .single-post-body__sidebar below.
   @media screen and (max-width: variables.$medium) {
     width: 100%;
   }
@@ -76,25 +43,16 @@
   gap: 24px;
   width: 297px;
   max-width: 100%;
-  // Follows the reader down the (typically much taller) article column
-  // instead of scrolling out of view after the first screen.
   position: sticky;
   top: 24px;
 
   @media screen and (max-width: variables.$medium) {
     position: static;
     width: 100%;
-    // Sidebar (TOC + contact CTA) reads before the article on mobile,
-    // where there's no side-by-side room for it to live alongside the
-    // text — order only, HTML stays content-first for source order/SEO.
     order: -1;
   }
 }
 
-// Rating + author/taxonomy cards — below the content+sidebar grid (the
-// sidebar doesn't continue alongside these), each capped at the 1031px
-// content-column width internally (see single_post_rating.scss /
-// single_post_author_card.scss), flush with the article's left edge.
 .single-post-body__footer {
   display: flex;
   flex-direction: column;
@@ -106,35 +64,11 @@
   }
 }
 
-// ---------------------------------------------------------------------------
-// Article content typography — the_content() output rendered into
-// .single-post-content (single.php). Figma blog-article type spec:
-// H2 "Section Title" 44/52, -1px tracking, uppercase — global h2/.h2
-// (_typography.scss + _tokens.scss --text-h2-*) already matches this
-// exactly, so only color/margin need setting here. Same for H3
-// "Benefit Title" (36/44, sentence case) via the global h3 rule, and
-// paragraphs (20/28) via the .body-m class already on the wrapper in
-// single.php — only color/spacing/links/lists/images/captions are new.
-//
-// ACF blocks (AI highlight, table, FAQ…) get inserted as regular blocks
-// in the same post_content, so their markup ends up nested INSIDE
-// .single-post-content too — e.g. FAQ's own <h2 class="faq-section__title">
-// or its <a class="faq-section__button">. Plain descendant selectors like
-// ".single-post-content h2 {...}" have higher specificity than a single
-// component class (class+type beats class alone) and were winning that
-// fight, silently overriding each block's own margin/color — e.g. pushing
-// the FAQ title down by a 64px margin-top that belongs to article
-// headings, not the FAQ card. Every element selector below is wrapped in
-// :where() (zero specificity) so this typography only ever acts as a
-// default for genuine prose tags, and unconditionally loses to any
-// component's own class-based rule, wherever it's nested.
-// ---------------------------------------------------------------------------
-
 .single-post-content {
-  color: var(--content-main-secondary); // paragraph text: white @ 80%
+  color: var(--content-main-secondary);
 
   > * {
-    margin: 0 0 12px; // paragraphSpacing
+    margin: 0 0 12px;
   }
 
   > *:last-child {
@@ -145,12 +79,6 @@
     margin-top: 64px;
     margin-bottom: 24px;
     color: var(--content-main-primary);
-    // TOC links (single_post_toc.php) jump to these via native #id
-    // anchors — without this, the sticky .header (top:16px, ~98px tall
-    // on desktop) lands directly over the heading's own top edge instead
-    // of stopping below it. ~header height + top offset + a bit of
-    // breathing room, per breakpoint (.header is ~74px/top:12px on
-    // mobile — see _header.scss).
     scroll-margin-top: 140px;
 
     @media screen and (max-width: variables.$small) {
@@ -158,9 +86,6 @@
     }
   }
 
-  // Child combinator (not a bare descendant) — this should only zero out
-  // the margin when the H2 is literally the article's first element, not
-  // any H2 that happens to be the first child of some nested wrapper.
   > :where(h2:first-child) {
     margin-top: 0;
   }
@@ -177,10 +102,6 @@
     color: var(--content-main-primary);
   }
 
-  // No Figma spec goes below H3 for article body content — this design's
-  // scale stops there. Minimal fallback (interpolated from the existing
-  // Funnel Display Bold scale) only so the block editor's remaining
-  // heading levels never fall back to raw browser serif defaults.
   :where(h5) {
     margin-top: 24px;
     margin-bottom: 12px;
@@ -207,12 +128,6 @@
     transition: opacity var(--transition-fast);
   }
 
-  // Color-only per the site's established link-hover convention (see
-  // .single-post-author__tag, .blog-card__author) — no underline. Split
-  // out of the :where(a) rule above because :hover needs to actually win
-  // over a component's own resting-state color when it DOES apply (a
-  // plain content link has no competing component rule to lose to
-  // anyway), while still never fighting a component's own hover state.
   :where(a:hover) {
     opacity: 0.8;
   }
@@ -222,7 +137,7 @@
     display: flex;
     flex-direction: column;
     gap: 12px;
-    padding-left: 24px; // indentation: 1
+    padding-left: 24px;
   }
 
   :where(ul) {
@@ -237,11 +152,6 @@
     padding-left: 4px;
   }
 
-  // Variant for lists of proper nouns (e.g. "Universities List", "Providers
-  // List" — node 527:28953): both the marker and the text render in the
-  // accent color instead of the default secondary white. Applied via an
-  // explicit class rather than guessed automatically, since most lists in
-  // this article are plain prose bullets in the default color.
   :where(.accent-list) {
     color: var(--content-solid-accent-2);
   }
@@ -263,7 +173,7 @@
     margin-bottom: 40px;
     font-family: var(--font-family-body);
     font-size: 16px;
-    line-height: 24px; // mobile: 22px — same 16px size, tighter leading only
+    line-height: 24px;
     color: var(--content-main-secondary);
     text-align: center;
 
@@ -272,17 +182,10 @@
     }
   }
 
-  // The figcaption's own margin-bottom above is the real spacing after an
-  // image block — without this, the generic "> * {margin-bottom:12px}"
-  // rule would still add 12px under the whole <figure> on top of it.
   > :where(figure) {
     margin-bottom: 0;
   }
 
-  // Not present in the sampled article content this spec was pulled
-  // from ("Отдельного блока «quote» ... не обнаружено") — kept minimal
-  // and theme-consistent (accent rule, no browser default italic/quote
-  // marks) so one never ships unstyled if an editor adds it.
   :where(blockquote) {
     margin: 0;
     padding: 4px 0 4px 24px;

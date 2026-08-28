@@ -1,22 +1,4 @@
 <?php
-/**
- * Block: Case Study Section
- * Registered as: acf/case-study-section
- * Source: WheelLab Website (Figma) — node 758:46934 ("Case Study Section").
- * Assets: build/css/sections/case_study_section.min.css
- *         build/js/sections/case_study_section.min.js
- *
- * Backed by the `case_study` CPT (inc/cpt_cases.php) rather than a
- * repeater field — same "Posts Source" latest/manual pattern as Featured
- * Posts Section, so per-case data (title, featured image, description,
- * stats) lives on its own post instead of being duplicated per block
- * instance. Cards link to their case's single page.
- *
- * Each case's two stat tags are their own nested repeater (icon/value/
- * label) rather than fixed per-index fields, so the layout still holds
- * up if an admin adds a third one later even though Figma's own mock
- * always shows exactly two.
- */
 
 $title       = get_field('title')        ?: '';
 $description = get_field('description')  ?: '';
@@ -49,12 +31,6 @@ $class .= !empty($block['className']) ? ' ' . $block['className']  : '';
 $class .= !empty($block['align'])     ? ' align' . $block['align'] : '';
 $id     = !empty($block['anchor'])    ? ' id="' . esc_attr($block['anchor']) . '"' : '';
 
-// node 758:44648;437:14500 — a rotated, blurred nebula texture behind
-// each card (mix-blend-mode: lighten, blur(35px)). Reusing the same
-// shared glow texture already used by Domains/Tile Section rather than
-// the much larger (14MB raw, 4096×2286) sprite sheet Figma uses here —
-// same blur radius (35px) as .blog-card__glow, so it's simplified the
-// same way: a plain corner anchor instead of the exact rotated crop.
 $glow_url          = esc_url(wheellab_asset_url('assets/img/domains/card-glow.png'));
 $chevron_left_url  = esc_url(wheellab_asset_url('assets/img/icons/chevron-left.svg'));
 $chevron_right_url = esc_url(wheellab_asset_url('assets/img/icons/chevron-right.svg'));
@@ -96,17 +72,11 @@ if (!$cases_query || !$cases_query->have_posts()) {
         </div>
     </div>
 
-    <?php // Full-bleed on purpose, same reasoning as .solutions-section__swiper. ?>
+    <?php ?>
     <div class="case-study-section__swiper swiper">
         <div class="swiper-wrapper">
             <?php while ($cases_query->have_posts()) : $cases_query->the_post();
-                // Explicit post ID here — inside an ACF block's render,
-                // get_field() with no ID resolves against the BLOCK's own
-                // fields by default, not the looped post. This block also
-                // has its own "description" field, so the bare call was
-                // silently returning the section's description on every
-                // card instead of each case's own, and "stats" (which the
-                // block doesn't have at all) was just always empty.
+
                 $case_id          = get_the_ID();
                 $case_description = get_field('description', $case_id) ?: '';
                 $case_stats       = get_field('stats', $case_id)       ?: [];

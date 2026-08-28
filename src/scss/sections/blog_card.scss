@@ -1,23 +1,5 @@
 @use "../partials/variables";
 
-// Source: WheelLab Website (Figma) — node 235:4331 / 527:24965 ("CardsBlog",
-// desktop), node 758:62169 ("Cards - blog", mobile).
-//
-// This is a shared partial (template-parts/sections/blog_card.php), not a
-// section of its own — it's reused by the blog page grid (blog_filter.php,
-// template-blog.php) and by the Featured Posts Section block. Its own file
-// so its CSS can be enqueued independently of either caller — see
-// inc/enqueue.php (blog template) and inc/acf_blocks.php (block-detection
-// enqueue, keyed off acf/featured-posts-section) for where it's loaded from.
-
-// Same two-layer bezel as .header__cta / .btn-gradient — outer glass frame
-// (accent-tinted here, not neutral) around a solid inner card.
-//
-// .blog-card is a <div>, not an <a> — .blog-card__author is its own real
-// link to the author page now, and an <a> can't contain another <a>.
-// .blog-card__link is a stretched-link overlay covering the whole card
-// instead, sitting below .blog-card__author (z-index) so that link stays
-// independently clickable. See template-parts/sections/blog_card.php.
 .blog-card {
   position: relative;
   display: flex;
@@ -66,9 +48,6 @@
   }
 }
 
-// Decorative ambient glow bleeding from the bottom-right corner (node
-// 235:4319) — same nebula asset/recipe as .contact-section__form-glow,
-// simplified from Figma's rotated-blob math to a plain corner anchor.
 .blog-card__glow {
   position: absolute;
   right: -160px;
@@ -126,9 +105,6 @@
 }
 
 .blog-card__title {
-  // .h4 already sets family/weight/size/line-height/margin — only the
-  // color needs overriding here (see blog_hero.scss for why: the global
-  // h1-h4 color rule in _general.scss is a stale boilerplate placeholder).
   color: var(--content-main-primary);
 }
 
@@ -148,8 +124,6 @@
 }
 
 .blog-card__author {
-  // Above .blog-card__link (z-index: 1) so this stays its own clickable
-  // target instead of the stretched post-link overlay swallowing clicks.
   position: relative;
   z-index: 2;
   color: inherit;
@@ -160,23 +134,12 @@
   }
 }
 
-// ---------------------------------------------------------------------------
-// Hover (crossfade, 300ms ease-out) — used both in the blog page grid and
-// the Featured Posts Section slider, since both share this same partial.
-// Only the two background layers + outer border change; title/meta/image/
-// glow all stay exactly as-is (no scale, no opacity shift), unlike
-// Solutions/Domains Section's card hover.
-// ---------------------------------------------------------------------------
-
 .blog-card:hover {
   .blog-card__bezel {
     background: var(--bg-main-surface-2);
     border-color: var(--outline-neutral);
   }
 
-  // Both layers land on the same white-10% token here — the inner card
-  // does NOT drop to the lighter/5% surface used by Solutions/Domains
-  // Section's hover, per spec.
   .blog-card__inner {
     background: var(--bg-main-surface-2);
   }

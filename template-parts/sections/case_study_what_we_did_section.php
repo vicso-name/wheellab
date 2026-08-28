@@ -1,17 +1,4 @@
 <?php
-/**
- * Block: Case Study What We Did Section
- * Registered as: acf/case-study-what-we-did-section
- * Source: WheelLab Website (Figma) — node 697:15561 ("Tile section").
- *
- * The image is a bespoke, one-off illustrated composite (browser mockup
- * + overlapping phone, coins, glow) unique to the BoxBet example — same
- * reasoning as Case Study Showcase/Screens Section's own images: not a
- * structural component worth reproducing, just a plain uploaded image
- * in the standard card frame.
- *
- * Assets: build/css/sections/case_study_what_we_did_section.min.css
- */
 
 $title    = get_field('title')    ?: '';
 $image    = get_field('image')    ?: null;

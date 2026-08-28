@@ -1,18 +1,5 @@
 @use "variables";
 
-// Source: WheelLab Website (Figma) — "UI Kit" canvas > Organisms > Header.
-// Desktop: node 444:18701 ("Property 1=Open, Device=Desktop") + the
-// "Card container" mega-menu variants (462:5959…462:6994). Mobile: node
-// 783:35858 ("Header opened"). Nav items come from the "primary" WP menu;
-// the Services mega-menu is ACF fields on that menu item — see
-// inc/theme_function.php and acf-json/group_menu_item_mega_menu.json.
-//
-// The 6 mega-menu category colors cycle through the Figma "ghost" accent
-// tokens in this fixed order (matches the 6 category variants in Figma):
-// 1 accent-2 (cyan) · 2 accent-1 (purple) · 3 pink · 4 warning (orange) ·
-// 5 yellow · 6 positive (teal). Applied via the --mega-color custom
-// property so it cascades from tab/panel down to the card icons inside.
-
 .header {
   position: sticky;
   top: 16px;
@@ -20,11 +7,6 @@
   isolation: isolate;
   transition: transform var(--transition-base) ease;
 
-  // Toggled by stats_showcase_section.js while that section is in
-  // view — gives the section's dome/orbit a bit more headroom instead
-  // of the sticky header sitting over it the whole time. Slides back
-  // down the moment the section leaves the viewport. -120% (not -100%)
-  // clears the header's own box-shadow/glow too, not just its box.
   &.is-hidden-for-stats-showcase {
     transform: translateY(-120%);
   }
@@ -34,19 +16,6 @@
   }
 }
 
-// ---------------------------------------------------------------------------
-// Bar — logo, nav, actions
-// ---------------------------------------------------------------------------
-
-// Same two-layer "bezel" pattern as .header__cta: an outer glass frame
-// (.header__bar) around an inner content bar (.header__bar-inner) —
-// matches node 527:24969 ("Header" > "Pro Blocks / LP Navbar / 2.").
-//
-// When a mega menu is open, its panel (.header__mega) renders as a sibling
-// of .header__bar-inner, inside this SAME bezel — the header grows taller
-// as one continuous card rather than showing a separate floating dropdown
-// (matches node 444:18701, "Property 1=Open": the "Card container" sits
-// inside the same outer frame as the navbar, gap-12 between them).
 .header__bar {
   position: relative;
   z-index: 2;
@@ -93,20 +62,12 @@
   align-items: center;
   flex-shrink: 0;
 
-  // general.js replaces <img class="svg"> with an inlined <svg> after
-  // DOMContentLoaded, so both tag types need covering here. `display` is
-  // intentionally NOT set here — .header__logo-full/-mobile own it (a
-  // compound `.header__logo img` selector would outrank their single-class
-  // rules and silently defeat the show/hide toggle).
   img, svg {
     width: auto;
     height: 24px;
   }
 }
 
-// Full (icon + wordmark) on tablet/desktop, icon-only on mobile — matches
-// the "Property 1=Default, Device=Mobile" header (node 618:10003), which
-// shows only the icon mark, rotated 180°.
 .header__logo-mobile {
   display: block;
   transform: rotate(180deg);
@@ -123,10 +84,6 @@
     display: block;
   }
 }
-
-// ---------------------------------------------------------------------------
-// Primary nav (desktop)
-// ---------------------------------------------------------------------------
 
 .header__nav {
   display: none;
@@ -172,14 +129,6 @@
 .header__nav-item--mega.is-open .header__nav-link {
   color: var(--content-main-primary);
 }
-
-// ---------------------------------------------------------------------------
-// Mega menu (desktop) — a sibling of .header__bar-inner inside .header__bar,
-// not a separately-boxed floating dropdown. It has no background/border of
-// its own; it shows through the shared bezel (see .header__bar above).
-// Toggled via the `hidden` attribute in general.js (identified by id, since
-// it's no longer a descendant of the trigger's .header__nav-item).
-// ---------------------------------------------------------------------------
 
 .header__mega {
   display: flex;
@@ -268,7 +217,7 @@
 .header__mega-panel {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  grid-auto-rows: 1fr; // both rows the same height, like the h-full/flex-1 cards in Figma
+  grid-auto-rows: 1fr;
   gap: 12px;
 
   &:nth-child(6n+1) {
@@ -329,12 +278,6 @@
   width: 52px;
   height: 52px;
   flex-shrink: 0;
-  // Content/Solid/* — a saturated tone from the same hue family as the
-  // chip's own BG/Ghost/* background (--mega-color). Only reaches the
-  // inlined <svg> (fill="currentColor", see wheellab_inline_svg()) — a
-  // raster <img> fallback (admin uploaded PNG/JPG instead of SVG) keeps its
-  // own baked-in colors regardless, there's no way around that for a
-  // raster image.
   color: var(--mega-icon-color);
   background: var(--mega-color);
   border-radius: 8px;
@@ -369,10 +312,6 @@
   line-height: var(--text-mega-card-desc-line-height);
 }
 
-// ---------------------------------------------------------------------------
-// Actions — search, CTA, mobile toggle
-// ---------------------------------------------------------------------------
-
 .header__actions {
   display: flex;
   align-items: center;
@@ -393,10 +332,6 @@
   border-radius: 12px;
   cursor: pointer;
 
-  // Sizing only — `display` is intentionally left to the icon (variant)
-  // classes below. A compound `.header__icon-btn img` selector outranks
-  // their single-class rules and would silently defeat the open/close
-  // icon-swap toggle regardless of source order.
   img, svg {
     width: 20px;
     height: 20px;
@@ -423,9 +358,6 @@
   }
 }
 
-// Base: hidden; each variant class below opts itself back in at equal
-// specificity, so source order decides — .header__menu-toggle-icon--open
-// comes after and wins by default (closed state).
 .header__menu-toggle-icon {
   display: none;
 }
@@ -446,9 +378,6 @@
   display: block;
 }
 
-// Two-layer button: a glass "bezel" frame (this element) around the actual
-// gradient pill (.header__cta-inner), plus two thin gradient shine lines
-// sitting on the top/bottom edge of the frame — matches node 527:24969.
 .header__cta {
   position: relative;
   display: inline-flex;
@@ -508,10 +437,6 @@
   }
 }
 
-// ---------------------------------------------------------------------------
-// Search panel
-// ---------------------------------------------------------------------------
-
 .header__search {
   margin-top: 12px;
   padding: 16px 24px;
@@ -550,45 +475,15 @@
   }
 }
 
-// ---------------------------------------------------------------------------
-// Mobile panel (accordion)
-// ---------------------------------------------------------------------------
-
-// Full-screen, edge-to-edge — no inset, no rounded corners, extends behind
-// the header bar itself (which stays on top via z-index). Matches node
-// 783:28673 ("Header opened"): a `fixed` frosted-glass layer covering the
-// whole viewport, not a card floating below the bar.
 .header__mobile-panel {
   position: fixed;
   inset: 0;
-  // inset: 0's top:0/bottom:0 pairing computes an initial height correctly,
-  // but on mobile Safari/Chrome that height doesn't reliably grow when the
-  // address bar/toolbar later collapses (or shrink when it expands) — the
-  // panel is left sized against a stale viewport snapshot, showing a gap
-  // at the bottom where the page behind it peeks through. An explicit
-  // height in dynamic-viewport units tracks the actual visual viewport
-  // instead and stays correct through that resize. vh first as a fallback
-  // for browsers without dvh support (dvh then overrides it everywhere
-  // that matters).
   height: 100vh;
   height: 100dvh;
   z-index: 1;
-  // Translucent dark fill + a strong blur of whatever sits behind it.
-  // Unlike .header__mega-inner (which dropped backdrop-filter because it
-  // sits behind a `transform`-animated ancestor — a known
-  // compositing-glitch combo), this panel is only toggled via the `hidden`
-  // attribute with no transform, so backdrop-filter is safe here.
   background: var(--bg-inv-surface-2);
   backdrop-filter: blur(60px);
   -webkit-backdrop-filter: blur(60px);
-  // NOT the scrolling element — see .header__mobile-panel-inner below.
-  // Confirmed live: pairing this blur with overflow-y: auto on the SAME
-  // element leaves Chromium's composited paint under-extended near the
-  // bottom few dozen px (swapping the filtered background for a plain
-  // solid color painted the full height correctly; only the filtered
-  // version left a gap there, worse the longer/taller the open accordion
-  // content got). Keeping this element static and moving the scrolling
-  // to a plain, unfiltered child sidesteps the bug entirely.
 
   &[hidden] {
     display: none;
@@ -602,15 +497,9 @@
 .header__mobile-panel-inner {
   height: 100%;
   overflow-y: auto;
-  // top: clears the sticky header bar (top offset 12px + 4px bezel + 64px
-  // bar + 4px bezel ≈ 84px, +12px breathing room) now that the panel's own
-  // background extends full-screen behind it.
   padding: 96px 20px 20px;
   transition: background-color var(--transition-fast);
 
-  // Mobile counterpart of ".header--mega-open .header__bar" — set by the
-  // same class when a .header__accordion-trigger (e.g. "Services") is
-  // expanded, see general.js.
   .header--mega-open & {
     background: var(--bg-header-mega-open);
   }
@@ -625,8 +514,6 @@
   list-style: none;
 }
 
-// gap-16 matches the "Controls" container in node 783:28673 exactly (the
-// category list is the one part of the mobile menu Figma shows in full).
 .header__accordion-sub {
   display: flex;
   flex-direction: column;
@@ -656,9 +543,6 @@
 }
 
 .header__accordion-panel {
-  // Symmetric — a left-only inset (the original 8px 0 8px 8px) reads as
-  // misaligned once the category pills below sit flush against the
-  // panel's own right edge but 8px shy of its left one.
   padding: 8px;
 
   &[hidden] {
@@ -671,9 +555,6 @@
   flex-direction: column;
   gap: 8px;
 
-  // Color cycle keyed off the category's position among its siblings —
-  // NOT on the trigger/cards elements below, which are always the 1st/2nd
-  // child of this wrapper. --mega-color cascades down to both.
   &:nth-child(6n+1) {
     --mega-color: var(--bg-ghost-accent-2);
     --mega-icon-color: var(--content-solid-accent-2);

@@ -1,17 +1,9 @@
 @use "../partials/variables";
 
-// Source: WheelLab Website (Figma) — node 581:15436 (desktop),
-// node 617:14281 (mobile). Same "Rate card" family/token system as
-// single_post_rating.scss (8% white outer, 2% white inner, same shadow).
-
 .single-post-author {
-  // See the matching comment in single_post_rating.scss — flex item of
-  // .single-post-body__footer, needs an explicit width or it shrinks to
-  // its own content size instead of filling the line. No margin:auto —
-  // flush left under the article, not centered in the wider container.
   width: 100%;
   max-width: 1031px;
-  padding: 8px; // gap/card-padding/focus
+  padding: 8px;
   background: rgb(255 255 255 / 8%);
   border: 1px solid rgb(255 255 255 / 8%);
   border-radius: 20px;
@@ -25,8 +17,8 @@
 .single-post-author__inner {
   display: flex;
   flex-direction: column;
-  gap: 32px; // gap/card-padding/s (desktop)
-  padding: 40px; // gap/card-padding/m (desktop)
+  gap: 32px;
+  padding: 40px;
   background: rgb(255 255 255 / 2%);
   border-radius: 16px;
 
@@ -35,11 +27,6 @@
     padding: 16px;
   }
 }
-
-// ---------------------------------------------------------------------------
-// Taxonomy tags — omitted entirely (row + divider) when the post has no
-// terms in any taxonomy, see the PHP template.
-// ---------------------------------------------------------------------------
 
 .single-post-author__tags {
   display: flex;
@@ -66,14 +53,6 @@
 .single-post-author__divider {
   border-top: 1px solid var(--divider-main);
 }
-
-// ---------------------------------------------------------------------------
-// Author row — avatar / name+meta / social icons.
-// Desktop: single row, socials pushed to the far right via margin-left:
-// auto (not a 3-way justify-content:space-between — that would spread
-// the avatar away from its own name/meta instead of keeping them
-// adjacent). Mobile: stacks all three, full width, no auto-push.
-// ---------------------------------------------------------------------------
 
 .single-post-author__row {
   display: flex;
@@ -142,8 +121,6 @@
   align-items: center;
   gap: 8px 12px;
 
-  // Figma drops the diamond separators between stats on mobile — the
-  // flex-wrap gap alone carries the spacing there.
   @media screen and (max-width: variables.$small) {
     .single-post-author__diamond {
       display: none;

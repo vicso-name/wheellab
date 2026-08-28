@@ -1,10 +1,4 @@
 <?php
-/**
- * Section: Blog Hero
- * Used by: template-blog.php only (fields live on the "Blog" page template,
- * not a Gutenberg block — see acf-json/group_template_blog.json)
- * Assets:  build/css/sections/blog_hero.min.css
- */
 
 $title       = get_field('hero_title')       ?: '';
 $description = get_field('hero_description') ?: '';

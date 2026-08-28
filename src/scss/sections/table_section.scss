@@ -1,16 +1,6 @@
-// Source: WheelLab Website (Figma) — node 527:28785 ("Table example").
-// A real <table> (not a div-grid) — semantic for tabular data and lets
-// a single overflow-x wrapper handle both mobile swipe and desktop
-// drag-scroll natively, no JS needed. Column count is admin-driven
-// (acf-json/group_table_section.json), so widths are all flex/min-width
-// based rather than hardcoded per column.
-
 .table-section {
   background: var(--bg-main-surface-1);
   border: 2px solid var(--divider-main);
-  // Clips the header row's square top corners (and the last row's
-  // bottom corners) to match — simpler and more robust than replicating
-  // Figma's per-cell corner-rounding by hand.
   border-radius: 20px;
   overflow: hidden;
 }
@@ -18,15 +8,11 @@
 .table-section__scroll {
   overflow: auto hidden;
   -webkit-overflow-scrolling: touch;
-
-  // Scrollbar hidden per spec (mobile swipes, no visible scrollbar) —
-  // applied on all breakpoints since the same horizontal scroll also
-  // kicks in on desktop for a table with many/wide columns.
-  scrollbar-width: none; // Firefox
-  -ms-overflow-style: none; // legacy Edge
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 
   &::-webkit-scrollbar {
-    display: none; // Chrome/Safari
+    display: none;
   }
 }
 
@@ -36,21 +22,9 @@
 }
 
 .table-section__head {
-  padding: 24px; // gap/main/x6
-  // 180px × 6 columns (1080px) exceeded this card's own 1031px width on
-  // its own, so the table was ALWAYS wider than its container — even on
-  // a full desktop viewport with room to spare — permanently pushing the
-  // last column off-screen at rest instead of only scrolling when a
-  // table genuinely has too many/too-wide columns to fit. Lower floor
-  // gives table-layout:auto's own content-based algorithm room to size
-  // each column to what it actually needs (e.g. "Famous startups" wider,
-  // "Average rates" narrower) instead of everything sitting pinned at a
-  // uniform minimum.
+  padding: 24px;
   min-width: 140px;
   font-family: var(--font-family-body);
-  // Figma: Inter Medium — the theme's type scale only defines Regular/
-  // Semibold/Bold (_tokens.scss), so this is a literal one-off rather
-  // than a token that doesn't otherwise exist yet.
   font-weight: 500;
   font-size: var(--text-footnote-size);
   line-height: var(--text-footnote-line-height);
@@ -61,16 +35,7 @@
 }
 
 .table-section__cell {
-  padding: 24px; // gap/main/x6
-  // 180px × 6 columns (1080px) exceeded this card's own 1031px width on
-  // its own, so the table was ALWAYS wider than its container — even on
-  // a full desktop viewport with room to spare — permanently pushing the
-  // last column off-screen at rest instead of only scrolling when a
-  // table genuinely has too many/too-wide columns to fit. Lower floor
-  // gives table-layout:auto's own content-based algorithm room to size
-  // each column to what it actually needs (e.g. "Famous startups" wider,
-  // "Average rates" narrower) instead of everything sitting pinned at a
-  // uniform minimum.
+  padding: 24px;
   min-width: 140px;
   vertical-align: top;
   font-family: var(--font-family-body);
@@ -98,8 +63,6 @@
   }
 }
 
-// Zebra striping by row (matches the Figma sample: row 1 shaded, row 2
-// clear, row 3 shaded…), not by column.
 .table-section__row:nth-child(odd) .table-section__cell {
   background: var(--bg-main-surface-2);
 }
