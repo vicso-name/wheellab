@@ -1,4 +1,5 @@
 @use "../partials/variables";
+@use "../partials/stats_banner";
 
 .service-comparison-section {
     position: relative;
@@ -39,6 +40,7 @@
     align-items: center;
     gap: 24px;
     width: 100%;
+    margin-bottom: 96px;
 }
 
 .service-comparison-section__desktop {
@@ -263,4 +265,23 @@
     height: calc(100% - 8px);
     object-fit: cover;
     border-radius: 12px;
+}
+
+// Optional stats banner (field: stats), just below whichever of
+// .__details (desktop) / .__stack (mobile) is visible. padding-top, not
+// margin-top — .__details' own margin-bottom: 96px is a sibling margin
+// in normal flow and would otherwise collapse with a margin-top here
+// (settling on whichever is larger, not their sum); padding never
+// collapses, so 96 (.__details) + 64 (here) reliably adds up to the
+// requested 160px gap on desktop instead.
+.service-comparison-section__stats {
+    padding-top: 64px;
+
+    @media screen and (max-width: variables.$medium) {
+        padding-top: 40px;
+    }
+
+    @media screen and (max-width: variables.$small) {
+        padding-top: 32px;
+    }
 }

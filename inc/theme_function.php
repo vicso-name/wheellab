@@ -465,3 +465,43 @@ function wheellab_extract_vimeo_id($url) {
     }
     return '';
 }
+
+// Shared markup for the "Statistics" component (Figma nodes 806:11701 /
+// 806:11974) — used by both service_stats_section.php (standalone
+// block) and, when its own stats field is filled in, by
+// service_comparison_section.php (rendered under the comparison
+// slider). Styles live in src/scss/partials/_stats_banner.scss,
+// @use'd by both blocks' own section stylesheets.
+function wheellab_render_stats_banner($stats) {
+    if (!$stats) {
+        return;
+    }
+    ?>
+    <div class="stats-banner">
+        <div class="stats-banner__inner">
+            <div class="stats-banner__glow stats-banner__glow--a" aria-hidden="true"></div>
+            <div class="stats-banner__glow stats-banner__glow--b" aria-hidden="true"></div>
+
+            <?php foreach ($stats as $stat) :
+                $value       = $stat['value']       ?? '';
+                $label       = $stat['label']       ?? '';
+                $description = $stat['description'] ?? '';
+                if (!$value) continue;
+            ?>
+                <div class="stats-banner__item">
+                    <div class="stats-banner__heading">
+                        <p class="stats-banner__value"><?php echo esc_html($value); ?></p>
+                        <?php if ($label) : ?>
+                            <p class="stats-banner__label"><?php echo esc_html($label); ?></p>
+                        <?php endif; ?>
+                    </div>
+
+                    <?php if ($description) : ?>
+                        <p class="stats-banner__description body-m"><?php echo esc_html($description); ?></p>
+                    <?php endif; ?>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+    <?php
+}

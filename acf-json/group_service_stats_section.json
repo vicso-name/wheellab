@@ -1,0 +1,62 @@
+{
+    "key": "group_service_stats_section",
+    "title": "Service Stats Section",
+    "fields": [
+        {
+            "key": "field_ssb_stats",
+            "label": "Stats",
+            "name": "stats",
+            "type": "repeater",
+            "layout": "table",
+            "button_label": "Add Stat",
+            "min": 1,
+            "sub_fields": [
+                {
+                    "key": "field_ssb_stat_value",
+                    "label": "Value",
+                    "name": "value",
+                    "type": "text",
+                    "required": 1,
+                    "instructions": "e.g. “5”, “10+”, “87%”",
+                    "wrapper": {
+                        "width": "25"
+                    }
+                },
+                {
+                    "key": "field_ssb_stat_label",
+                    "label": "Label",
+                    "name": "label",
+                    "type": "text",
+                    "instructions": "e.g. “weeks”, “casinos”, “players”",
+                    "wrapper": {
+                        "width": "25"
+                    }
+                },
+                {
+                    "key": "field_ssb_stat_description",
+                    "label": "Description",
+                    "name": "description",
+                    "type": "text",
+                    "wrapper": {
+                        "width": "50"
+                    }
+                }
+            ]
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "block",
+                "operator": "==",
+                "value": "acf/service-stats-section"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "active": true
+}

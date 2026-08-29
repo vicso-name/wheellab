@@ -1,0 +1,14 @@
+@use "../partials/variables";
+@use "../partials/stats_banner";
+
+.service-stats-section {
+    padding: 96px 0;
+
+    @media screen and (max-width: variables.$medium) {
+        padding: 60px 0;
+    }
+
+    @media screen and (max-width: variables.$small) {
+        padding: 40px 0;
+    }
+}

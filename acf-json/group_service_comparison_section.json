@@ -58,6 +58,47 @@
             "wrapper": {
                 "width": "50"
             }
+        },
+        {
+            "key": "field_scs_stats",
+            "label": "Stats",
+            "name": "stats",
+            "type": "repeater",
+            "layout": "table",
+            "button_label": "Add Stat",
+            "instructions": "Optional — same stats banner as the standalone Service Stats Section block, rendered under the comparison slider. Leave empty to hide it.",
+            "sub_fields": [
+                {
+                    "key": "field_scs_stat_value",
+                    "label": "Value",
+                    "name": "value",
+                    "type": "text",
+                    "required": 1,
+                    "instructions": "e.g. “5”, “10+”, “87%”",
+                    "wrapper": {
+                        "width": "25"
+                    }
+                },
+                {
+                    "key": "field_scs_stat_label",
+                    "label": "Label",
+                    "name": "label",
+                    "type": "text",
+                    "instructions": "e.g. “weeks”, “casinos”, “players”",
+                    "wrapper": {
+                        "width": "25"
+                    }
+                },
+                {
+                    "key": "field_scs_stat_description",
+                    "label": "Description",
+                    "name": "description",
+                    "type": "text",
+                    "wrapper": {
+                        "width": "50"
+                    }
+                }
+            ]
         }
     ],
     "location": [

@@ -5,6 +5,7 @@ $before_label = get_field('before_label') ?: '';
 $after_label  = get_field('after_label')  ?: '';
 $before_image = get_field('before_image') ?: null;
 $after_image  = get_field('after_image')  ?: null;
+$stats        = get_field('stats')        ?: [];
 
 if (!$title || empty($before_image['url']) || empty($after_image['url'])) {
     return;
@@ -80,5 +81,11 @@ $id     = !empty($block['anchor'])    ? ' id="' . esc_attr($block['anchor']) . '
                 </div>
             </div>
         </div>
+
+        <?php if ($stats) : ?>
+            <div class="service-comparison-section__stats">
+                <?php wheellab_render_stats_banner($stats); ?>
+            </div>
+        <?php endif; ?>
     </div>
 </section>
