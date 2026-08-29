@@ -435,3 +435,33 @@ add_filter('acf/fields/relationship/query/key=field_spr_manual', function ($args
     $args['post__not_in'] = [(int) $post_id];
     return $args;
 }, 10, 3);
+
+function wheellab_parse_video_timestamp($value) {
+    $value = trim((string) $value);
+    if ($value === '') {
+        return 0;
+    }
+    if (strpos($value, ':') === false) {
+        return max(0, (int) $value);
+    }
+    $parts = array_map('intval', explode(':', $value));
+    $seconds = 0;
+    foreach ($parts as $part) {
+        $seconds = $seconds * 60 + $part;
+    }
+    return max(0, $seconds);
+}
+
+function wheellab_extract_youtube_id($url) {
+    if (preg_match('#(?:youtube(?:-nocookie)?\.com/(?:watch\?v=|embed/|shorts/)|youtu\.be/)([A-Za-z0-9_-]{11})#', $url, $m)) {
+        return $m[1];
+    }
+    return '';
+}
+
+function wheellab_extract_vimeo_id($url) {
+    if (preg_match('#vimeo\.com/(?:video/)?(\d+)#', $url, $m)) {
+        return $m[1];
+    }
+    return '';
+}

@@ -30,6 +30,7 @@ function wheellab_register_acf_blocks() {
         'service_hero',
         'service_manifesto_section',
         'service_tiles_section',
+        'service_reel_section',
         'service_feature_cards',
         'service_comparison_section',
         'service_process_deck',

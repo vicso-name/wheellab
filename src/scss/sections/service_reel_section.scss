@@ -1,0 +1,171 @@
+@use "../partials/variables";
+
+// Source: WheelLab Website (Figma) — node 806:11659 ("Frame"), the
+// "See it in motion" video showcase. Player card width (1302px) and
+// chapter-strip height (52px) match the Figma frame; player height is
+// driven by aspect-ratio: 16/9 instead of Figma's own literal 846px —
+// that number only fit the specific promotional screenshot used as a
+// placeholder there, not real video content, which is near-universally
+// 16:9 across self-hosted/YouTube/Vimeo.
+
+.service-reel-section {
+    padding: 96px 0;
+
+    @media screen and (max-width: variables.$medium) {
+        padding: 60px 0;
+    }
+}
+
+.service-reel-section__header {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 1000px;
+    margin-bottom: 64px;
+
+    @media screen and (max-width: variables.$medium) {
+        margin-bottom: 40px;
+    }
+}
+
+.service-reel-section__eyebrow {
+    margin: 0;
+    color: var(--content-solid-accent-2);
+    text-transform: uppercase;
+}
+
+.service-reel-section__title {
+    color: var(--content-main-primary);
+}
+
+.service-reel-section__description {
+    margin: 0;
+    color: var(--content-main-secondary);
+}
+
+.service-reel-section__note {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.service-reel-section__note-icon {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    color: var(--content-main-secondary);
+}
+
+.service-reel-section__note-text {
+    margin: 0;
+    color: var(--content-main-secondary);
+}
+
+// ---------------------------------------------------------------------------
+// Player
+// ---------------------------------------------------------------------------
+
+.service-reel-section__player-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+}
+
+.service-reel-section__player {
+    width: 100%;
+    max-width: 1302px;
+    padding: 8px;
+    background: var(--bg-main-surface-2);
+    border: 1px solid var(--outline-neutral);
+    border-radius: 20px;
+}
+
+.service-reel-section__video {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: var(--bg-main-surface-1);
+    border: 0;
+    border-radius: 12px;
+    object-fit: cover;
+}
+
+// ---------------------------------------------------------------------------
+// Chapters — click-to-seek thumbnail strip (see service_reel_section.js).
+// Height stays a short 52px strip per Figma rather than full preview
+// tiles — it's a "which scene" scrubber, not a set of poster images in
+// their own right.
+// ---------------------------------------------------------------------------
+
+.service-reel-section__chapters {
+    display: flex;
+    gap: 24px;
+    width: 100%;
+    max-width: 1302px;
+
+    // Below $small, the row can't fit 5 equal-width tiles without
+    // squeezing each one unreadably thin, so it swipes horizontally
+    // instead of wrapping to multiple rows — scrollbar hidden (still
+    // fully scrollable via touch/trackpad, just no visible track) since
+    // a bare native scrollbar under a row this short reads as a stray
+    // UI element rather than a hint to swipe.
+    @media screen and (max-width: variables.$small) {
+        overflow-x: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+}
+
+.service-reel-section__chapter {
+    position: relative;
+    flex: 1 0 0;
+    min-width: 96px;
+    height: 52px;
+    padding: 0;
+    overflow: hidden;
+    cursor: pointer;
+    background: var(--bg-main-surface-1);
+    border: 1px solid var(--divider-main);
+    border-radius: 16px;
+    transition: border-color var(--transition-fast);
+
+    @media screen and (max-width: variables.$small) {
+        flex: 0 0 auto;
+        width: 140px;
+    }
+
+    img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    // Figma's own always-on 50% dark wash — lightens on hover/active so
+    // the current chapter reads clearly against its neighbors.
+    &::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: rgb(0 0 0 / 50%);
+        transition: background-color var(--transition-fast);
+    }
+
+    &:hover::after {
+        background: rgb(0 0 0 / 30%);
+    }
+
+    &.is-active {
+        border-color: var(--content-solid-accent-2);
+
+        &::after {
+            background: rgb(0 0 0 / 15%);
+        }
+    }
+}
