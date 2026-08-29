@@ -36,6 +36,11 @@
 .service-capability-cards__card {
     display: flex;
     flex: 1 1 480px;
+    // Flex items default to min-width: auto (won't shrink below content's
+    // own min-content width) — .card-bezel/.card-inner both flex further,
+    // but without overriding it here too the card as a whole was the
+    // floor forcing the row (and the page) wider than the viewport.
+    min-width: 0;
     color: inherit;
     text-decoration: none;
 
@@ -49,6 +54,7 @@
     flex: 1 0 0;
     width: 100%;
     height: 640px;
+    min-width: 0;
     padding: 8px;
     background: var(--bg-ghost-accent-2);
     border: 1px solid var(--outline-accent-2);

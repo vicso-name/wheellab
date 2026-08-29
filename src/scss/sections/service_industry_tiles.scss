@@ -39,6 +39,11 @@
 
 .service-industry-tiles__card {
     display: flex;
+    // Grid items default to min-width: auto, which refuses to shrink
+    // below the card's own content min-content width (a long <li> line
+    // in .card-content) — without this override that content, not the
+    // grid track, was driving the column's width past the viewport.
+    min-width: 0;
     padding: 8px;
     background: var(--bg-main-surface-2);
     border: 1px solid var(--outline-neutral);
