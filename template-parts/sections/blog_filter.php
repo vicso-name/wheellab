@@ -3,7 +3,7 @@
 $categories = get_categories(['hide_empty' => false]);
 $categories = array_filter($categories, static fn($cat) => $cat->slug !== 'uncategorized');
 
-$initial_query = new WP_Query(wheellab_blog_query_args('', 1));
+$initial_query = new WP_Query(wheellab_blog_query_args([], 1));
 
 $subscribe_enabled = (bool) get_field('subscribe_enabled', get_queried_object_id());
 ?>
@@ -12,16 +12,16 @@ $subscribe_enabled = (bool) get_field('subscribe_enabled', get_queried_object_id
     <div class="container">
 
         <?php if ($categories) : ?>
-            <div class="blog-filter__chips" role="tablist" aria-label="<?php esc_attr_e('Filter articles by category', 'wheellab'); ?>">
+            <div class="blog-filter__chips" role="group" aria-label="<?php esc_attr_e('Filter articles by category', 'wheellab'); ?>">
                 <?php foreach ($categories as $category) : ?>
                     <button
                         type="button"
                         class="blog-filter__chip body-s"
-                        role="tab"
-                        aria-selected="false"
+                        aria-pressed="false"
                         data-category="<?php echo esc_attr($category->slug); ?>"
                     ><?php echo esc_html($category->name); ?></button>
                 <?php endforeach; ?>
+                <button type="button" class="blog-filter__clear body-s" hidden><?php esc_html_e('Clear All', 'wheellab'); ?></button>
             </div>
         <?php endif; ?>
 

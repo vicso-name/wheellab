@@ -3,7 +3,7 @@
 $author    = get_queried_object();
 $author_id = $author instanceof WP_User ? $author->ID : 0;
 
-$initial_query = new WP_Query(wheellab_blog_query_args('', 1, $author_id));
+$initial_query = new WP_Query(wheellab_blog_query_args([], 1, $author_id));
 ?>
 
 <section class="author-posts">

@@ -1,5 +1,5 @@
 /**
- * Blog page — AJAX category filter + "load more" pagination.
+ * Blog page — AJAX category filter (multi-select) + "load more" pagination.
  * Requires `wheellabBlog` (ajaxUrl + nonce), localized in inc/enqueue.php
  * only when template-blog.php is active. The first page of results is
  * already rendered server-side (see template-parts/sections/blog_filter.php)
@@ -20,6 +20,7 @@ function initBlogFilter() {
   const loadMoreWrap = section.querySelector(".blog-filter__load-more");
   const loadMoreBtn = loadMoreWrap ? loadMoreWrap.querySelector("button") : null;
   const chips = section.querySelectorAll(".blog-filter__chip");
+  const clearBtn = section.querySelector(".blog-filter__clear");
   if (!grid) return;
 
   // Guards against out-of-order responses: if the user clicks two chips in
@@ -27,28 +28,41 @@ function initBlogFilter() {
   // applied — an earlier, slower response can no longer clobber it.
   let requestToken = 0;
 
+  const getActiveCategories = () =>
+    Array.from(chips)
+      .filter((chip) => chip.classList.contains("is-active"))
+      .map((chip) => chip.dataset.category);
+
+  const updateClearVisibility = () => {
+    if (clearBtn) clearBtn.hidden = getActiveCategories().length === 0;
+  };
+
+  const runFilterQuery = () => {
+    requestToken += 1;
+    fetchBlogPage({ grid, countNumber, loadMoreWrap, loadMoreBtn, category: getActiveCategories().join(","), page: 1, append: false, token: requestToken, getToken: () => requestToken });
+  };
+
   chips.forEach((chip) => {
     chip.addEventListener("click", () => {
-      const alreadyActive = chip.classList.contains("is-active");
+      const isActive = chip.classList.toggle("is-active");
+      chip.setAttribute("aria-pressed", String(isActive));
 
-      chips.forEach((c) => {
-        c.classList.remove("is-active");
-        c.setAttribute("aria-selected", "false");
-      });
-
-      // Clicking the active chip again clears the filter — there's no
-      // separate "All" chip in the design (node 527:28120).
-      const category = alreadyActive ? "" : chip.dataset.category;
-
-      if (!alreadyActive) {
-        chip.classList.add("is-active");
-        chip.setAttribute("aria-selected", "true");
-      }
-
-      requestToken += 1;
-      fetchBlogPage({ grid, countNumber, loadMoreWrap, loadMoreBtn, category, page: 1, append: false, token: requestToken, getToken: () => requestToken });
+      updateClearVisibility();
+      runFilterQuery();
     });
   });
+
+  if (clearBtn) {
+    clearBtn.addEventListener("click", () => {
+      chips.forEach((chip) => {
+        chip.classList.remove("is-active");
+        chip.setAttribute("aria-pressed", "false");
+      });
+      clearBtn.hidden = true;
+
+      runFilterQuery();
+    });
+  }
 
   if (loadMoreBtn) {
     loadMoreBtn.addEventListener("click", () => {

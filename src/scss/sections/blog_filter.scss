@@ -41,6 +41,27 @@
   }
 }
 
+.blog-filter__clear {
+  display: inline-flex;
+  align-items: center;
+  height: 40px;
+  padding: 0 16px;
+  color: var(--content-main-tertiary);
+  text-decoration: underline;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  transition: color var(--transition-fast);
+
+  &:hover {
+    color: var(--content-main-primary);
+  }
+
+  &[hidden] {
+    display: none;
+  }
+}
+
 .blog-filter__count {
   margin: 0 0 24px;
   color: var(--content-main-tertiary);
