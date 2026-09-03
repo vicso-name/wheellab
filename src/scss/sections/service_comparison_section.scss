@@ -283,5 +283,14 @@
 
     @media screen and (max-width: variables.$small) {
         padding-top: 32px;
+
+        .stats-banner__inner {
+            align-items: center;
+        }
+
+        .stats-banner__item {
+            align-items: center;
+            width: 100%;
+        }
     }
 }
