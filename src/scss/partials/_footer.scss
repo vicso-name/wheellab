@@ -6,9 +6,16 @@
   position: relative;
   overflow: visible;
   padding: 160px 0 220px;
+  // .footer__logomark bleeds min(588px, 45vw) * 0.2 below this element's own
+  // bottom edge (see below). Padding alone can't contain that — it just
+  // moves the reference edge the negative "bottom" offset is measured from
+  // — so margin (outside the containing block) reserves the page space the
+  // graphic actually needs, instead of it getting cut off by the page's end.
+  margin-bottom: calc(min(588px, 45vw) * 0.2);
 
   @media screen and (max-width: variables.$small) {
     padding: 120px 0;
+    margin-bottom: 0;
     overflow: hidden;
   }
 }
@@ -70,6 +77,12 @@
 
 .footer__wordmark {
   display: block;
+
+  // Fallback for browsers without flexbox gap support, so the wordmark
+  // never ends up flush against .footer__card below it.
+  @supports not (gap: 1px) {
+    margin-bottom: 80px;
+  }
 
   img {
     display: block;

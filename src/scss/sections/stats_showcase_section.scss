@@ -102,8 +102,12 @@
 
 .stats-showcase-section__logo {
     display: block;
+    // Fixed canvas (see the ACF field instructions) so logos of differing
+    // aspect ratios still tile at the same footprint — required for the
+    // gallery mode, where mixed logos share one marquee.
     width: 220px;
-    height: auto;
+    height: 80px;
+    object-fit: contain;
     flex-shrink: 0;
 }
 

@@ -38,6 +38,32 @@
     }
 }
 
+// Blends the blurred glow images into the page background at the section's
+// own edges, so overflow: hidden doesn't cut them off with a visible seam
+// against the sections above/below (same technique as
+// service-manifesto-section__bg-fade and stats-showcase-section's gradient).
+.contact-section__bg-fade {
+    position: absolute;
+    right: 0;
+    left: 0;
+    height: 100px;
+    pointer-events: none;
+
+    &--top {
+        top: 0;
+        background: linear-gradient(to bottom, var(--bg-main-background) 0%, rgb(4 5 36 / 0%) 100%);
+    }
+
+    &--bottom {
+        bottom: 0;
+        background: linear-gradient(to bottom, rgb(4 5 36 / 0%) 0%, var(--bg-main-background) 100%);
+    }
+
+    @media screen and (max-width: variables.$medium) {
+        height: 64px;
+    }
+}
+
 .contact-section__row {
     position: relative;
     z-index: 1;

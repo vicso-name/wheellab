@@ -3,6 +3,23 @@
     "title": "Stats Showcase Section",
     "fields": [
         {
+            "key": "field_stss_logo_mode",
+            "label": "Logo Source",
+            "name": "logo_mode",
+            "type": "button_group",
+            "instructions": "Single: one logo tiled everywhere. Gallery: upload several and they'll alternate across the scrolling columns.",
+            "choices": {
+                "single": "Single logo",
+                "gallery": "Gallery (alternating)"
+            },
+            "default_value": "single",
+            "layout": "horizontal",
+            "return_format": "value",
+            "wrapper": {
+                "width": "100"
+            }
+        },
+        {
             "key": "field_stss_logo",
             "label": "Marquee Logo",
             "name": "logo",
@@ -10,10 +27,46 @@
             "required": 1,
             "return_format": "array",
             "preview_size": "medium",
-            "instructions": "A single logo, tiled through the 4 scrolling background columns.",
+            "instructions": "Tiled through the 4 scrolling background columns. Canvas: 440×160px (displays at 220×80px, so upload at 2x for retina) — transparent PNG or SVG. The logo is letterboxed to fit that box, not cropped, so any aspect ratio works as long as the file itself is at least 220×80px.",
+            "min_width": 220,
+            "min_height": 80,
             "wrapper": {
                 "width": "100"
-            }
+            },
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_stss_logo_mode",
+                        "operator": "==",
+                        "value": "single"
+                    }
+                ]
+            ]
+        },
+        {
+            "key": "field_stss_logos",
+            "label": "Marquee Logos",
+            "name": "logos",
+            "type": "gallery",
+            "return_format": "array",
+            "preview_size": "medium",
+            "insert": "append",
+            "min": 2,
+            "instructions": "Tiled through the 4 scrolling background columns — logos alternate as the columns repeat. Canvas: 440×160px per logo (displays at 220×80px, so upload at 2x for retina) — transparent PNG or SVG. Each logo is letterboxed to fit that box, not cropped, so any aspect ratio works as long as the file itself is at least 220×80px.",
+            "min_width": 220,
+            "min_height": 80,
+            "wrapper": {
+                "width": "100"
+            },
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_stss_logo_mode",
+                        "operator": "==",
+                        "value": "gallery"
+                    }
+                ]
+            ]
         },
         {
             "key": "field_stss_slides",

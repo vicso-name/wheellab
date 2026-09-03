@@ -1,13 +1,23 @@
 <?php
 
-$logo   = get_field('logo')   ?: null;
-$slides = get_field('slides') ?: [];
+$logo_mode = get_field('logo_mode') ?: 'single';
+$slides    = get_field('slides')    ?: [];
+
+if ($logo_mode === 'gallery') {
+    $logos = get_field('logos') ?: [];
+} else {
+    $logo  = get_field('logo') ?: null;
+    $logos = !empty($logo['url']) ? [$logo] : [];
+}
+$logos = array_values(array_filter($logos, static function ($item) {
+    return !empty($item['url']);
+}));
 
 $slides = array_values(array_filter($slides, static function ($slide) {
     return !empty($slide['stat']) && !empty($slide['title']);
 }));
 
-if (empty($logo['url']) || !$slides) {
+if (!$logos || !$slides) {
     return;
 }
 
@@ -45,15 +55,26 @@ $title_lines = array_map(static function ($slide) {
     </div>
 
     <div class="stats-showcase-section__logos" aria-hidden="true">
-        <?php for ($col = 0; $col < 4; $col++) :
+        <?php
+        $logos_count = count($logos);
+        for ($col = 0; $col < 4; $col++) :
             $direction = $col % 2 === 0 ? 'up' : 'down';
+
+            // Same alternating sequence for both sets in a column, so the
+            // -50% loop stays seamless; offset per column for variety. With
+            // a single logo this collapses to repeating that one image,
+            // same as before.
+            $col_logos = [];
+            for ($i = 0; $i < $logo_repeats; $i++) {
+                $col_logos[] = $logos[($i + $col * 3) % $logos_count];
+            }
         ?>
             <div class="stats-showcase-section__logo-col stats-showcase-section__logo-col--<?php echo $direction; ?>">
                 <?php for ($set = 0; $set < 2; $set++) : ?>
                     <div class="stats-showcase-section__logo-set">
-                        <?php for ($i = 0; $i < $logo_repeats; $i++) : ?>
-                            <img class="stats-showcase-section__logo" src="<?php echo esc_url($logo['url']); ?>" alt="" loading="lazy">
-                        <?php endfor; ?>
+                        <?php foreach ($col_logos as $logo_item) : ?>
+                            <img class="stats-showcase-section__logo" src="<?php echo esc_url($logo_item['url']); ?>" alt="" loading="lazy">
+                        <?php endforeach; ?>
                     </div>
                 <?php endfor; ?>
             </div>

@@ -3,7 +3,7 @@
 .header {
   position: sticky;
   top: 16px;
-  z-index: 100;
+  z-index: 999;
   isolation: isolate;
   transition: transform var(--transition-base) ease;
 
@@ -13,6 +13,13 @@
 
   @media screen and (max-width: variables.$small) {
     top: 12px;
+  }
+
+  // Positioning context for .header__search, so it overlays page content
+  // below (as position: absolute) instead of growing the sticky header's
+  // own box and pushing everything below it down when toggled open.
+  > .container {
+    position: relative;
   }
 }
 
@@ -131,6 +138,13 @@
 }
 
 .header__mega {
+  position: absolute;
+  top: calc(100% + 12px);
+  // Absolute offsets resolve against .header__bar's padding edge (its outer
+  // edge), not its content edge — inset by the bar's own padding so this
+  // matches the nav pill's width instead of running past it.
+  left: 8px;
+  right: 8px;
   display: flex;
   gap: 12px;
 
@@ -438,6 +452,13 @@
 }
 
 .header__search {
+  position: absolute;
+  top: 100%;
+  // Same reasoning as .header__mega above: offsets resolve against
+  // .container's padding edge, so inset by its own horizontal padding to
+  // match .header__bar's width instead of the wider container box.
+  left: 24px;
+  right: 24px;
   margin-top: 12px;
   padding: 16px 24px;
   background: var(--bg-main-surface-2-light);

@@ -39,6 +39,8 @@ $badge_logos_html = ob_get_clean();
     <div class="contact-section__bg" aria-hidden="true">
         <img class="contact-section__bg-image contact-section__bg-image--tl" src="<?php echo $glow_url; ?>" alt="">
         <img class="contact-section__bg-image contact-section__bg-image--br" src="<?php echo $glow_url; ?>" alt="">
+        <div class="contact-section__bg-fade contact-section__bg-fade--top"></div>
+        <div class="contact-section__bg-fade contact-section__bg-fade--bottom"></div>
     </div>
 
     <div class="container">
