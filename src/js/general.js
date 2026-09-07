@@ -24,6 +24,7 @@ function initHeader() {
 
   initMobileMenuToggle(header);
   initSearchToggle(header);
+  initLiveSearch(header);
   initMegaMenus(header);
   initMobileAccordion(header);
   initHeaderDismiss(header);
@@ -87,6 +88,126 @@ function setSearchOpen(toggle, panel, open) {
     const input = panel.querySelector('input[type="search"]');
     if (input) input.focus();
   }
+}
+
+function initLiveSearch(header) {
+  const form = header.querySelector("[data-live-search]");
+  const config = window.wheellabSearch;
+  if (!form || !config) return;
+
+  const input = form.querySelector('input[type="search"]');
+  const results = form.querySelector("[data-search-results]");
+  const items = form.querySelector("[data-search-items]");
+  const status = form.querySelector("[data-search-status]");
+  const allLink = form.querySelector("[data-search-all]");
+  if (!input || !results || !items || !status || !allLink) return;
+
+  const minLength = Number(config.minLength) || 2;
+  const resultLimit = Number(config.resultLimit) || 8;
+  let timer = null;
+  let controller = null;
+  let requestSequence = 0;
+
+  const resetResults = () => {
+    if (controller) controller.abort();
+    controller = null;
+    items.innerHTML = "";
+    results.hidden = true;
+    allLink.hidden = true;
+    allLink.removeAttribute("href");
+    status.hidden = true;
+    status.textContent = "";
+    form.classList.remove("is-loading");
+  };
+
+  const setStatus = (message) => {
+    status.textContent = message;
+    status.hidden = !message;
+  };
+
+  const runSearch = async () => {
+    const query = input.value.trim();
+    if (query.length < minLength) {
+      resetResults();
+      if (query.length > 0) setStatus(config.strings.minLength);
+      return;
+    }
+
+    if (controller) controller.abort();
+    controller = new window.AbortController();
+    const sequence = ++requestSequence;
+
+    form.classList.add("is-loading");
+    setStatus(config.strings.searching);
+    items.innerHTML = "";
+    results.hidden = true;
+    allLink.hidden = true;
+
+    const body = new URLSearchParams({
+      action: "wheellab_site_search",
+      nonce: config.nonce,
+      search: query,
+    });
+
+    try {
+      const response = await fetch(config.ajaxUrl, {
+        method: "POST",
+        credentials: "same-origin",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+        },
+        body: body.toString(),
+        signal: controller.signal,
+      });
+
+      if (!response.ok) throw new Error(`Search request failed: ${response.status}`);
+
+      const payload = await response.json();
+      if (sequence !== requestSequence) return;
+      if (!payload.success || !payload.data) throw new Error("Invalid search response");
+
+      const html = payload.data.html || "";
+      const foundPosts = Number(payload.data.foundPosts) || 0;
+
+      form.classList.remove("is-loading");
+
+      if (!html || foundPosts === 0) {
+        items.innerHTML = "";
+        results.hidden = true;
+        setStatus(config.strings.noResults);
+        return;
+      }
+
+      items.innerHTML = html;
+      results.hidden = false;
+      setStatus("");
+
+      if (foundPosts > resultLimit && payload.data.searchUrl) {
+        allLink.href = payload.data.searchUrl;
+        allLink.textContent = config.strings.viewAll.replace("%d", String(foundPosts));
+        allLink.hidden = false;
+      }
+    } catch (error) {
+      if (error.name === "AbortError") return;
+      if (sequence !== requestSequence) return;
+
+      form.classList.remove("is-loading");
+      items.innerHTML = "";
+      results.hidden = true;
+      setStatus(config.strings.error);
+    }
+  };
+
+  input.addEventListener("input", () => {
+    window.clearTimeout(timer);
+    timer = window.setTimeout(runSearch, 280);
+  });
+
+  input.addEventListener("focus", () => {
+    if (input.value.trim().length >= minLength && !items.children.length) {
+      runSearch();
+    }
+  });
 }
 
 function initMegaMenus(header) {

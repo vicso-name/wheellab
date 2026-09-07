@@ -230,6 +230,23 @@ add_action('wp_enqueue_scripts', function () {
         true
     );
 
+    wp_localize_script('btf-main-scripts', 'wheellabSearch', [
+        'ajaxUrl'     => admin_url('admin-ajax.php'),
+        'nonce'       => wp_create_nonce('wheellab_site_search'),
+        'minLength'   => WHEELLAB_SEARCH_MIN_LENGTH,
+        'resultLimit' => WHEELLAB_SEARCH_AJAX_LIMIT,
+        'strings'     => [
+            'searching' => __('Searching…', 'wheellab'),
+            'minLength' => sprintf(
+                __('Type at least %d characters to search.', 'wheellab'),
+                WHEELLAB_SEARCH_MIN_LENGTH
+            ),
+            'noResults' => __('No results found. Try another phrase.', 'wheellab'),
+            'error'     => __('Search is temporarily unavailable. Please try again.', 'wheellab'),
+            'viewAll'   => __('View all %d results', 'wheellab'),
+        ],
+    ]);
+
     if (is_page_template('template-blog.php')) {
         wp_enqueue_script(
             'btf-blog-filter-script',
