@@ -5,8 +5,8 @@
     box-shadow: 0 20px 60px rgb(0 0 0 / 16%);
 
     @media screen and (max-width: variables.$small) {
-        left: 16px;
         right: 16px;
+        left: 16px;
         margin-top: 8px;
         padding: 12px;
         border-radius: 16px;
@@ -26,6 +26,7 @@
 
 .header__search .site-search-form__input {
     width: 100%;
+    min-width: 0;
     min-height: 48px;
     outline: none;
     transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
@@ -60,8 +61,33 @@
     flex-direction: column;
     gap: 12px;
     max-height: min(560px, 66vh);
+    padding-right: 10px;
     overflow-y: auto;
     overscroll-behavior: contain;
+    scrollbar-color: var(--outline-accent-2) transparent;
+    scrollbar-gutter: stable;
+    scrollbar-width: thin;
+
+    &::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: var(--outline-accent-2);
+        background-clip: padding-box;
+        border: 2px solid transparent;
+        border-radius: 999px;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background: var(--content-solid-accent-2);
+        background-clip: padding-box;
+        border: 2px solid transparent;
+    }
 
     &[hidden] {
         display: none;
@@ -110,7 +136,10 @@
     background: var(--bg-main-surface-2);
     border: 1px solid var(--outline-neutral);
     border-radius: 16px;
-    transition: background var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast);
+    transition:
+        background var(--transition-fast),
+        border-color var(--transition-fast),
+        transform var(--transition-fast);
 
     &:hover,
     &:focus-within {
@@ -161,8 +190,16 @@
     position: absolute;
     inset: -24px;
     background:
-        radial-gradient(circle at 25% 25%, var(--color-primary-alpha-35), transparent 46%),
-        radial-gradient(circle at 75% 75%, var(--color-secondary-alpha-25), transparent 46%),
+        radial-gradient(
+            circle at 25% 25%,
+            var(--color-primary-alpha-35),
+            transparent 46%
+        ),
+        radial-gradient(
+            circle at 75% 75%,
+            var(--color-secondary-alpha-25),
+            transparent 46%
+        ),
         var(--bg-ghost-accent-2);
     transform: rotate(10deg);
 }

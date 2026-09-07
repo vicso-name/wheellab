@@ -3,6 +3,7 @@
 defined('ABSPATH') || exit;
 
 add_action('init', 'wheellab_register_service_cpt');
+
 function wheellab_register_service_cpt() {
     register_post_type('service', [
         'labels' => [
@@ -17,12 +18,23 @@ function wheellab_register_service_cpt() {
             'not_found'          => __('No services found', 'wheellab'),
             'not_found_in_trash' => __('No services found in Trash', 'wheellab'),
         ],
-        'public'       => true,
-        'has_archive'  => false,
-        'rewrite'      => ['slug' => 'services'],
-        'menu_icon'    => 'dashicons-admin-tools',
+
+        'public'        => true,
+        'has_archive'   => false,
+        'rewrite'       => ['slug' => 'services'],
+        'menu_icon'     => 'dashicons-admin-tools',
         'menu_position' => 21,
-        'supports'     => ['title', 'editor', 'thumbnail'],
+
+        'supports' => [
+            'title',
+            'editor',
+            'thumbnail',
+        ],
+
+        'taxonomies' => [
+            'post_tag',
+        ],
+
         'show_in_rest' => true,
     ]);
 }

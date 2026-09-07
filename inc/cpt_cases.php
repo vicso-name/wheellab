@@ -3,6 +3,7 @@
 defined('ABSPATH') || exit;
 
 add_action('init', 'wheellab_register_case_study_cpt');
+
 function wheellab_register_case_study_cpt() {
     register_post_type('case_study', [
         'labels' => [
@@ -17,12 +18,23 @@ function wheellab_register_case_study_cpt() {
             'not_found'          => __('No case studies found', 'wheellab'),
             'not_found_in_trash' => __('No case studies found in Trash', 'wheellab'),
         ],
-        'public'       => true,
-        'has_archive'  => 'cases',
-        'rewrite'      => ['slug' => 'cases'],
-        'menu_icon'    => 'dashicons-portfolio',
+
+        'public'        => true,
+        'has_archive'   => 'cases',
+        'rewrite'       => ['slug' => 'cases'],
+        'menu_icon'     => 'dashicons-portfolio',
         'menu_position' => 20,
-        'supports'     => ['title', 'editor', 'thumbnail'],
+
+        'supports' => [
+            'title',
+            'editor',
+            'thumbnail',
+        ],
+
+        'taxonomies' => [
+            'post_tag',
+        ],
+
         'show_in_rest' => true,
     ]);
 }
