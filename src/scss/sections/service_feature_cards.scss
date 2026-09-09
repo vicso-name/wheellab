@@ -110,15 +110,18 @@
     align-items: stretch;
 
     @media screen and (max-width: variables.$small) {
-        display: flex;
-        flex-direction: column;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        grid-auto-rows: 1fr;
         gap: 16px;
     }
 }
 
-.service-feature-cards__slide {
+.service-feature-cards__slide.swiper-slide {
     display: flex;
     width: 506.667px;
+    // Let the wrapper stretch every slide to the tallest card.
+    height: auto;
 
     @media screen and (max-width: variables.$small) {
         width: 100%;
@@ -128,7 +131,6 @@
 .service-feature-cards__card {
     display: flex;
     width: 100%;
-    height: 100%;
     padding: 8px;
     background: var(--bg-main-surface-2);
     border: 1px solid var(--outline-neutral);
@@ -190,28 +192,60 @@
     background: var(--divider-main);
 }
 
-.service-feature-cards__card-list {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-}
-
-.service-feature-cards__card-list-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
+.service-feature-cards__card-features {
     width: 100%;
     color: var(--content-main-primary);
-}
+    overflow-wrap: anywhere;
 
-.service-feature-cards__card-bullet {
-    flex-shrink: 0;
-    width: 6px;
-    height: 28px;
-    color: var(--content-solid-accent-2);
-    opacity: 0.6;
+    p,
+    ul,
+    ol {
+        margin: 0 0 12px;
+    }
+
+    ul {
+        padding: 0;
+        list-style: none;
+    }
+
+    ol {
+        padding-left: 24px;
+        list-style: decimal;
+    }
+
+    li + li {
+        margin-top: 12px;
+    }
+
+    ul > li {
+        position: relative;
+        padding-left: 18px;
+
+        &::before {
+            position: absolute;
+            top: calc((1lh - 6px) / 2);
+            left: 0;
+            width: 6px;
+            height: 6px;
+            background: var(--content-solid-accent-2);
+            clip-path: polygon(0 50%, 50% 0, 100% 50%, 50% 100%);
+            opacity: 0.6;
+            content: "";
+        }
+    }
+
+    li > ul,
+    li > ol {
+        margin-top: 12px;
+    }
+
+    a {
+        color: var(--content-solid-accent-2);
+        text-decoration: underline;
+    }
+
+    > :last-child,
+    li > :last-child {
+        margin-bottom: 0;
+    }
 }

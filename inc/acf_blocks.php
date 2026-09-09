@@ -2,6 +2,29 @@
 
 defined('ABSPATH') || exit;
 
+// Load legacy feature rows into the editor; the next normal save stores the HTML.
+add_filter('acf/load_value/key=field_sfc_card_features', 'wheellab_load_service_card_features', 10, 3);
+function wheellab_load_service_card_features($value, $post_id, $field) {
+    if ($field['type'] !== 'wysiwyg' || !ctype_digit((string) $value)) {
+        return $value;
+    }
+
+    $prefix = $field['name'];
+    if (acf_get_metadata($post_id, "{$prefix}_0_label", true) !== 'field_sfc_feature_label') {
+        return $value;
+    }
+
+    $items = '';
+    for ($i = 0; $i < (int) $value; $i++) {
+        $label = acf_get_metadata($post_id, "{$prefix}_{$i}_label");
+        if (is_string($label) && $label !== '') {
+            $items .= '<li>' . esc_html($label) . '</li>';
+        }
+    }
+
+    return $items !== '' ? '<ul>' . $items . '</ul>' : '';
+}
+
 add_action('acf/init', 'wheellab_register_acf_blocks');
 function wheellab_register_acf_blocks() {
     $blocks = [

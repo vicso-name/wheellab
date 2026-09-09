@@ -59,23 +59,12 @@
                     "key": "field_sfc_card_features",
                     "label": "Features",
                     "name": "features",
-                    "type": "repeater",
-                    "layout": "table",
-                    "button_label": "Add Feature",
-                    "min": 1,
-                    "sub_fields": [
-                        {
-                            "key": "field_sfc_feature_label",
-                            "label": "Label",
-                            "name": "label",
-                            "type": "text",
-                            "required": 1,
-                            "instructions": "e.g. “Lobby & category architecture”",
-                            "wrapper": {
-                                "width": "100"
-                            }
-                        }
-                    ]
+                    "type": "wysiwyg",
+                    "instructions": "Add or paste text, bulleted lists, or numbered lists.",
+                    "tabs": "all",
+                    "toolbar": "basic",
+                    "media_upload": 0,
+                    "delay": 0
                 }
             ]
         }

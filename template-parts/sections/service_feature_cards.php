@@ -46,7 +46,7 @@ $id     = !empty($block['anchor'])    ? ' id="' . esc_attr($block['anchor']) . '
             <?php foreach ($cards as $card) :
                 $card_title       = $card['title']       ?? '';
                 $card_description = $card['description'] ?? '';
-                $card_features    = $card['features']    ?? [];
+                $card_features    = $card['features']    ?? '';
                 if (!$card_title) continue;
             ?>
                 <div class="swiper-slide service-feature-cards__slide">
@@ -64,19 +64,9 @@ $id     = !empty($block['anchor'])    ? ' id="' . esc_attr($block['anchor']) . '
                                 <?php if ($card_features) : ?>
                                     <div class="service-feature-cards__card-divider" aria-hidden="true"></div>
 
-                                    <ul class="service-feature-cards__card-list">
-                                        <?php foreach ($card_features as $feature) :
-                                            $feature_label = $feature['label'] ?? '';
-                                            if (!$feature_label) continue;
-                                        ?>
-                                            <li class="service-feature-cards__card-list-item">
-                                                <svg class="service-feature-cards__card-bullet" width="6" height="28" viewBox="0 0 6 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                                    <path d="M0 14L3 11L6 14L3 17L0 14Z" fill="currentColor"/>
-                                                </svg>
-                                                <span class="body-m"><?php echo esc_html($feature_label); ?></span>
-                                            </li>
-                                        <?php endforeach; ?>
-                                    </ul>
+                                    <div class="service-feature-cards__card-features body-m">
+                                        <?php echo wp_kses_post($card_features); ?>
+                                    </div>
                                 <?php endif; ?>
                             </div>
                         </div>
