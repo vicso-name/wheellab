@@ -63,11 +63,18 @@ function wheellab_render_service_template_settings_page(): void {
                 esc_html__('Done. Edit mode fixed on %d service post(s).', 'wheellab'),
                 $updated
             ) . '</p></div>';
+        } elseif (isset($_POST['action_add_stats_section'])) {
+            $updated = wheellab_backfill_stats_section_on_service_posts();
+            echo '<div class="notice notice-success"><p>' . sprintf(
+                esc_html__('Done. Service Stats Section added to %d service post(s).', 'wheellab'),
+                $updated
+            ) . '</p></div>';
         }
     }
 
-    $empty_count    = wheellab_count_empty_service_posts();
-    $fix_mode_count = wheellab_count_service_posts_needing_edit_mode();
+    $empty_count         = wheellab_count_empty_service_posts();
+    $fix_mode_count      = wheellab_count_service_posts_needing_edit_mode();
+    $missing_stats_count = wheellab_count_service_posts_missing_stats_section();
     ?>
 
     <div class="wrap">
@@ -151,6 +158,26 @@ function wheellab_render_service_template_settings_page(): void {
         </div>
         <?php endif; ?>
 
+        <?php if ($missing_stats_count > 0) : ?>
+        <div class="card" style="max-width: 720px; margin-top: 20px;">
+            <h2><?php esc_html_e('Add Service Stats Section to Existing Posts', 'wheellab'); ?></h2>
+            <p>
+                <?php printf(
+                    esc_html__('%d service post(s) were created before the Service Stats Section block was added and don\'t have it yet.', 'wheellab'),
+                    $missing_stats_count
+                ); ?>
+                <?php esc_html_e('This will insert the block right after Service Comparison Section (or at the end, if that block isn\'t present). Existing content and fields are not touched.', 'wheellab'); ?>
+            </p>
+            <form method="post">
+                <?php wp_nonce_field('wheellab_service_template_save', 'wheellab_service_template_nonce'); ?>
+                <button type="submit" name="action_add_stats_section" value="1" class="button button-primary"
+                        onclick="return confirm('<?php esc_attr_e('Add Service Stats Section block to all posts missing it?', 'wheellab'); ?>')">
+                    <?php printf(esc_html__('Add Block to %d Post(s)', 'wheellab'), $missing_stats_count); ?>
+                </button>
+            </form>
+        </div>
+        <?php endif; ?>
+
         <div class="card" style="max-width: 720px; margin-top: 20px; background: #fff8e1; border-left: 4px solid #f0b429;">
             <h3 style="margin-top: 0;"><?php esc_html_e('How it works', 'wheellab'); ?></h3>
             <ul style="list-style: disc; padding-left: 20px;">
@@ -191,6 +218,7 @@ function wheellab_get_service_default_template_content(): string {
 <!-- wp:acf/service-feature-cards {"mode":"edit"} /-->
 <!-- wp:acf/service-reel-section {"mode":"edit"} /-->
 <!-- wp:acf/service-comparison-section {"mode":"edit"} /-->
+<!-- wp:acf/service-stats-section {"mode":"edit"} /-->
 <!-- wp:acf/service-process-deck {"mode":"edit"} /-->
 <!-- wp:acf/service-industry-tiles {"mode":"edit"} /-->
 <!-- wp:acf/cta-banner-section {"mode":"edit"} /-->
@@ -356,6 +384,77 @@ function wheellab_fix_edit_mode_on_service_posts(): int {
         wp_update_post([
             'ID'           => $id,
             'post_content' => wheellab_inject_edit_mode($post->post_content),
+        ]);
+        $updated++;
+    }
+
+    return $updated;
+}
+
+function wheellab_get_service_posts_missing_stats_section(): array {
+    $posts = get_posts([
+        'post_type'      => 'service',
+        'post_status'    => ['publish', 'draft', 'pending', 'future'],
+        'posts_per_page' => -1,
+        'fields'         => 'ids',
+    ]);
+
+    return array_filter($posts, function (int $id): bool {
+        $post = get_post($id);
+        return $post
+            && strpos($post->post_content, 'wp:acf/') !== false
+            && strpos($post->post_content, 'wp:acf/service-stats-section') === false;
+    });
+}
+
+function wheellab_count_service_posts_missing_stats_section(): int {
+    return count(wheellab_get_service_posts_missing_stats_section());
+}
+
+// Inserts a Service Stats Section block right after Service Comparison
+// Section (matching where it sits in the default template), or at the
+// end of the content if that block isn't present.
+function wheellab_insert_stats_section_block(string $content): string {
+    $blocks = parse_blocks($content);
+
+    $stats_block = [
+        'blockName'    => 'acf/service-stats-section',
+        'attrs'        => ['mode' => 'edit'],
+        'innerBlocks'  => [],
+        'innerHTML'    => '',
+        'innerContent' => [],
+    ];
+
+    $result   = [];
+    $inserted = false;
+
+    foreach ($blocks as $block) {
+        $result[] = $block;
+        if (!$inserted && ($block['blockName'] ?? '') === 'acf/service-comparison-section') {
+            $result[] = $stats_block;
+            $inserted = true;
+        }
+    }
+
+    if (!$inserted) {
+        $result[] = $stats_block;
+    }
+
+    return serialize_blocks($result);
+}
+
+function wheellab_backfill_stats_section_on_service_posts(): int {
+    $updated = 0;
+
+    foreach (wheellab_get_service_posts_missing_stats_section() as $id) {
+        $post = get_post($id);
+        if (!$post) {
+            continue;
+        }
+
+        wp_update_post([
+            'ID'           => $id,
+            'post_content' => wheellab_insert_stats_section_block($post->post_content),
         ]);
         $updated++;
     }

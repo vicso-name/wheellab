@@ -1,0 +1,76 @@
+{
+    "key": "group_case_study_about_section",
+    "title": "Case Study About Section",
+    "fields": [
+        {
+            "key": "field_csa_title",
+            "label": "Title",
+            "name": "title",
+            "type": "text",
+            "required": 1,
+            "default_value": "About the Client + Challenge",
+            "wrapper": {
+                "width": "100"
+            }
+        },
+        {
+            "key": "field_csa_description",
+            "label": "Description",
+            "name": "description",
+            "type": "textarea",
+            "rows": 6,
+            "instructions": "Separate paragraphs with a blank line.",
+            "wrapper": {
+                "width": "100"
+            }
+        },
+        {
+            "key": "field_csa_client_logo",
+            "label": "Client Logo",
+            "name": "client_logo",
+            "type": "image",
+            "return_format": "array",
+            "preview_size": "medium",
+            "instructions": "Optional — shown beside the text. Column stays text-only if left empty.",
+            "wrapper": {
+                "width": "100"
+            }
+        },
+        {
+            "key": "field_csa_challenges",
+            "label": "Challenges",
+            "name": "challenges",
+            "type": "repeater",
+            "layout": "table",
+            "button_label": "Add Challenge",
+            "instructions": "Shown as numbered cards, numbered automatically in the order listed.",
+            "sub_fields": [
+                {
+                    "key": "field_csa_challenge_text",
+                    "label": "Text",
+                    "name": "text",
+                    "type": "text",
+                    "required": 1,
+                    "wrapper": {
+                        "width": "100"
+                    }
+                }
+            ]
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "block",
+                "operator": "==",
+                "value": "acf/case-study-about-section"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "active": true
+}

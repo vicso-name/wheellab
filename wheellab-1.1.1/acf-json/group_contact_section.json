@@ -1,0 +1,101 @@
+{
+    "key": "group_contact_section",
+    "title": "Contact Section",
+    "fields": [
+        {
+            "key": "field_cs_tab_content",
+            "label": "Content",
+            "type": "tab",
+            "placement": "top"
+        },
+        {
+            "key": "field_cs_title",
+            "label": "Title",
+            "name": "title",
+            "type": "text",
+            "default_value": "Let’s discuss your great ideas together",
+            "wrapper": {
+                "width": "100"
+            }
+        },
+        {
+            "key": "field_cs_description",
+            "label": "Description",
+            "name": "description",
+            "type": "textarea",
+            "rows": 3,
+            "default_value": "Let’s talk about your iGaming business. Please complete the form, and our team will reach out to you as soon as possible.",
+            "wrapper": {
+                "width": "100"
+            }
+        },
+        {
+            "key": "field_cs_tab_badges",
+            "label": "Trust Badges",
+            "type": "tab",
+            "placement": "top"
+        },
+        {
+            "key": "field_cs_badges_text",
+            "label": "Badges Text",
+            "name": "badges_text",
+            "type": "text",
+            "default_value": "Trusted by world top-10 best iGaming businesses",
+            "wrapper": {
+                "width": "100"
+            }
+        },
+        {
+            "key": "field_cs_badges",
+            "label": "Badge Icons",
+            "name": "badges",
+            "type": "repeater",
+            "layout": "table",
+            "button_label": "Add Badge",
+            "instructions": "Leave empty to show the 3 default badge icons from the Figma design. Add rows here to replace them with your own.",
+            "sub_fields": [
+                {
+                    "key": "field_cs_badge_icon",
+                    "label": "Icon",
+                    "name": "icon",
+                    "type": "image",
+                    "return_format": "array",
+                    "preview_size": "thumbnail",
+                    "required": 1
+                }
+            ]
+        },
+        {
+            "key": "field_cs_tab_form",
+            "label": "Form",
+            "type": "tab",
+            "placement": "top"
+        },
+        {
+            "key": "field_cs_form_shortcode",
+            "label": "Contact Form 7 Shortcode",
+            "name": "form_shortcode",
+            "type": "text",
+            "instructions": "Paste the Contact Form 7 shortcode, e.g. [contact-form-7 id=\"123\" title=\"Contact form\"]. See docs/acf-block-patterns.md § Contact Section for the recommended CF7 form template (field names + wrapper markup the CSS expects).",
+            "placeholder": "[contact-form-7 id=\"123\" title=\"Contact form\"]",
+            "wrapper": {
+                "width": "100"
+            }
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "block",
+                "operator": "==",
+                "value": "acf/contact-section"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "active": true
+}

@@ -1,0 +1,77 @@
+{
+    "key": "group_case_study_tabs_section",
+    "title": "Case Study Tabs Section",
+    "fields": [
+        {
+            "key": "field_csts_title",
+            "label": "Title",
+            "name": "title",
+            "type": "text",
+            "required": 1,
+            "instructions": "e.g. “Motion was the differentiator”",
+            "wrapper": {
+                "width": "100"
+            }
+        },
+        {
+            "key": "field_csts_description",
+            "label": "Description",
+            "name": "description",
+            "type": "textarea",
+            "rows": 3,
+            "wrapper": {
+                "width": "100"
+            }
+        },
+        {
+            "key": "field_csts_tabs",
+            "label": "Tabs",
+            "name": "tabs",
+            "type": "repeater",
+            "layout": "block",
+            "button_label": "Add Tab",
+            "min": 1,
+            "instructions": "The first tab is active by default. Clicking a tab crossfades the image on the right.",
+            "sub_fields": [
+                {
+                    "key": "field_csts_tab_label",
+                    "label": "Label",
+                    "name": "label",
+                    "type": "text",
+                    "required": 1,
+                    "instructions": "e.g. “Custom spin-to-win wheel with weighted easing”",
+                    "wrapper": {
+                        "width": "50"
+                    }
+                },
+                {
+                    "key": "field_csts_tab_image",
+                    "label": "Image",
+                    "name": "image",
+                    "type": "image",
+                    "required": 1,
+                    "return_format": "array",
+                    "preview_size": "medium",
+                    "wrapper": {
+                        "width": "50"
+                    }
+                }
+            ]
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "block",
+                "operator": "==",
+                "value": "acf/case-study-tabs-section"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "active": true
+}

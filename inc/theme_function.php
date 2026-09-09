@@ -482,11 +482,8 @@ function wheellab_extract_vimeo_id($url) {
 }
 
 // Shared markup for the "Statistics" component (Figma nodes 806:11701 /
-// 806:11974) — used by both service_stats_section.php (standalone
-// block) and, when its own stats field is filled in, by
-// service_comparison_section.php (rendered under the comparison
-// slider). Styles live in src/scss/partials/_stats_banner.scss,
-// @use'd by both blocks' own section stylesheets.
+// 806:11974), used by the standalone service_stats_section.php block.
+// Styles live in src/scss/partials/_stats_banner.scss.
 function wheellab_render_stats_banner($stats) {
     if (!$stats) {
         return;

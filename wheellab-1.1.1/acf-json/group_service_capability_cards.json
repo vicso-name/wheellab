@@ -1,0 +1,92 @@
+{
+    "key": "group_service_capability_cards",
+    "title": "Service Capability Cards",
+    "fields": [
+        {
+            "key": "field_scc_title",
+            "label": "Title",
+            "name": "title",
+            "type": "text",
+            "required": 1,
+            "instructions": "e.g. “Part of building your casino”",
+            "wrapper": {
+                "width": "100"
+            }
+        },
+        {
+            "key": "field_scc_cards",
+            "label": "Cards",
+            "name": "cards",
+            "type": "repeater",
+            "layout": "block",
+            "button_label": "Add Card",
+            "min": 1,
+            "instructions": "Plain wrapping row (not a slider) — 3 per row on desktop, wraps for more, stacks on mobile.",
+            "sub_fields": [
+                {
+                    "key": "field_scc_card_image",
+                    "label": "Image",
+                    "name": "image",
+                    "type": "image",
+                    "return_format": "array",
+                    "preview_size": "medium",
+                    "required": 1,
+                    "instructions": "Bespoke per-card illustration — no shared fallback (unlike Industry Tiles' icon), each card needs its own.",
+                    "wrapper": {
+                        "width": "100"
+                    }
+                },
+                {
+                    "key": "field_scc_card_title",
+                    "label": "Title",
+                    "name": "title",
+                    "type": "text",
+                    "required": 1,
+                    "instructions": "e.g. “Custom Front-End”",
+                    "wrapper": {
+                        "width": "100"
+                    }
+                },
+                {
+                    "key": "field_scc_card_description",
+                    "label": "Description",
+                    "name": "description",
+                    "type": "textarea",
+                    "rows": 3,
+                    "maxlength": 140,
+                    "required": 1,
+                    "instructions": "Keep it short (140 chars max) - the card's image is a fixed-height box below this text, and a long description pushes into it.",
+                    "wrapper": {
+                        "width": "100"
+                    }
+                },
+                {
+                    "key": "field_scc_card_link",
+                    "label": "Link",
+                    "name": "link",
+                    "type": "link",
+                    "return_format": "array",
+                    "instructions": "Optional — the card renders as a plain (non-clickable) card when empty; the corner arrow only shows when a link is set.",
+                    "wrapper": {
+                        "width": "100"
+                    }
+                }
+            ]
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "block",
+                "operator": "==",
+                "value": "acf/service-capability-cards"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "active": true
+}

@@ -1,0 +1,54 @@
+{
+    "key": "group_author_fields",
+    "title": "Author Bio (Blog)",
+    "fields": [
+        {
+            "key": "field_auth_job_title",
+            "label": "Job Title",
+            "name": "job_title",
+            "type": "text",
+            "instructions": "Shown next to the name on the author page and blog card meta, e.g. \"CEO of WheelLab\".",
+            "placeholder": "CEO of WheelLab"
+        },
+        {
+            "key": "field_auth_photo",
+            "label": "Photo",
+            "name": "photo",
+            "type": "image",
+            "return_format": "array",
+            "preview_size": "thumbnail",
+            "instructions": "Shown on the author page hero. Falls back to the account's Gravatar if left empty."
+        },
+        {
+            "key": "field_auth_social_instagram",
+            "label": "Instagram",
+            "name": "social_instagram",
+            "type": "link",
+            "return_format": "array",
+            "instructions": "Link title is shown as the handle text, e.g. \"@jane_hopper\"."
+        },
+        {
+            "key": "field_auth_social_linkedin",
+            "label": "LinkedIn",
+            "name": "social_linkedin",
+            "type": "link",
+            "return_format": "array",
+            "instructions": "Link title is shown as the handle text, e.g. \"Jane Hopper\"."
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "user_form",
+                "operator": "==",
+                "value": "all"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "active": true
+}

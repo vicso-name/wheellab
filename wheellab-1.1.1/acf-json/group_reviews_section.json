@@ -1,0 +1,80 @@
+{
+    "key": "group_reviews_section",
+    "title": "Reviews Section",
+    "fields": [
+        {
+            "key": "field_rs_use_custom_reviews",
+            "label": "Use Custom Reviews",
+            "name": "use_custom_reviews",
+            "type": "true_false",
+            "instructions": "Off: pulls the default review list from Theme Options → Reviews. On: fill in a list unique to this block.",
+            "default_value": 0,
+            "ui": 1
+        },
+        {
+            "key": "field_rs_custom_reviews",
+            "label": "Custom Reviews",
+            "name": "custom_reviews",
+            "type": "repeater",
+            "layout": "block",
+            "button_label": "Add Review",
+            "min": 1,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_rs_use_custom_reviews",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "sub_fields": [
+                {
+                    "key": "field_rs_custom_review_quote",
+                    "label": "Quote",
+                    "name": "quote",
+                    "type": "textarea",
+                    "rows": 3,
+                    "required": 1,
+                    "wrapper": {
+                        "width": "100"
+                    }
+                },
+                {
+                    "key": "field_rs_custom_review_author_name",
+                    "label": "Author Name",
+                    "name": "author_name",
+                    "type": "text",
+                    "required": 1,
+                    "wrapper": {
+                        "width": "50"
+                    }
+                },
+                {
+                    "key": "field_rs_custom_review_author_role",
+                    "label": "Author Role",
+                    "name": "author_role",
+                    "type": "text",
+                    "wrapper": {
+                        "width": "50"
+                    }
+                }
+            ]
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "block",
+                "operator": "==",
+                "value": "acf/reviews-section"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "active": true
+}

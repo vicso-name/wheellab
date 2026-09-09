@@ -1,0 +1,112 @@
+{
+    "key": "group_featured_posts_section",
+    "title": "Featured Posts Section",
+    "fields": [
+        {
+            "key": "field_fps_title",
+            "label": "Title",
+            "name": "title",
+            "type": "text",
+            "default_value": "Be on one wave with technological progress",
+            "wrapper": {
+                "width": "100"
+            }
+        },
+        {
+            "key": "field_fps_description",
+            "label": "Description",
+            "name": "description",
+            "type": "textarea",
+            "rows": 3,
+            "default_value": "We engineer the systems operators rely on — from player-facing platforms to back-office tooling and the integrations that hold it all together.",
+            "wrapper": {
+                "width": "100"
+            }
+        },
+        {
+            "key": "field_fps_posts_source",
+            "label": "Posts Source",
+            "name": "posts_source",
+            "type": "select",
+            "choices": {
+                "latest": "Latest Posts",
+                "manual": "Manual Selection"
+            },
+            "default_value": "latest",
+            "allow_null": 0,
+            "ui": 1,
+            "wrapper": {
+                "width": "50"
+            }
+        },
+        {
+            "key": "field_fps_posts_count",
+            "label": "Number of Posts",
+            "name": "posts_count",
+            "type": "number",
+            "instructions": "How many of the latest published posts to show.",
+            "default_value": 10,
+            "min": 1,
+            "max": 20,
+            "step": 1,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_fps_posts_source",
+                        "operator": "==",
+                        "value": "latest"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50"
+            }
+        },
+        {
+            "key": "field_fps_manual_posts",
+            "label": "Posts",
+            "name": "manual_posts",
+            "type": "relationship",
+            "instructions": "Search, pick, and order the posts to feature in the slider.",
+            "post_type": [
+                "post"
+            ],
+            "filters": [
+                "search",
+                "taxonomy"
+            ],
+            "elements": [
+                "featured_image"
+            ],
+            "return_format": "id",
+            "min": 1,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_fps_posts_source",
+                        "operator": "==",
+                        "value": "manual"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "100"
+            }
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "block",
+                "operator": "==",
+                "value": "acf/featured-posts-section"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "active": true
+}

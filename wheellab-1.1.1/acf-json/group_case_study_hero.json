@@ -1,0 +1,97 @@
+{
+    "key": "group_case_study_hero",
+    "title": "Case Study Hero",
+    "fields": [
+        {
+            "key": "field_csh_background_image",
+            "label": "Background Image",
+            "name": "background_image",
+            "type": "image",
+            "return_format": "array",
+            "preview_size": "medium",
+            "instructions": "Optional — falls back to the post's Featured Image if left empty.",
+            "wrapper": {
+                "width": "100"
+            }
+        },
+        {
+            "key": "field_csh_tags",
+            "label": "Tags",
+            "name": "hero_tags",
+            "type": "repeater",
+            "layout": "table",
+            "button_label": "Add Tag",
+            "instructions": "Short pill labels shown under the title, e.g. \"Regular\", \"Crypto\", \"Telegram\".",
+            "sub_fields": [
+                {
+                    "key": "field_csh_tag_label",
+                    "label": "Label",
+                    "name": "label",
+                    "type": "text",
+                    "required": 1,
+                    "wrapper": {
+                        "width": "100"
+                    }
+                }
+            ]
+        },
+        {
+            "key": "field_csh_highlights",
+            "label": "Highlights",
+            "name": "hero_highlights",
+            "type": "repeater",
+            "layout": "table",
+            "button_label": "Add Highlight",
+            "instructions": "The stat strip under the divider, e.g. Industry / Backend / License / Team. \"Note\" is an optional second line (only \"Team\" uses one in the reference design).",
+            "sub_fields": [
+                {
+                    "key": "field_csh_highlight_label",
+                    "label": "Label",
+                    "name": "label",
+                    "type": "text",
+                    "required": 1,
+                    "instructions": "e.g. \"Industry\"",
+                    "wrapper": {
+                        "width": "33"
+                    }
+                },
+                {
+                    "key": "field_csh_highlight_value",
+                    "label": "Value",
+                    "name": "value",
+                    "type": "text",
+                    "required": 1,
+                    "instructions": "e.g. \"iGaming / Crypto\"",
+                    "wrapper": {
+                        "width": "33"
+                    }
+                },
+                {
+                    "key": "field_csh_highlight_note",
+                    "label": "Note (optional)",
+                    "name": "note",
+                    "type": "text",
+                    "instructions": "e.g. \"8–16 total across project phases\"",
+                    "wrapper": {
+                        "width": "34"
+                    }
+                }
+            ]
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "block",
+                "operator": "==",
+                "value": "acf/case-study-hero"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "active": true
+}

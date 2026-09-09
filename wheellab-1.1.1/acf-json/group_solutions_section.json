@@ -1,0 +1,97 @@
+{
+    "key": "group_solutions_section",
+    "title": "Solutions Section",
+    "fields": [
+        {
+            "key": "field_ss_title",
+            "label": "Title",
+            "name": "title",
+            "type": "text",
+            "default_value": "Solutions",
+            "wrapper": {
+                "width": "100"
+            }
+        },
+        {
+            "key": "field_ss_description",
+            "label": "Description",
+            "name": "description",
+            "type": "textarea",
+            "rows": 3,
+            "default_value": "We engineer the systems operators rely on — from player-facing platforms to back-office tooling and the integrations that hold it all together.",
+            "wrapper": {
+                "width": "100"
+            }
+        },
+        {
+            "key": "field_ss_cards",
+            "label": "Cards",
+            "name": "cards",
+            "type": "repeater",
+            "layout": "block",
+            "button_label": "Add Card",
+            "min": 1,
+            "sub_fields": [
+                {
+                    "key": "field_ss_card_title",
+                    "label": "Title",
+                    "name": "title",
+                    "type": "text",
+                    "required": 1,
+                    "wrapper": {
+                        "width": "100"
+                    }
+                },
+                {
+                    "key": "field_ss_card_description",
+                    "label": "Description",
+                    "name": "description",
+                    "type": "textarea",
+                    "rows": 3,
+                    "wrapper": {
+                        "width": "100"
+                    }
+                },
+                {
+                    "key": "field_ss_card_image",
+                    "label": "Illustration",
+                    "name": "image",
+                    "type": "image",
+                    "return_format": "array",
+                    "preview_size": "medium",
+                    "instructions": "Displayed contained (not cropped) at the bottom of the card, so any aspect ratio works.",
+                    "wrapper": {
+                        "width": "100"
+                    }
+                },
+                {
+                    "key": "field_ss_card_link",
+                    "label": "Link",
+                    "name": "link",
+                    "type": "link",
+                    "return_format": "array",
+                    "instructions": "The whole card links here.",
+                    "required": 1,
+                    "wrapper": {
+                        "width": "100"
+                    }
+                }
+            ]
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "block",
+                "operator": "==",
+                "value": "acf/solutions-section"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "active": true
+}

@@ -1,0 +1,119 @@
+{
+    "key": "group_single_post_related",
+    "title": "Read More Section",
+    "fields": [
+        {
+            "key": "field_spr_enabled",
+            "label": "Show “Read More” Section",
+            "name": "show_related_posts",
+            "type": "true_false",
+            "instructions": "Shows a “Read more on this topic” section at the bottom of the post, below the article and sidebar. On by default for every post — including posts saved before this field existed.",
+            "default_value": 1,
+            "ui": 1
+        },
+        {
+            "key": "field_spr_source",
+            "label": "Posts Source",
+            "name": "related_posts_source",
+            "type": "select",
+            "choices": {
+                "latest": "Latest Posts",
+                "manual": "Manual Selection"
+            },
+            "default_value": "latest",
+            "allow_null": 0,
+            "ui": 1,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_spr_enabled",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50"
+            }
+        },
+        {
+            "key": "field_spr_count",
+            "label": "Number of Posts",
+            "name": "related_posts_count",
+            "type": "number",
+            "instructions": "How many of the latest published posts to show (this post excluded).",
+            "default_value": 10,
+            "min": 1,
+            "max": 20,
+            "step": 1,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_spr_enabled",
+                        "operator": "==",
+                        "value": "1"
+                    },
+                    {
+                        "field": "field_spr_source",
+                        "operator": "==",
+                        "value": "latest"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50"
+            }
+        },
+        {
+            "key": "field_spr_manual",
+            "label": "Posts",
+            "name": "related_posts",
+            "type": "relationship",
+            "instructions": "Search, pick, and order the posts to show. This post is excluded from the results automatically.",
+            "post_type": [
+                "post"
+            ],
+            "filters": [
+                "search",
+                "taxonomy"
+            ],
+            "elements": [
+                "featured_image"
+            ],
+            "return_format": "id",
+            "min": 1,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_spr_enabled",
+                        "operator": "==",
+                        "value": "1"
+                    },
+                    {
+                        "field": "field_spr_source",
+                        "operator": "==",
+                        "value": "manual"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "100"
+            }
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "post"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "active": true
+}

@@ -3,11 +3,11 @@
  * Block: Service Stats Section
  * Registered as: acf/service-stats-section
  * Source: WheelLab Website (Figma) — "Statistics" component (desktop
- * node 806:11701, mobile node 806:11974). Standalone version of the
- * same stats banner also available as an optional add-on under
- * Service Comparison Section — both share wheellab_render_stats_banner()
- * (inc/theme_function.php) and src/scss/partials/_stats_banner.scss so
- * the two never drift out of sync.
+ * node 806:11701, mobile node 806:11974). Standalone block, kept
+ * separate from Service Comparison Section per QA (was previously an
+ * optional embedded add-on there; removed 2026-09-09). Rendering lives
+ * in wheellab_render_stats_banner() (inc/theme_function.php) and
+ * src/scss/partials/_stats_banner.scss.
  *
  * Assets: build/css/sections/service_stats_section.min.css
  */
