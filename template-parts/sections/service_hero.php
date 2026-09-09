@@ -15,15 +15,15 @@ $class .= !empty($block['className']) ? ' ' . $block['className']  : '';
 $class .= !empty($block['align'])     ? ' align' . $block['align'] : '';
 $id     = !empty($block['anchor'])    ? ' id="' . esc_attr($block['anchor']) . '"' : '';
 
-$bg_url = !empty($bg_image['url'])
-    ? $bg_image['url']
-    : wheellab_asset_url('assets/img/services/hero-fallback.jpg');
+$bg_url = $bg_image['url'] ?? '';
 $bg_alt = $bg_image['alt'] ?? '';
 ?>
 
 <section class="<?php echo esc_attr($class); ?>"<?php echo $id; ?>>
     <div class="service-hero__bg" aria-hidden="true">
-        <img class="service-hero__bg-image" src="<?php echo esc_url($bg_url); ?>" alt="<?php echo esc_attr($bg_alt); ?>" loading="eager">
+        <?php if ($bg_url) : ?>
+            <img class="service-hero__bg-image" src="<?php echo esc_url($bg_url); ?>" alt="<?php echo esc_attr($bg_alt); ?>" loading="eager">
+        <?php endif; ?>
         <div class="service-hero__bg-gradient"></div>
     </div>
 

@@ -9,7 +9,7 @@
             "type": "image",
             "return_format": "array",
             "preview_size": "medium",
-            "instructions": "Optional — falls back to the theme's default casino chips/dice background when empty.",
+            "instructions": "Optional — background image for the hero section. Left empty, only the gradient background shows.",
             "wrapper": {
                 "width": "100"
             }
