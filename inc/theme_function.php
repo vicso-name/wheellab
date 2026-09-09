@@ -273,8 +273,12 @@ function wheellab_add_heading_anchors_and_toc( string $content ): array {
     libxml_clear_errors();
     libxml_use_internal_errors( $prev_errors );
 
-    $toc  = [];
-    $used = [];
+    $toc         = [];
+    $used        = [];
+    $toc_labels  = function_exists( 'wheellab_get_post_toc_labels' )
+        ? wheellab_get_post_toc_labels()
+        : [];
+    $occurrences = [];
 
     $headings = iterator_to_array( $dom->getElementsByTagName( 'h2' ) );
 
@@ -309,7 +313,18 @@ function wheellab_add_heading_anchors_and_toc( string $content ): array {
         }
         $used[ $anchor ] = true;
 
-        $toc[] = [ 'text' => $text, 'anchor' => $anchor ];
+        $toc_key = function_exists( 'wheellab_toc_heading_key' )
+            ? wheellab_toc_heading_key( $text, $occurrences )
+            : '';
+
+        // Meta is the canonical source because it works for Gutenberg Heading,
+        // Classic and Custom HTML content alike. Keep the data attribute as a
+        // compatibility fallback for posts saved with the previous implementation.
+        $toc_label = $toc_key !== '' && isset( $toc_labels[ $toc_key ] )
+            ? trim( sanitize_text_field( (string) $toc_labels[ $toc_key ] ) )
+            : trim( sanitize_text_field( $node->getAttribute( 'data-wheellab-toc-label' ) ) );
+
+        $toc[] = [ 'text' => $toc_label !== '' ? $toc_label : $text, 'anchor' => $anchor ];
     }
 
     $html = '';
