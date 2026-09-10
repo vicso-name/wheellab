@@ -30,8 +30,8 @@
                     "type": "image",
                     "return_format": "array",
                     "preview_size": "medium",
-                    "required": 1,
-                    "instructions": "Bespoke per-card illustration — no shared fallback (unlike Industry Tiles' icon), each card needs its own.",
+                    "required": 0,
+                    "instructions": "Optional bespoke illustration. Without an image, the card displays its title and description in a compact layout.",
                     "wrapper": {
                         "width": "100"
                     }

@@ -276,7 +276,8 @@ header comment for why), `service_feature_cards`,
 `.solutions-section__card*`'s bezel/glow/image/title-row/arrow recipe
 byte-for-byte, incl. the same corner arrow SVG, but as static flex-wrap
 instead of Swiper; own 640px card height vs. Solutions Section's 720px;
-per-card image has no fallback — bespoke art only; link is optional,
+per-card image is optional with no fallback — cards without an image
+show their title and description at natural height; link is optional,
 card renders as `<div>` and drops the corner arrow when absent)
 
 `case_study_section` (existing homepage block, general-purpose — see

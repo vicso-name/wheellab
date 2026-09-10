@@ -68,6 +68,10 @@
     }
 }
 
+.service-capability-cards__card--no-image .service-capability-cards__card-bezel {
+    height: auto;
+}
+
 .service-capability-cards__card-inner {
     position: relative;
     display: flex;

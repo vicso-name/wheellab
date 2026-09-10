@@ -4,7 +4,7 @@ $title = get_field('title') ?: '';
 $cards = get_field('cards') ?: [];
 
 $cards = array_values(array_filter($cards, static function ($card) {
-    return !empty($card['title']) && !empty($card['description']) && !empty($card['image']['url']);
+    return !empty($card['title']) && !empty($card['description']);
 }));
 
 if (!$title || !$cards) {
@@ -27,10 +27,11 @@ $glow_url = esc_url(wheellab_asset_url('assets/img/contact/glow.jpg'));
             <?php foreach ($cards as $card) :
                 $link    = $card['link'] ?? null;
                 $has_url = !empty($link['url']);
+                $has_image = !empty($card['image']['url']);
                 $tag     = $has_url ? 'a' : 'div';
             ?>
                 <<?php echo $tag; ?>
-                    class="service-capability-cards__card"
+                    class="service-capability-cards__card<?php echo !$has_image ? ' service-capability-cards__card--no-image' : ''; ?>"
                     <?php if ($has_url) : ?>
                         href="<?php echo esc_url($link['url']); ?>"
                         <?php echo !empty($link['target']) ? 'target="_blank" rel="noopener"' : ''; ?>
@@ -55,9 +56,11 @@ $glow_url = esc_url(wheellab_asset_url('assets/img/contact/glow.jpg'));
                                 <p class="service-capability-cards__card-description body-m"><?php echo nl2br(esc_html($card['description'])); ?></p>
                             </div>
 
-                            <div class="service-capability-cards__card-image">
-                                <img src="<?php echo esc_url($card['image']['url']); ?>" alt="<?php echo esc_attr($card['image']['alt'] ?? ''); ?>" loading="lazy">
-                            </div>
+                            <?php if ($has_image) : ?>
+                                <div class="service-capability-cards__card-image">
+                                    <img src="<?php echo esc_url($card['image']['url']); ?>" alt="<?php echo esc_attr($card['image']['alt'] ?? ''); ?>" loading="lazy">
+                                </div>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </<?php echo $tag; ?>>
