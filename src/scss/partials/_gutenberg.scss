@@ -140,8 +140,33 @@ $text-blocks: 'p, h1, h2, h3, h4, h5, h6, ul, ol, blockquote, pre';
   }
 }
 
+#{$content-root} > figure.wp-block-image {
+  margin-block: 24px;
+
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 16px;
+  }
+
+  figcaption {
+    margin-block-start: 12px;
+    color: var(--content-main-secondary);
+    font-size: var(--text-body-s-size);
+    line-height: var(--text-body-s-line-height);
+    text-align: center;
+  }
+
+  // A full-width image is meant to bleed edge-to-edge, not sit in a
+  // rounded card like an inline one.
+  &.alignfull img {
+    border-radius: 0;
+  }
+}
+
 // Match the section container gutters without constraining dynamic sections.
-main > :is(#{$text-blocks}, .wp-block-table, .wp-block-group, .wp-block-columns) {
+main > :is(#{$text-blocks}, .wp-block-table, .wp-block-group, .wp-block-columns, .wp-block-image) {
   width: calc(100% - 48px);
   max-width: calc(var(--container-max-width) - 48px);
   margin-inline: auto;
