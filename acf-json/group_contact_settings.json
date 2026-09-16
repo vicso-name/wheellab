@@ -64,6 +64,17 @@
             "wrapper": {
                 "width": "100"
             }
+        },
+        {
+            "key": "field_cso_webhook_url",
+            "label": "Webhook URL",
+            "name": "webhook_url",
+            "type": "url",
+            "instructions": "Every successful contact form submission is forwarded here as JSON (in addition to the normal CF7 email). Leave empty to disable forwarding.",
+            "placeholder": "https://hook.eu2.make.com/xxxxxxxxxxxxxxxxxxxxxxxx",
+            "wrapper": {
+                "width": "100"
+            }
         }
     ],
     "location": [

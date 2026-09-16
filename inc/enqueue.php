@@ -230,6 +230,11 @@ add_action('wp_enqueue_scripts', function () {
         true
     );
 
+    wp_localize_script('btf-main-scripts', 'wheellabContact', [
+        'ajaxUrl' => admin_url('admin-ajax.php'),
+        'nonce'   => wp_create_nonce('wheellab_contact_webhook'),
+    ]);
+
     wp_localize_script('btf-main-scripts', 'wheellabSearch', [
         'ajaxUrl'     => admin_url('admin-ajax.php'),
         'nonce'       => wp_create_nonce('wheellab_site_search'),

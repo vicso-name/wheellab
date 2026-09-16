@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initHeader();
   initSmoothScroll();
   replaceImagesWithInlineSVGs();
+  wheellabInitVisitorTracking();
 });
 
 /* ===========================================================
@@ -380,7 +381,69 @@ function initSmoothScroll() {
 }
 
 /* ===========================================================
- * 3. Convert <img class="svg"> → inline <svg>
+ * 3. Visitor tracking — page journey + first UTM touch, read back by
+ *    contact_section.js and forwarded to the Make webhook on form submit.
+ *    Storage keys are also relied on (as string literals) in
+ *    contact_section.js — keep both in sync if renamed.
+ * =========================================================== */
+const WHEELLAB_USER_JOURNEY_KEY = "wheellab_user_journey";
+const WHEELLAB_VISIT_DATA_KEY = "wheellab_visit_data";
+const WHEELLAB_USER_JOURNEY_LIMIT = 200;
+
+function wheellabInitVisitorTracking() {
+  try {
+    wheellabRecordPageVisit();
+    wheellabCaptureVisitData();
+  } catch {
+    // localStorage can throw (private browsing, blocked storage) — tracking
+    // is best-effort and must never break the rest of the page.
+  }
+}
+
+function wheellabRecordPageVisit() {
+  const journey = wheellabReadJSON(WHEELLAB_USER_JOURNEY_KEY, []);
+  const now = new Date();
+
+  journey.push({
+    path: window.location.origin + window.location.pathname,
+    time: now.toISOString(),
+    date: now.toISOString().slice(0, 10),
+    timestamp: now.getTime(),
+  });
+
+  while (journey.length > WHEELLAB_USER_JOURNEY_LIMIT) journey.shift();
+
+  window.localStorage.setItem(WHEELLAB_USER_JOURNEY_KEY, JSON.stringify(journey));
+}
+
+function wheellabCaptureVisitData() {
+  const params = new URLSearchParams(window.location.search);
+  const utmKeys = ["source", "medium", "campaign", "term", "content"];
+  const hasUtm = utmKeys.some((key) => params.has(`utm_${key}`));
+
+  // First-touch attribution: once we have UTM data stored, later visits
+  // without UTM params (e.g. a direct revisit) don't overwrite it.
+  if (!hasUtm && window.localStorage.getItem(WHEELLAB_VISIT_DATA_KEY)) return;
+
+  const visitData = {};
+  utmKeys.forEach((key) => {
+    visitData[key] = params.get(`utm_${key}`) || null;
+  });
+
+  window.localStorage.setItem(WHEELLAB_VISIT_DATA_KEY, JSON.stringify(visitData));
+}
+
+function wheellabReadJSON(key, fallback) {
+  try {
+    const raw = window.localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+/* ===========================================================
+ * 4. Convert <img class="svg"> → inline <svg>
  * =========================================================== */
 function replaceImagesWithInlineSVGs() {
   const svgImages = document.querySelectorAll("img.svg");

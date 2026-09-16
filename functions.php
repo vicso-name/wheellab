@@ -66,6 +66,7 @@ require_once get_template_directory() . '/inc/acf_options.php';
 require_once get_template_directory() . '/inc/ajax_blog.php';
 require_once get_template_directory() . '/inc/ajax_search.php';
 require_once get_template_directory() . '/inc/ajax_mailchimp.php';
+require_once get_template_directory() . '/inc/ajax_contact_webhook.php';
 require_once get_template_directory() . '/inc/post_ratings.php';
 require_once get_template_directory() . '/inc/post_toc.php';
 require_once get_template_directory() . '/inc/theme_function.php';

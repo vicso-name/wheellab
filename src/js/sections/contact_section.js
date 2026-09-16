@@ -9,6 +9,11 @@
  *    wpcf7mailsent on its form element after a successful AJAX submit; we
  *    catch it, clear the form, and swap the form card into its "sent" look
  *    for 4 seconds before reverting to the (now empty) form.
+ * 4. Forwards the same successful submission to the Make webhook configured
+ *    in Theme Options → Contact, alongside the visitor tracking data
+ *    general.js has been collecting into localStorage (see WHEELLAB_USER_
+ *    JOURNEY_KEY / WHEELLAB_VISIT_DATA_KEY there — keys duplicated below as
+ *    literals since these two files don't share scope).
  */
 
 const SENT_OVERLAY_DURATION = 4000;
@@ -36,7 +41,70 @@ document.addEventListener("wpcf7mailsent", (event) => {
   setTimeout(() => {
     card.classList.remove("is-sent");
   }, SENT_OVERLAY_DURATION);
+
+  wheellabForwardToWebhook(event);
 });
+
+function wheellabForwardToWebhook(event) {
+  const config = window.wheellabContact;
+  if (!config) return;
+
+  const fields = {};
+  const inputs = (event.detail && event.detail.inputs) || [];
+  inputs.forEach((input) => {
+    fields[input.name] = input.value;
+  });
+
+  const payload = {
+    fields,
+    userJourney: wheellabReadStoredJSON("wheellab_user_journey", []),
+    visitData: wheellabReadStoredJSON("wheellab_visit_data", {}),
+    timezone: wheellabGetTimezone(),
+    userGaId: wheellabGetGaClientId(),
+  };
+
+  const body = new URLSearchParams({
+    action: "wheellab_contact_webhook",
+    nonce: config.nonce,
+    payload: JSON.stringify(payload),
+  });
+
+  // Best-effort: the CF7 email already went out, so a failed/blocked webhook
+  // call here must never surface as an error to the visitor.
+  fetch(config.ajaxUrl, {
+    method: "POST",
+    credentials: "same-origin",
+    headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" },
+    body: body.toString(),
+  }).catch(() => {});
+}
+
+function wheellabReadStoredJSON(key, fallback) {
+  try {
+    const raw = window.localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+function wheellabGetTimezone() {
+  try {
+    return Intl.DateTimeFormat().resolvedOptions().timeZone || "";
+  } catch {
+    return "";
+  }
+}
+
+function wheellabGetGaClientId() {
+  // "_ga" cookie format: GA1.<domainDepth>.<clientId>.<timestamp> — not set
+  // until GA/GTM is actually installed on the site, so this is null for now.
+  const match = document.cookie.match(/(?:^|;\s*)_ga=([^;]+)/);
+  if (!match) return null;
+
+  const parts = decodeURIComponent(match[1]).split(".");
+  return parts.length >= 4 ? parts.slice(-2).join(".") : null;
+}
 
 function syncMessengerToggle(card) {
   const items = card.querySelectorAll(".wpcf7-radio .wpcf7-list-item");
