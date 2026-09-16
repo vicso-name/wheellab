@@ -81,7 +81,7 @@
                             <span class="visually-hidden"><?php esc_html_e('Search', 'wheellab'); ?></span>
                         </button>
 
-                        <a class="header__cta" href="#contact-section">
+                        <a class="header__cta" href="#contact">
                             <span class="header__cta-inner button-text-m"><?php echo esc_html($header_cta_title ?: __('Book a Call', 'wheellab')); ?></span>
                         </a>
 

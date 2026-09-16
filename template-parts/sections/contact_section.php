@@ -18,7 +18,7 @@ $class  = 'contact-section';
 $class .= !empty($block['className']) ? ' ' . $block['className']  : '';
 $class .= !empty($block['align'])     ? ' align' . $block['align'] : '';
 
-$id     = ' id="' . esc_attr(!empty($block['anchor']) ? $block['anchor'] : 'contact-section') . '"';
+$id     = ' id="' . esc_attr(!empty($block['anchor']) ? $block['anchor'] : 'contact') . '"';
 
 $glow_url = esc_url(wheellab_asset_url('assets/img/contact/glow.jpg'));
 
