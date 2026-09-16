@@ -103,7 +103,7 @@ $footer_copyright    = get_field('copyright_text', 'option')     ?: '';
                                         ><?php echo esc_html($link['title']); ?></a>
                                     <?php endforeach; ?>
                                     <?php if ($footer_copyright) : ?>
-                                        <p class="footer__copyright body-s"><?php echo esc_html(date('Y') . ' ' . $footer_copyright); ?></p>
+                                        <p class="footer__copyright body-s"><?php echo esc_html($footer_copyright); ?></p>
                                     <?php endif; ?>
                                 </div>
                             <?php endif; ?>
