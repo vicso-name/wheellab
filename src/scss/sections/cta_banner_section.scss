@@ -109,7 +109,7 @@
   flex-shrink: 0;
 
   &:only-child {
-    width: 200px;
+    min-width: 200px;
 
     .btn-gradient__inner {
       width: 100%;
