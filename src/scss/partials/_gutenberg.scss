@@ -158,10 +158,19 @@ $text-blocks: 'p, h1, h2, h3, h4, h5, h6, ul, ol, blockquote, pre';
     text-align: center;
   }
 
-  // A full-width image is meant to bleed edge-to-edge, not sit in a
-  // rounded card like an inline one.
-  &.alignfull img {
-    border-radius: 0;
+  // A full-width image is meant to bleed edge-to-edge — flush against
+  // whatever ACF section sits above/below it, not boxed in a rounded
+  // card with the same vertical gap an inline image gets.
+  &.alignfull {
+    margin-block: 0;
+
+    img {
+      border-radius: 0;
+    }
+
+    figcaption {
+      padding-inline: 24px;
+    }
   }
 }
 
