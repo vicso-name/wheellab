@@ -47,12 +47,21 @@ $id     = !empty($block['anchor'])    ? ' id="' . esc_attr($block['anchor']) . '
                 $card_title       = $card['title']       ?? '';
                 $card_description = $card['description'] ?? '';
                 $card_features    = $card['features']    ?? '';
+                $card_image       = $card['image']       ?? null;
+                $has_card_image   = !empty($card_image['url']);
                 if (!$card_title) continue;
             ?>
                 <div class="swiper-slide service-feature-cards__slide">
                     <div class="service-feature-cards__card">
                         <div class="service-feature-cards__card-inner">
-                            <div class="service-feature-cards__card-image" aria-hidden="true"></div>
+                            <div
+                                class="service-feature-cards__card-image<?php echo !$has_card_image ? ' service-feature-cards__card-image--placeholder' : ''; ?>"
+                                <?php echo !$has_card_image ? 'aria-hidden="true"' : ''; ?>
+                            >
+                                <?php if ($has_card_image) : ?>
+                                    <img src="<?php echo esc_url($card_image['url']); ?>" alt="<?php echo esc_attr($card_image['alt'] ?? ''); ?>" loading="lazy">
+                                <?php endif; ?>
+                            </div>
 
                             <div class="service-feature-cards__card-text">
                                 <h3 class="service-feature-cards__card-title"><?php echo esc_html($card_title); ?></h3>

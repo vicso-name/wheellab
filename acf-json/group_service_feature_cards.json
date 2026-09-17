@@ -34,6 +34,18 @@
             "instructions": "Rendered as a slider on desktop/tablet (arrow controls appear once there are 2+ cards) and a plain stacked column on mobile (≤576px — no slider there).",
             "sub_fields": [
                 {
+                    "key": "field_sfc_card_image",
+                    "label": "Image",
+                    "name": "image",
+                    "type": "image",
+                    "return_format": "array",
+                    "preview_size": "medium",
+                    "instructions": "Optional — best-fit ratio ~427×284. Leave empty to keep the default accent-tinted illustration.",
+                    "wrapper": {
+                        "width": "100"
+                    }
+                },
+                {
                     "key": "field_sfc_card_title",
                     "label": "Title",
                     "name": "title",

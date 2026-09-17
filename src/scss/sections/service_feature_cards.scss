@@ -158,15 +158,28 @@
     flex-shrink: 0;
     width: 100%;
     aspect-ratio: 426.667 / 284;
-    background: var(--content-solid-accent-2);
-    mask-image: url("../../../assets/img/services/feature-card-illustration.png");
-    mask-repeat: no-repeat;
-    mask-position: center;
-    mask-size: contain;
-    -webkit-mask-image: url("../../../assets/img/services/feature-card-illustration.png");
-    -webkit-mask-repeat: no-repeat;
-    -webkit-mask-position: center;
-    -webkit-mask-size: contain;
+
+    img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    // Default illustration shown until an editor uploads a per-card image
+    // (see the ACF "Image" field on Cards) — same accent-tinted mask as
+    // before, just scoped to a modifier now that it's optional.
+    &--placeholder {
+        background: var(--content-solid-accent-2);
+        mask-image: url("../../../assets/img/services/feature-card-illustration.png");
+        mask-repeat: no-repeat;
+        mask-position: center;
+        mask-size: contain;
+        -webkit-mask-image: url("../../../assets/img/services/feature-card-illustration.png");
+        -webkit-mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        -webkit-mask-size: contain;
+    }
 }
 
 .service-feature-cards__card-text {
