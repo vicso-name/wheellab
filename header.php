@@ -1,7 +1,31 @@
+<?php
+$gtm_container_id  = get_field('gtm_container_id', 'option')  ?: '';
+$clarity_project_id = get_field('clarity_project_id', 'option') ?: '';
+?>
 <!DOCTYPE html>
 <html <?php language_attributes(); ?>>
 <head>
     <meta charset="<?php bloginfo('charset'); ?>">
+    <?php if ($gtm_container_id) : ?>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','<?php echo esc_js($gtm_container_id); ?>');</script>
+    <!-- End Google Tag Manager -->
+    <?php endif; ?>
+    <?php if ($clarity_project_id) : ?>
+    <!-- Microsoft Clarity -->
+    <script type="text/javascript">
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "<?php echo esc_js($clarity_project_id); ?>");
+    </script>
+    <!-- End Microsoft Clarity -->
+    <?php endif; ?>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="format-detection" content="telephone=no">
@@ -10,6 +34,12 @@
 </head>
 
 <body <?php body_class(); ?> >
+    <?php if ($gtm_container_id) : ?>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=<?php echo esc_attr($gtm_container_id); ?>"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    <?php endif; ?>
     <a class="skip-link" href="#main"><?php esc_html_e('Skip to content', 'wheellab'); ?></a>
     <div id="wrapper">
         <?php

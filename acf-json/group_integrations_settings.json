@@ -1,0 +1,42 @@
+{
+    "key": "group_integrations_settings",
+    "title": "Integrations Settings",
+    "fields": [
+        {
+            "key": "field_int_gtm_id",
+            "label": "Google Tag Manager Container ID",
+            "name": "gtm_container_id",
+            "type": "text",
+            "instructions": "e.g. GTM-XXXXXXX. Leave empty to disable GTM on this environment.",
+            "placeholder": "GTM-XXXXXXX",
+            "wrapper": {
+                "width": "50"
+            }
+        },
+        {
+            "key": "field_int_clarity_id",
+            "label": "Microsoft Clarity Project ID",
+            "name": "clarity_project_id",
+            "type": "text",
+            "instructions": "The id parameter from the Clarity tracking snippet. Leave empty to disable Clarity on this environment.",
+            "wrapper": {
+                "width": "50"
+            }
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "options_page",
+                "operator": "==",
+                "value": "acf-options-integrations"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "active": true
+}
