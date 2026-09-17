@@ -7,7 +7,11 @@
  * in two variants: an Image variant (top-left large tile, bottom-right
  * small tile) and a Text variant (the other 4 tiles — title +
  * description, one of them — bottom-left — in a highlighted/glow
- * treatment). No per-item link/button in this instance, so the Text
+ * treatment). Each photo tile keeps its own aspect ratio regardless of
+ * how tall its row sibling's text is — see service_tiles_section.scss
+ * for why that isn't the flex default.
+ *
+ * No per-item link/button in this instance, so the Text
  * variant's own arrow icon (node …;444:7803 "Icon") is intentionally
  * not reproduced here — per explicit instruction, these tiles are
  * static, not clickable.

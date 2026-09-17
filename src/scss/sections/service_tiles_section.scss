@@ -84,19 +84,25 @@
 // ---------------------------------------------------------------------------
 // Photo tiles — node …;443:4335 ("Image"). Large = 756×584, small =
 // 756×236 (client rounded this to the outer frame's own 772px width —
-// "772×236"); both figures fill the row height together via the row's
-// own default align-items: stretch, so mismatched real-photo heights
-// still line up edge to edge (object-fit: cover absorbs the crop).
+// "772×236"). Row siblings default to align-items: stretch, but the
+// photo tile opts out (align-self: flex-start) and its img has no
+// explicit height, so its own aspect-ratio (set per large/small below)
+// governs its height instead of being stretched to match a taller text
+// column — a 3-card text stack is routinely much taller than 584px,
+// and stretching the img to that height silently overrides
+// aspect-ratio (both width and height become definite, so aspect-ratio
+// has nothing left to compute), which object-fit: cover then "absorbs"
+// as a severe center-crop — the photo reads as zoomed in.
 // ---------------------------------------------------------------------------
 
 .service-tiles-section__tile--photo {
     display: block;
+    align-self: flex-start;
     margin: 0;
 
     img {
         display: block;
         width: 100%;
-        height: 100%;
         object-fit: cover;
         background: var(--bg-main-surface-1);
         border-radius: 12px;
