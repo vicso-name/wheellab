@@ -7,7 +7,8 @@
   isolation: isolate;
   transition: transform var(--transition-base) ease;
 
-  &.is-hidden-for-stats-showcase {
+  &.is-hidden-for-stats-showcase,
+  &.header--hidden {
     transform: translateY(-120%);
   }
 

@@ -29,6 +29,49 @@ function initHeader() {
   initMegaMenus(header);
   initMobileAccordion(header);
   initHeaderDismiss(header);
+  initHeaderScrollHide(header);
+}
+
+/**
+ * Hides the header once the visitor scrolls down past it, reveals it again
+ * on scroll up — never while a menu/search panel is open, and never near
+ * the very top (so it doesn't flicker while the page is still settling).
+ */
+function initHeaderScrollHide(header) {
+  const revealThreshold = 120;
+  const scrollDelta = 5;
+  let lastScrollY = window.scrollY;
+  let ticking = false;
+
+  const isHeaderInteractionOpen = () =>
+    header.classList.contains("header--menu-open") ||
+    header.classList.contains("header--mega-open");
+
+  const update = () => {
+    const currentScrollY = window.scrollY;
+    const diff = currentScrollY - lastScrollY;
+
+    if (isHeaderInteractionOpen() || currentScrollY <= revealThreshold) {
+      header.classList.remove("header--hidden");
+    } else if (diff > scrollDelta) {
+      header.classList.add("header--hidden");
+    } else if (diff < -scrollDelta) {
+      header.classList.remove("header--hidden");
+    }
+
+    lastScrollY = currentScrollY;
+    ticking = false;
+  };
+
+  window.addEventListener(
+    "scroll",
+    () => {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(update);
+    },
+    { passive: true }
+  );
 }
 
 function initMobileMenuToggle(header) {
