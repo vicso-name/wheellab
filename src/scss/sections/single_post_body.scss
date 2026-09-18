@@ -17,7 +17,10 @@
 
 .single-post-body__grid {
   display: flex;
-  align-items: flex-start;
+  // stretch (not flex-start): the sidebar must match the content column's
+  // height so its sticky TOC child has room to stay pinned for the whole
+  // article instead of only for the CTA banner's height above it.
+  align-items: stretch;
   justify-content: center;
   gap: 80px;
 
@@ -44,13 +47,21 @@
   gap: 24px;
   width: 297px;
   max-width: 100%;
-  position: sticky;
-  top: 24px;
+
+  // Desktop shows the CTA above the sticky TOC (so it scrolls away first,
+  // leaving the TOC pinned); markup order stays TOC-then-CTA so mobile,
+  // where nothing is sticky, keeps its original reading order below.
+  .single-post-cta {
+    order: -1;
+  }
 
   @media screen and (max-width: variables.$medium) {
-    position: static;
     width: 100%;
     order: -1;
+
+    .single-post-cta {
+      order: 0;
+    }
   }
 }
 

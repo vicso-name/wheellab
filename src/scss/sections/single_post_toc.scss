@@ -1,3 +1,5 @@
+@use "../partials/variables";
+
 .single-post-toc {
   display: flex;
   flex-direction: column;
@@ -5,6 +7,12 @@
   padding: 8px;
   background: var(--bg-main-surface-2);
   border-radius: 16px;
+  position: sticky;
+  top: 24px;
+
+  @media screen and (max-width: variables.$medium) {
+    position: static;
+  }
 }
 
 .single-post-toc__label {
