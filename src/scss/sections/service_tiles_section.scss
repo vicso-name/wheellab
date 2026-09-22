@@ -65,6 +65,46 @@
     flex-direction: column;
     gap: 24px;
     min-width: 0;
+
+    // On desktop the stack is capped to the large photo's height by
+    // service_tiles_section.js, so a stack with more cards than fit
+    // scrolls internally instead of dragging the row taller than its
+    // photo. The is-scrollable class is set by that script only when
+    // the content actually overflows, so the bottom fade never shows
+    // on a stack that already fits.
+    @media screen and (min-width: variables.$medium + 1) {
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        scroll-behavior: smooth;
+        scrollbar-gutter: stable;
+        scrollbar-color: var(--color-primary-600) transparent;
+        scrollbar-width: thin;
+
+        &::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        &::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: var(--color-primary-600);
+            background-clip: padding-box;
+            border: 1px solid transparent;
+            border-radius: 999px;
+        }
+
+        &::-webkit-scrollbar-thumb:hover {
+            background: var(--color-secondary-500);
+            background-clip: padding-box;
+            border: 1px solid transparent;
+        }
+
+        &.is-scrollable {
+            mask-image: linear-gradient(to bottom, #000 calc(100% - 48px), transparent 100%);
+        }
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -120,6 +160,21 @@
 
 .service-tiles-section__tile--small img {
     aspect-ratio: 756 / 236;
+}
+
+// When the small photo sits under a scroll-capped stack it has to fill
+// whatever height is left in the row rather than keep its own ratio,
+// so the ratio above is released and the image covers the box instead.
+.service-tiles-section__tile--small {
+    display: flex;
+    align-self: stretch;
+
+    img {
+        height: 100%;
+        aspect-ratio: auto;
+        object-fit: cover;
+        object-position: center;
+    }
 }
 
 // ---------------------------------------------------------------------------
