@@ -30,42 +30,6 @@
             }
         },
         {
-            "key": "field_cs_tab_badges",
-            "label": "Trust Badges",
-            "type": "tab",
-            "placement": "top"
-        },
-        {
-            "key": "field_cs_badges_text",
-            "label": "Badges Text",
-            "name": "badges_text",
-            "type": "text",
-            "default_value": "Trusted by world top-10 best iGaming businesses",
-            "wrapper": {
-                "width": "100"
-            }
-        },
-        {
-            "key": "field_cs_badges",
-            "label": "Badge Icons",
-            "name": "badges",
-            "type": "repeater",
-            "layout": "table",
-            "button_label": "Add Badge",
-            "instructions": "Leave empty to show the 3 default badge icons from the Figma design. Add rows here to replace them with your own.",
-            "sub_fields": [
-                {
-                    "key": "field_cs_badge_icon",
-                    "label": "Icon",
-                    "name": "icon",
-                    "type": "image",
-                    "return_format": "array",
-                    "preview_size": "thumbnail",
-                    "required": 1
-                }
-            ]
-        },
-        {
             "key": "field_cs_tab_form",
             "label": "Form",
             "type": "tab",

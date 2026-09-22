@@ -1,18 +1,19 @@
 <?php
 
-$title       = get_field('title')          ?: get_field('title', 'option')          ?: '';
-$description = get_field('description')    ?: get_field('description', 'option')    ?: '';
-$badges_text = get_field('badges_text')    ?: get_field('badges_text', 'option')    ?: '';
-$badges      = get_field('badges')         ?: get_field('badges', 'option')         ?: [];
-$shortcode   = get_field('form_shortcode') ?: get_field('form_shortcode', 'option') ?: '';
+$title           = get_field('title')       ?: get_field('title', 'option')       ?: '';
+$description     = get_field('description') ?: get_field('description', 'option') ?: '';
+$shortcode       = get_field('form_shortcode') ?: get_field('form_shortcode', 'option') ?: '';
 
-if (!$badges) {
-    $badges = [
-        ['icon' => ['url' => wheellab_asset_url('assets/img/contact/badge-logo-1.jpg'), 'alt' => '']],
-        ['icon' => ['url' => wheellab_asset_url('assets/img/contact/badge-logo-2.jpg'), 'alt' => '']],
-        ['icon' => ['url' => wheellab_asset_url('assets/img/contact/badge-logo-3.jpg'), 'alt' => '']],
-    ];
-}
+// Global, not per-block — one shared process/CTA across every page (see
+// Theme Options > Contact). "steps" and "cta_button" are deliberately
+// namespaced (contact_*): both names already exist on unrelated field
+// groups elsewhere (service_process_deck, case_study_section), and
+// get_field(..., 'option') resolves by name only, with no block context
+// to disambiguate — the bare names silently pulled the wrong field.
+$steps           = get_field('contact_steps', 'option')     ?: [];
+$cta_title       = get_field('cta_title', 'option')          ?: '';
+$cta_description = get_field('cta_description', 'option')    ?: '';
+$cta_button      = get_field('contact_cta_button', 'option') ?: null;
 
 $class  = 'contact-section';
 $class .= !empty($block['className']) ? ' ' . $block['className']  : '';
@@ -21,18 +22,6 @@ $class .= !empty($block['align'])     ? ' align' . $block['align'] : '';
 $id     = ' id="' . esc_attr(!empty($block['anchor']) ? $block['anchor'] : 'contact') . '"';
 
 $glow_url = esc_url(wheellab_asset_url('assets/img/contact/glow.jpg'));
-
-ob_start();
-foreach ($badges as $badge) :
-    $icon = $badge['icon'] ?? null;
-    if (empty($icon['url'])) continue;
-    ?>
-    <span class="contact-section__badge-logo">
-        <img src="<?php echo esc_url($icon['url']); ?>" alt="<?php echo esc_attr($icon['alt'] ?? ''); ?>">
-    </span>
-    <?php
-endforeach;
-$badge_logos_html = ob_get_clean();
 ?>
 
 <section class="<?php echo esc_attr($class); ?>"<?php echo $id; ?>>
@@ -59,14 +48,45 @@ $badge_logos_html = ob_get_clean();
                     </div>
                 <?php endif; ?>
 
-                <?php if ($badges) : ?>
+                <?php if ($steps) : ?>
+                    <div class="contact-section__steps">
+                        <?php foreach ($steps as $step) :
+                            if (empty($step['text'])) continue;
+                        ?>
+                            <div class="contact-section__step">
+                                <span class="contact-section__step-marker-col" aria-hidden="true">
+                                    <span class="contact-section__step-marker"></span>
+                                    <span class="contact-section__step-connector"></span>
+                                </span>
+                                <p class="contact-section__step-text body-m"><?php echo esc_html($step['text']); ?></p>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+
+                <?php if ($cta_title || $cta_description || !empty($cta_button['url'])) : ?>
                     <div class="contact-section__divider"></div>
 
-                    <div class="contact-section__badges">
-                        <div class="contact-section__badge-logos"><?php echo $badge_logos_html; ?></div>
+                    <div class="contact-section__cta">
+                        <div class="contact-section__cta-text">
+                            <?php if ($cta_title) : ?>
+                                <h3 class="contact-section__cta-title body-m body-m--bold"><?php echo esc_html($cta_title); ?></h3>
+                            <?php endif; ?>
 
-                        <?php if ($badges_text) : ?>
-                            <p class="contact-section__badges-text"><?php echo esc_html($badges_text); ?></p>
+                            <?php if ($cta_description) : ?>
+                                <p class="contact-section__cta-description body-m"><?php echo esc_html($cta_description); ?></p>
+                            <?php endif; ?>
+                        </div>
+
+                        <?php if (!empty($cta_button['url'])) : ?>
+                            <a
+                                class="contact-section__cta-button"
+                                href="<?php echo esc_url($cta_button['url']); ?>"
+                                <?php echo !empty($cta_button['target']) ? 'target="_blank" rel="noopener"' : ''; ?>
+                            >
+                                <span class="contact-section__cta-button-text button-text-m"><?php echo esc_html($cta_button['title'] ?: __('Book a meeting', 'wheellab')); ?></span>
+                                <img class="svg contact-section__cta-button-icon" src="<?php echo esc_url(wheellab_asset_url('assets/img/icons/chevron-right.svg')); ?>" alt="">
+                            </a>
                         <?php endif; ?>
                     </div>
                 <?php endif; ?>
@@ -92,16 +112,6 @@ $badge_logos_html = ob_get_clean();
                             </div>
                         </div>
                     </div>
-                </div>
-            <?php endif; ?>
-
-            <?php if ($badges) : ?>
-                <div class="contact-section__badges contact-section__badges--mobile">
-                    <div class="contact-section__badge-logos"><?php echo $badge_logos_html; ?></div>
-
-                    <?php if ($badges_text) : ?>
-                        <p class="contact-section__badges-text"><?php echo esc_html($badges_text); ?></p>
-                    <?php endif; ?>
                 </div>
             <?php endif; ?>
 

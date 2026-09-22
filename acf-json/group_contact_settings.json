@@ -25,34 +25,69 @@
             }
         },
         {
-            "key": "field_cso_badges_text",
-            "label": "Badges Text",
-            "name": "badges_text",
+            "key": "field_cso_steps",
+            "label": "Process Steps",
+            "name": "contact_steps",
+            "type": "repeater",
+            "layout": "table",
+            "button_label": "Add Step",
+            "instructions": "Shown as the 4-step timeline in the Contact Section's left column, on every page — one shared process, not editable per page.",
+            "sub_fields": [
+                {
+                    "key": "field_cso_step_text",
+                    "label": "Step Text",
+                    "name": "text",
+                    "type": "textarea",
+                    "rows": 2,
+                    "required": 1
+                }
+            ],
+            "default_value": [
+                {
+                    "text": "We will process your request within 1-2 business days."
+                },
+                {
+                    "text": "Get back to you with an offer based on your project's scope and requirements."
+                },
+                {
+                    "text": "Set a call to discuss your future project in detail and finalize the offer."
+                },
+                {
+                    "text": "Sign a contract with you to start working on your project."
+                }
+            ]
+        },
+        {
+            "key": "field_cso_cta_title",
+            "label": "CTA Title",
+            "name": "cta_title",
             "type": "text",
-            "default_value": "Trusted by world top-10 best iGaming businesses",
+            "default_value": "Not sure what you need yet?",
             "wrapper": {
                 "width": "100"
             }
         },
         {
-            "key": "field_cso_badges",
-            "label": "Badge Icons",
-            "name": "badges",
-            "type": "repeater",
-            "layout": "table",
-            "button_label": "Add Badge",
-            "instructions": "Leave empty to show the 3 default badge icons from the Figma design.",
-            "sub_fields": [
-                {
-                    "key": "field_cso_badge_icon",
-                    "label": "Icon",
-                    "name": "icon",
-                    "type": "image",
-                    "return_format": "array",
-                    "preview_size": "thumbnail",
-                    "required": 1
-                }
-            ]
+            "key": "field_cso_cta_description",
+            "label": "CTA Description",
+            "name": "cta_description",
+            "type": "textarea",
+            "rows": 3,
+            "default_value": "Book a quick intro call to explore WheelLab's iGaming expertise and see how we can support your next project.",
+            "wrapper": {
+                "width": "100"
+            }
+        },
+        {
+            "key": "field_cso_cta_button",
+            "label": "CTA Button",
+            "name": "contact_cta_button",
+            "type": "link",
+            "return_format": "array",
+            "instructions": "Button text comes from the link's own title (e.g. \"Book a meeting\"). Separate from the header's \"Book a Call\" link — leave empty to hide the CTA card.",
+            "wrapper": {
+                "width": "100"
+            }
         },
         {
             "key": "field_cso_form_shortcode",

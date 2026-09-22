@@ -68,7 +68,7 @@
     position: relative;
     z-index: 1;
     display: flex;
-    align-items: stretch;
+    align-items: flex-start;
     justify-content: center;
     gap: 24px;
 
@@ -83,6 +83,7 @@
     display: flex;
     flex: 1 0 0;
     flex-direction: column;
+    gap: 40px;
     justify-content: flex-start;
     min-width: 0;
     padding: 60px 90px 60px 0;
@@ -91,6 +92,7 @@
         width: 100%;
         padding: 0;
         text-align: center;
+        order: 1;
     }
 }
 
@@ -111,92 +113,149 @@
 
 .contact-section__divider {
     height: 1px;
-    margin: 40px 0;
     background: var(--outline-neutral);
-
-    @media screen and (max-width: variables.$large) {
-        display: none;
-    }
 }
 
-.contact-section__badges {
+// ---------------------------------------------------------------------------
+// Process steps — a vertical list where each row owns a fixed-width marker
+// column, so the connector line can run from one marker down to the next
+// without depending on the text's height.
+// ---------------------------------------------------------------------------
+
+.contact-section__steps {
     display: flex;
-    align-items: center;
-    gap: 12px;
+    flex-direction: column;
+    gap: 32px;
 
     @media screen and (max-width: variables.$large) {
-        display: none;
+        align-items: center;
     }
 }
 
-.contact-section__badges--mobile {
-    display: none;
-    flex-direction: column;
-    gap: 12px;
-    text-align: center;
+.contact-section__step {
+    display: flex;
+    align-items: stretch;
+    gap: 20px;
 
     @media screen and (max-width: variables.$large) {
-        display: flex;
-    }
-
-    .contact-section__badge-logos {
         justify-content: center;
     }
-
-    .contact-section__badges-text {
-        max-width: 260px;
-        margin: 0 auto;
-    }
 }
 
-.contact-section__badge-logos {
-    display: flex;
-    flex-shrink: 0;
-    align-items: center;
-}
-
-.contact-section__badge-logo {
+.contact-section__step-marker-col {
     position: relative;
     flex-shrink: 0;
-    width: 40px;
-    height: 40px;
-    margin-right: -12px;
-    overflow: hidden;
-    background: var(--bg-main-surface-2);
-    border: 5px solid var(--bg-main-background);
+    width: 24px;
+}
+
+.contact-section__step-marker {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: var(--bg-ghost-accent-2);
+    border: 1px solid var(--outline-accent-2);
     border-radius: 50%;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
 
-    &:last-child {
-        margin-right: 0;
-    }
+.contact-section__step-marker::before {
+    content: "";
+    width: 16px;
+    height: 16px;
+    background: var(--divider-main);
+    border-radius: 50%;
+}
 
-    &:nth-child(1) {
-        z-index: 3;
-    }
+// Bottom is pulled past the marker column by exactly the steps' gap, so the
+// line meets the next marker instead of stopping at this row's edge.
+.contact-section__step-connector {
+    position: absolute;
+    top: 24px;
+    bottom: -32px;
+    left: 50%;
+    width: 1px;
+    background: var(--outline-accent-2);
+    transform: translateX(-50%);
+}
 
-    &:nth-child(2) {
-        z-index: 2;
-    }
+.contact-section__step:last-child .contact-section__step-connector {
+    display: none;
+}
 
-    &:nth-child(3) {
-        z-index: 1;
-    }
+.contact-section__step-text {
+    flex: 1 1 auto;
+    min-width: 0;
+    margin: 0;
+    color: var(--content-main-primary);
+    text-align: left;
+}
 
-    img {
-        display: block;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
+// ---------------------------------------------------------------------------
+// CTA — copy plus an outlined button, centred with the rest of the column
+// once the layout stacks.
+// ---------------------------------------------------------------------------
+
+.contact-section__cta {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+
+    @media screen and (max-width: variables.$large) {
+        align-items: center;
     }
 }
 
-.contact-section__badges-text {
+.contact-section__cta-text {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.contact-section__cta-title,
+.contact-section__cta-description {
     margin: 0;
-    font-family: var(--font-family-body);
-    font-weight: var(--font-weight-semibold);
-    font-size: var(--text-header-item-size);
-    line-height: var(--text-header-item-line-height);
-    color: var(--content-main-secondary);
+    color: var(--content-main-primary);
+}
+
+.contact-section__cta-button {
+    display: inline-flex;
+    align-self: flex-start;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-width: 209px;
+    max-width: 100%;
+    height: 56px;
+    padding: 4px 20px;
+    color: var(--content-main-primary);
+    text-decoration: none;
+    background: var(--bg-ghost-accent-2);
+    border: 1px solid var(--outline-accent-2);
+    border-radius: 12px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: opacity var(--transition-fast);
+
+    &:hover {
+        opacity: 0.85;
+    }
+
+    @media screen and (max-width: variables.$large) {
+        align-self: center;
+    }
+}
+
+.contact-section__cta-button-icon {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
 }
 
 .contact-section__form-card {
