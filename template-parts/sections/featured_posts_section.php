@@ -4,20 +4,47 @@ $title       = get_field('title')       ?: '';
 $description = get_field('description') ?: '';
 $source      = get_field('posts_source') ?: 'latest';
 
-if ($source === 'manual') {
+if ($source === "tags") {
+    $count = absint(get_field("posts_count"));
+    $count = $count > 0 ? min($count, 20) : 10;
+    $tag_ids = wp_get_post_tags(get_the_ID(), ["fields" => "ids"]);
+    $tag_ids = is_wp_error($tag_ids) ? [] : $tag_ids;
+
+    $query_args = [
+        "post_type"      => "post",
+        "post_status"    => "publish",
+        "posts_per_page" => $count,
+        "ignore_sticky_posts" => true,
+        "post__not_in"   => [get_the_ID()],
+        "orderby"        => "date",
+        "order"          => "DESC",
+    ];
+
+    if ($tag_ids) {
+        $query_args["tax_query"] = [[
+            "taxonomy" => "post_tag",
+            "field"    => "term_id",
+            "terms"    => $tag_ids,
+            "operator" => "IN",
+        ]];
+    }
+} elseif ($source === 'manual') {
     $post_ids   = get_field('manual_posts') ?: [];
     $query_args = $post_ids ? [
         'post_type'      => 'post',
         'post__in'       => $post_ids,
+        'post_status'    => 'publish',
         'orderby'        => 'post__in',
         'posts_per_page' => count($post_ids),
     ] : null;
 } else {
-    $count      = (int) get_field('posts_count') ?: 10;
+    $count = absint(get_field('posts_count'));
+    $count = $count > 0 ? min($count, 20) : 10;
     $query_args = [
         'post_type'      => 'post',
         'post_status'    => 'publish',
         'posts_per_page' => $count,
+        'ignore_sticky_posts' => true,
         'orderby'        => 'date',
         'order'          => 'DESC',
     ];

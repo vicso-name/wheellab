@@ -30,6 +30,7 @@
             "type": "select",
             "choices": {
                 "latest": "Latest Posts",
+                "tags": "Posts by Current Post Tags",
                 "manual": "Manual Selection"
             },
             "default_value": "latest",
@@ -44,7 +45,7 @@
             "label": "Number of Posts",
             "name": "posts_count",
             "type": "number",
-            "instructions": "How many of the latest published posts to show.",
+            "instructions": "How many of the latest or tag-matched published posts to show.",
             "default_value": 10,
             "min": 1,
             "max": 20,
@@ -53,8 +54,8 @@
                 [
                     {
                         "field": "field_fps_posts_source",
-                        "operator": "==",
-                        "value": "latest"
+                        "operator": "!=",
+                        "value": "manual"
                     }
                 ]
             ],
