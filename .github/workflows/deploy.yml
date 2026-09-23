@@ -105,10 +105,26 @@ jobs:
           printf '%s\n' "$SSH_KEY" > "$KEY"
           chmod 600 "$KEY"
 
-          # --ff-only so a stray local edit on the server surfaces as a failed
-          # run instead of being silently merged.
+          # The heredoc is unquoted so $DEPLOY_PATH expands here, from the
+          # secret, and the rest is sent to the server verbatim.
           ssh -i "$KEY" -p "$SSH_PORT" \
               -o StrictHostKeyChecking=accept-new \
               -o ConnectTimeout=20 \
-              "$SSH_USER@$SSH_HOST" \
-              "cd '$DEPLOY_PATH' && git pull --ff-only && git rev-parse --short HEAD"
+              "$SSH_USER@$SSH_HOST" bash -s <<REMOTE
+          set -euo pipefail
+
+          # --ff-only so a stray edit made directly on the server surfaces as a
+          # failed run instead of being silently merged away.
+          cd "$DEPLOY_PATH"
+          git pull --ff-only
+          git rev-parse --short HEAD
+
+          # Breeze stamps every asset URL with one shared ?ver= that does not
+          # change when files do, and Cloudflare caches those URLs for a year.
+          # Without this purge the new CSS sits on disk while browsers keep
+          # being served the previous build. Purging reissues the stamp, so the
+          # next page references URLs the edge has never seen.
+          cd ../../..
+          wp eval 'do_action("breeze_clear_all_cache");'
+          echo "cache purged"
+          REMOTE
