@@ -183,7 +183,12 @@ $mobile: 1024px;
     left: 0;
     height: 396px;
     pointer-events: none;
-    transition: height 0.4s ease-out;
+    // Shifted on hover rather than resized: the img inside is sized in
+    // percentages of this box (bottom: -45%, height: 145%) and fitted with
+    // object-fit: contain, so growing the box moved each illustration by a
+    // different amount depending on its aspect ratio — some appeared to zoom
+    // in, others to sink. A translate moves all of them the same 10px.
+    transition: transform 0.4s ease-out;
 
     @media screen and (max-width: $mobile) {
         position: relative;
@@ -293,7 +298,7 @@ $mobile: 1024px;
         }
 
         .solutions-section__card-image {
-            height: 406px;
+            transform: translateY(-10px);
         }
 
         .solutions-section__card-glow--a {
