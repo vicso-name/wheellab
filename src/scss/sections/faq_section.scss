@@ -90,6 +90,14 @@
   &:last-child {
     border-bottom: 0;
   }
+
+  // Batched items stay in the DOM behind display: none, so the last item the
+  // reader can actually see is not :last-child and kept a divider dangling
+  // under it. faq_section.js strips the --more class as each batch is
+  // revealed, so this moves down the list on its own.
+  &:has(+ .faq-section__item--more) {
+    border-bottom: 0;
+  }
 }
 
 .faq-section__item--more {
