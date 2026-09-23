@@ -117,13 +117,12 @@ const ARROW_INTRO_START_DELAY_MS = 380;
 // over the top) rather than fading in at rest — see initGearIntroSweep().
 const GEAR_INTRO_ANGLE_OFFSET_DEG = -150;
 
-// Stable-state hold durations (ms) before the NEXT rotation starts,
-// measured from when that state's text finished settling — tuned to the
-// reference timeline (state 1 stable ~0.9s, next rotation starts ~1.8s;
-// state 2 stable ~2.5s, next rotation starts ~4.05s). Any state beyond
-// the ones with an explicit hold below reuses HOLD_MS_DEFAULT.
-const HOLD_MS_AFTER_STATE = [900, 1500];
-const HOLD_MS_DEFAULT = 1500;
+// One stat change every 2s, the same for every stat. Holds used to be listed
+// per state ([900, 1500]), which made the first change land after 1.65s and
+// the rest after 2.25s. The hold is now whatever is left of the period once
+// the transition that precedes it has run, so desktop (750ms rotation) and
+// mobile (420ms icon swap) both settle into the same cadence.
+const STATE_PERIOD_MS = 2000;
 
 const DEG2RAD = Math.PI / 180;
 
@@ -513,7 +512,10 @@ function initStatsShowcase(section) {
   function scheduleNext(fromIndex) {
     if (slideCount <= 1) return; // nothing to advance to — avoid a no-op rotation/transition every hold cycle
     if (!LOOP && fromIndex >= slideCount - 1) return; // stop on the last state
-    const holdMs = HOLD_MS_AFTER_STATE[fromIndex] ?? HOLD_MS_DEFAULT;
+    // scheduleNext runs once the preceding transition has finished, so take
+    // that off the period to keep the gap between changes at STATE_PERIOD_MS.
+    const transitionMs = isMobile() ? MOBILE_ICON_DURATION_MS : STATE_ROTATION_MS;
+    const holdMs = Math.max(0, STATE_PERIOD_MS - transitionMs);
     setTimeoutTracked(() => advanceTo((fromIndex + 1) % slideCount), holdMs);
   }
 
