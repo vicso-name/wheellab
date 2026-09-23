@@ -1,0 +1,100 @@
+{
+    "key": "group_hero_section",
+    "title": "Hero Section",
+    "fields": [
+        {
+            "key": "field_hs_title_white",
+            "label": "Title (white)",
+            "name": "title_white",
+            "type": "text",
+            "default_value": "Custom Enhanced ",
+            "instructions": "First part of the headline, in the default white color.",
+            "wrapper": {
+                "width": "50"
+            }
+        },
+        {
+            "key": "field_hs_title_accent",
+            "label": "Title (accent)",
+            "name": "title_accent",
+            "type": "text",
+            "default_value": "Casino Platform",
+            "instructions": "Second part of the headline, in accent cyan.",
+            "wrapper": {
+                "width": "50"
+            }
+        },
+        {
+            "key": "field_hs_description",
+            "label": "Description",
+            "name": "description",
+            "type": "textarea",
+            "rows": 3,
+            "default_value": "As your premier partner in iGaming development, we are dedicated to delivering cutting-edge and innovative solutions specifically tailored for the dynamic gaming industry.",
+            "wrapper": {
+                "width": "100"
+            }
+        },
+        {
+            "key": "field_hs_background_video",
+            "label": "Background Video",
+            "name": "background_video",
+            "type": "file",
+            "return_format": "array",
+            "mime_types": "mp4,webm",
+            "instructions": "Looping, muted background video. Falls back to the poster image below (or the plain background color) when empty.",
+            "wrapper": {
+                "width": "50"
+            }
+        },
+        {
+            "key": "field_hs_background_poster",
+            "label": "Background Poster / Fallback Image",
+            "name": "background_poster",
+            "type": "image",
+            "return_format": "array",
+            "preview_size": "medium",
+            "instructions": "Shown while the video loads, and used instead of it if no video is set.",
+            "wrapper": {
+                "width": "50"
+            }
+        },
+        {
+            "key": "field_hs_primary_button",
+            "label": "Primary Button",
+            "name": "primary_button",
+            "type": "link",
+            "return_format": "array",
+            "instructions": "\"Book a Call\" style — solid gradient button.",
+            "wrapper": {
+                "width": "50"
+            }
+        },
+        {
+            "key": "field_hs_secondary_button",
+            "label": "Secondary Button",
+            "name": "secondary_button",
+            "type": "link",
+            "return_format": "array",
+            "instructions": "\"See our Services\" style — outlined button with a down arrow.",
+            "wrapper": {
+                "width": "50"
+            }
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "block",
+                "operator": "==",
+                "value": "acf/hero-section"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "active": true
+}

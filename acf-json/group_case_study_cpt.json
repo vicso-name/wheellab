@@ -1,0 +1,77 @@
+{
+    "key": "group_case_study_cpt",
+    "title": "Case Study Details",
+    "fields": [
+        {
+            "key": "field_csc_description",
+            "label": "Short Description",
+            "name": "description",
+            "type": "textarea",
+            "rows": 3,
+            "instructions": "Shown on the Case Study Section card and the archive grid.",
+            "wrapper": {
+                "width": "100"
+            }
+        },
+        {
+            "key": "field_csc_stats",
+            "label": "Stats",
+            "name": "stats",
+            "type": "repeater",
+            "layout": "table",
+            "button_label": "Add Stat",
+            "instructions": "Shown as icon/value/label tags — Figma's own mock always shows exactly 2.",
+            "sub_fields": [
+                {
+                    "key": "field_csc_stat_icon",
+                    "label": "Icon",
+                    "name": "icon",
+                    "type": "image",
+                    "return_format": "array",
+                    "preview_size": "thumbnail",
+                    "instructions": "Single-color SVG, tinted accent-2 cyan automatically via CSS mask.",
+                    "mime_types": "svg",
+                    "wrapper": {
+                        "width": "33"
+                    }
+                },
+                {
+                    "key": "field_csc_stat_value",
+                    "label": "Value",
+                    "name": "value",
+                    "type": "text",
+                    "required": 1,
+                    "instructions": "e.g. \"6 weeks\"",
+                    "wrapper": {
+                        "width": "33"
+                    }
+                },
+                {
+                    "key": "field_csc_stat_label",
+                    "label": "Label",
+                    "name": "label",
+                    "type": "text",
+                    "instructions": "e.g. \"From scratch to launch\"",
+                    "wrapper": {
+                        "width": "34"
+                    }
+                }
+            ]
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "case_study"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "active": true
+}

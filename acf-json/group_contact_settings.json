@@ -1,0 +1,130 @@
+{
+    "key": "group_contact_settings",
+    "title": "Contact Settings",
+    "fields": [
+        {
+            "key": "field_cso_title",
+            "label": "Title",
+            "name": "title",
+            "type": "text",
+            "instructions": "Fallback used by the Contact Section wherever it's rendered outside the block editor (e.g. the Author page) instead of a page-specific block instance.",
+            "default_value": "Let’s discuss your great ideas together",
+            "wrapper": {
+                "width": "100"
+            }
+        },
+        {
+            "key": "field_cso_description",
+            "label": "Description",
+            "name": "description",
+            "type": "textarea",
+            "rows": 3,
+            "default_value": "Let’s talk about your iGaming business. Please complete the form, and our team will reach out to you as soon as possible.",
+            "wrapper": {
+                "width": "100"
+            }
+        },
+        {
+            "key": "field_cso_steps",
+            "label": "Process Steps",
+            "name": "contact_steps",
+            "type": "repeater",
+            "layout": "table",
+            "button_label": "Add Step",
+            "instructions": "Shown as the 4-step timeline in the Contact Section's left column, on every page — one shared process, not editable per page.",
+            "sub_fields": [
+                {
+                    "key": "field_cso_step_text",
+                    "label": "Step Text",
+                    "name": "text",
+                    "type": "textarea",
+                    "rows": 2,
+                    "required": 1
+                }
+            ],
+            "default_value": [
+                {
+                    "text": "We will process your request within 1-2 business days."
+                },
+                {
+                    "text": "Get back to you with an offer based on your project's scope and requirements."
+                },
+                {
+                    "text": "Set a call to discuss your future project in detail and finalize the offer."
+                },
+                {
+                    "text": "Sign a contract with you to start working on your project."
+                }
+            ]
+        },
+        {
+            "key": "field_cso_cta_title",
+            "label": "CTA Title",
+            "name": "cta_title",
+            "type": "text",
+            "default_value": "Not sure what you need yet?",
+            "wrapper": {
+                "width": "100"
+            }
+        },
+        {
+            "key": "field_cso_cta_description",
+            "label": "CTA Description",
+            "name": "cta_description",
+            "type": "textarea",
+            "rows": 3,
+            "default_value": "Book a quick intro call to explore WheelLab's iGaming expertise and see how we can support your next project.",
+            "wrapper": {
+                "width": "100"
+            }
+        },
+        {
+            "key": "field_cso_cta_button",
+            "label": "CTA Button",
+            "name": "contact_cta_button",
+            "type": "link",
+            "return_format": "array",
+            "instructions": "Button text comes from the link's own title (e.g. \"Book a meeting\"). Separate from the header's \"Book a Call\" link — leave empty to hide the CTA card.",
+            "wrapper": {
+                "width": "100"
+            }
+        },
+        {
+            "key": "field_cso_form_shortcode",
+            "label": "Contact Form 7 Shortcode",
+            "name": "form_shortcode",
+            "type": "text",
+            "instructions": "Paste the Contact Form 7 shortcode, e.g. [contact-form-7 id=\"123\" title=\"Contact form\"].",
+            "placeholder": "[contact-form-7 id=\"123\" title=\"Contact form\"]",
+            "wrapper": {
+                "width": "100"
+            }
+        },
+        {
+            "key": "field_cso_webhook_url",
+            "label": "Webhook URL",
+            "name": "webhook_url",
+            "type": "url",
+            "instructions": "Every successful contact form submission is forwarded here as JSON (in addition to the normal CF7 email). Leave empty to disable forwarding.",
+            "placeholder": "https://hook.eu2.make.com/xxxxxxxxxxxxxxxxxxxxxxxx",
+            "wrapper": {
+                "width": "100"
+            }
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "options_page",
+                "operator": "==",
+                "value": "acf-options-contact"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "active": true
+}

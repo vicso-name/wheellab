@@ -1,0 +1,109 @@
+{
+    "key": "group_footer_settings",
+    "title": "Footer Settings",
+    "fields": [
+        {
+            "key": "field_footer_link_groups",
+            "label": "Link Groups",
+            "name": "link_groups",
+            "type": "repeater",
+            "layout": "block",
+            "button_label": "Add Link Group",
+            "sub_fields": [
+                {
+                    "key": "field_footer_link_group_title",
+                    "label": "Title",
+                    "name": "title",
+                    "type": "text",
+                    "required": 1
+                },
+                {
+                    "key": "field_footer_link_group_links",
+                    "label": "Links",
+                    "name": "links",
+                    "type": "repeater",
+                    "layout": "table",
+                    "button_label": "Add Link",
+                    "sub_fields": [
+                        {
+                            "key": "field_footer_link_group_link",
+                            "label": "Link",
+                            "name": "link",
+                            "type": "link",
+                            "return_format": "array",
+                            "required": 1
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "key": "field_footer_social_instagram",
+            "label": "Instagram URL",
+            "name": "social_instagram",
+            "type": "url"
+        },
+        {
+            "key": "field_footer_social_linkedin",
+            "label": "LinkedIn URL",
+            "name": "social_linkedin",
+            "type": "url"
+        },
+        {
+            "key": "field_footer_clutch_badge_image",
+            "label": "Review Badge Image",
+            "name": "clutch_badge_image",
+            "type": "image",
+            "return_format": "array",
+            "preview_size": "medium",
+            "instructions": "e.g. the Clutch reviews badge."
+        },
+        {
+            "key": "field_footer_clutch_badge_link",
+            "label": "Review Badge Link",
+            "name": "clutch_badge_link",
+            "type": "url"
+        },
+        {
+            "key": "field_footer_legal_links",
+            "label": "Legal Links",
+            "name": "legal_links",
+            "type": "repeater",
+            "layout": "table",
+            "button_label": "Add Legal Link",
+            "sub_fields": [
+                {
+                    "key": "field_footer_legal_link",
+                    "label": "Link",
+                    "name": "link",
+                    "type": "link",
+                    "return_format": "array",
+                    "required": 1
+                }
+            ]
+        },
+        {
+            "key": "field_footer_copyright_text",
+            "label": "Copyright Text",
+            "name": "copyright_text",
+            "type": "text",
+            "instructions": "The current year is prepended automatically.",
+            "default_value": "Wheelab. All rights reserved."
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "options_page",
+                "operator": "==",
+                "value": "acf-options-footer"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "active": true
+}

@@ -1,0 +1,111 @@
+{
+    "key": "group_menu_item_mega_menu",
+    "title": "Mega Menu",
+    "fields": [
+        {
+            "key": "field_mm_enabled",
+            "label": "Enable Mega Menu",
+            "name": "has_mega_menu",
+            "type": "true_false",
+            "instructions": "Shows a dropdown panel (desktop) / accordion (mobile) with service categories under this menu item.",
+            "default_value": 0,
+            "ui": 1
+        },
+        {
+            "key": "field_mm_categories",
+            "label": "Categories",
+            "name": "mega_menu_categories",
+            "type": "repeater",
+            "layout": "block",
+            "button_label": "Add Category",
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_mm_enabled",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "sub_fields": [
+                {
+                    "key": "field_mm_category_name",
+                    "label": "Category Name",
+                    "name": "name",
+                    "type": "text",
+                    "required": 1,
+                    "wrapper": {
+                        "width": "100"
+                    }
+                },
+                {
+                    "key": "field_mm_category_cards",
+                    "label": "Cards",
+                    "name": "cards",
+                    "type": "repeater",
+                    "layout": "block",
+                    "button_label": "Add Card",
+                    "min": 1,
+                    "sub_fields": [
+                        {
+                            "key": "field_mm_card_icon",
+                            "label": "Icon",
+                            "name": "icon",
+                            "type": "image",
+                            "return_format": "array",
+                            "preview_size": "acf-icon-preview",
+                            "instructions": "SVG upload, rendered inline.",
+                            "wrapper": {
+                                "width": "100"
+                            }
+                        },
+                        {
+                            "key": "field_mm_card_title",
+                            "label": "Title",
+                            "name": "title",
+                            "type": "text",
+                            "required": 1,
+                            "wrapper": {
+                                "width": "100"
+                            }
+                        },
+                        {
+                            "key": "field_mm_card_description",
+                            "label": "Description",
+                            "name": "description",
+                            "type": "text",
+                            "wrapper": {
+                                "width": "100"
+                            }
+                        },
+                        {
+                            "key": "field_mm_card_link",
+                            "label": "Link",
+                            "name": "link",
+                            "type": "link",
+                            "return_format": "array",
+                            "wrapper": {
+                                "width": "100"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "nav_menu_item",
+                "operator": "==",
+                "value": "all"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "active": true
+}

@@ -1,0 +1,186 @@
+{
+    "key": "group_service_reel_section",
+    "title": "Service Reel Section",
+    "fields": [
+        {
+            "key": "field_srs_eyebrow",
+            "label": "Eyebrow",
+            "name": "eyebrow",
+            "type": "text",
+            "default_value": "See it in motion",
+            "wrapper": {
+                "width": "33"
+            }
+        },
+        {
+            "key": "field_srs_title",
+            "label": "Title",
+            "name": "title",
+            "type": "text",
+            "required": 1,
+            "wrapper": {
+                "width": "33"
+            }
+        },
+        {
+            "key": "field_srs_note_text",
+            "label": "Note",
+            "name": "note_text",
+            "type": "text",
+            "instructions": "Optional small print under the description, with an info icon. e.g. \"Full reels available on request.\"",
+            "wrapper": {
+                "width": "34"
+            }
+        },
+        {
+            "key": "field_srs_description",
+            "label": "Description",
+            "name": "description",
+            "type": "textarea",
+            "rows": 2,
+            "wrapper": {
+                "width": "100"
+            }
+        },
+        {
+            "key": "field_srs_video_type",
+            "label": "Video Source",
+            "name": "video_type",
+            "type": "button_group",
+            "choices": {
+                "file": "Uploaded file",
+                "youtube": "YouTube",
+                "vimeo": "Vimeo"
+            },
+            "default_value": "file",
+            "layout": "horizontal",
+            "instructions": "Thumbnails below jump/seek playback to a timestamp — this works the same way for all three sources.",
+            "wrapper": {
+                "width": "100"
+            }
+        },
+        {
+            "key": "field_srs_video_file",
+            "label": "Video File",
+            "name": "video_file",
+            "type": "file",
+            "return_format": "array",
+            "mime_types": "mp4,webm",
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_srs_video_type",
+                        "operator": "==",
+                        "value": "file"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50"
+            }
+        },
+        {
+            "key": "field_srs_video_poster",
+            "label": "Poster Image",
+            "name": "video_poster",
+            "type": "image",
+            "return_format": "array",
+            "preview_size": "medium",
+            "instructions": "Shown before playback starts.",
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_srs_video_type",
+                        "operator": "==",
+                        "value": "file"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50"
+            }
+        },
+        {
+            "key": "field_srs_video_url",
+            "label": "Video URL",
+            "name": "video_url",
+            "type": "url",
+            "instructions": "Paste the normal watch/share URL — e.g. https://www.youtube.com/watch?v=... or https://vimeo.com/...",
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_srs_video_type",
+                        "operator": "==",
+                        "value": "youtube"
+                    }
+                ],
+                [
+                    {
+                        "field": "field_srs_video_type",
+                        "operator": "==",
+                        "value": "vimeo"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "100"
+            }
+        },
+        {
+            "key": "field_srs_chapters",
+            "label": "Chapters",
+            "name": "chapters",
+            "type": "repeater",
+            "layout": "table",
+            "button_label": "Add Chapter",
+            "instructions": "Thumbnail strip below the player. Each one seeks the video to its timestamp and plays — leave empty to hide the strip entirely.",
+            "sub_fields": [
+                {
+                    "key": "field_srs_chapter_image",
+                    "label": "Thumbnail",
+                    "name": "image",
+                    "type": "image",
+                    "return_format": "array",
+                    "preview_size": "thumbnail",
+                    "required": 1
+                },
+                {
+                    "key": "field_srs_chapter_timestamp",
+                    "label": "Timestamp",
+                    "name": "timestamp",
+                    "type": "text",
+                    "required": 1,
+                    "instructions": "mm:ss or seconds, e.g. 1:23 or 83",
+                    "wrapper": {
+                        "width": "30"
+                    }
+                },
+                {
+                    "key": "field_srs_chapter_label",
+                    "label": "Label",
+                    "name": "label",
+                    "type": "text",
+                    "instructions": "Accessibility label only — not shown visually.",
+                    "wrapper": {
+                        "width": "70"
+                    }
+                }
+            ]
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "block",
+                "operator": "==",
+                "value": "acf/service-reel-section"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "active": true
+}

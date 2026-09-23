@@ -1,0 +1,46 @@
+{
+    "key": "group_template_privacy_policy",
+    "title": "Privacy Policy Page — Hero",
+    "fields": [
+        {
+            "key": "field_pp_hero_title",
+            "label": "Title",
+            "name": "hero_title",
+            "type": "text",
+            "required": 1,
+            "default_value": "WheelLab Privacy Policy"
+        },
+        {
+            "key": "field_pp_hero_description",
+            "label": "Description",
+            "name": "hero_description",
+            "type": "text",
+            "default_value": "Data, security, and cookie policies"
+        },
+        {
+            "key": "field_pp_last_updated",
+            "label": "Last Updated",
+            "name": "last_updated",
+            "type": "date_picker",
+            "instructions": "Shown as “Last Updated: {date}” under the description. Defaults to today if left blank.",
+            "display_format": "m.d.Y",
+            "return_format": "m.d.Y",
+            "first_day": 1
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "page_template",
+                "operator": "==",
+                "value": "template-privacy-policy.php"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "active": true
+}
