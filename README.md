@@ -26,8 +26,6 @@ npm run setup
 
 > If `scripts/setup.mjs` does not exist, setup has already been run on this project — skip straight to Development.
 
-> **Deployment via git?** Remove `build/` from `.gitignore` so compiled assets are tracked and available on the server after `git pull`.
-
 ---
 
 ## Development
@@ -70,7 +68,7 @@ inc/
 └── theme_function.php     ← theme helpers
 fonts/                     ← source font files (.woff/.woff2)
 docs/                      ← developer reference
-build/                     ← Gulp output (gitignored)
+build/                     ← Gulp output (committed; CI rebuilds it for deploy)
 ```
 
 ---
@@ -83,6 +81,35 @@ npm run lint:scss:fix    # auto-fix SCSS violations
 ```
 
 Linters run automatically as the first step of `npm run build`.
+
+---
+
+## Deployment
+
+`master` holds the sources. The server never pulls it — it pulls **`deploy`**, a
+branch that contains only the runtime theme: PHP templates, `build/`, `assets/`,
+`fonts/`, `acf-json/`, `style.css` and `screenshot.png`. No `src/`, no Gulp, no
+`node_modules`, no docs.
+
+That branch is generated, never edited by hand. On every push to `master`,
+`.github/workflows/deploy.yml` lints, builds, strips everything listed in
+`.deployignore` and commits the result to `deploy`. A lint or build failure stops
+the run, so a broken commit cannot reach the server.
+
+Point the server's auto-deploy at the `deploy` branch and let it pull into the
+theme folder:
+
+```bash
+cd wp-content/themes/wheellab
+git pull origin deploy
+```
+
+The workflow commits onto the branch rather than force-pushing, so the server can
+always fast-forward.
+
+**Adding a development file?** Add it to `.deployignore`, or it ships. The list is
+a denylist on purpose: new templates, includes and assets go live automatically,
+which is the failure mode worth avoiding.
 
 ---
 

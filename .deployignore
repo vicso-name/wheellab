@@ -1,0 +1,39 @@
+# Paths that never reach the server.
+#
+# .github/workflows/deploy.yml rsyncs the repository minus everything listed
+# here onto the `deploy` branch, which is what the server pulls. The list is a
+# denylist on purpose: anything NOT named here ships. A new template, include
+# or asset therefore goes live without anyone remembering to allowlist it,
+# while a new development file has to be added below.
+#
+# Syntax is rsync's --exclude-from: a leading slash anchors to the repo root.
+
+# Version control and CI
+/.git/
+/.github/
+/.gitignore
+/.deployignore
+
+# Build toolchain
+/src/
+/node_modules/
+/gulpfile.js
+/package.json
+/package-lock.json
+/generate-sections.js
+/release.sh
+
+# Linter and editor config
+/.editorconfig
+/.stylelintrc.json
+/eslint.config.js
+
+# Developer documentation
+/docs/
+/README.md
+/CLAUDE.md
+
+# Local noise
+.DS_Store
+*.log
+*.zip

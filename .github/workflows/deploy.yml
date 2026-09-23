@@ -1,0 +1,89 @@
+name: Publish deploy branch
+
+# `master` holds the sources; the server never sees them. Every push to master
+# is linted, built, stripped of tooling and published to the `deploy` branch,
+# which contains exactly what belongs in wp-content/themes/<theme>/ — so the
+# server can pull it straight into the theme folder.
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+# Two pushes in quick succession would otherwise race to publish the branch.
+concurrency:
+  group: publish-deploy-branch
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out master
+        uses: actions/checkout@v4
+        with:
+          # The deploy branch is committed onto from this same checkout, so its
+          # history has to be reachable.
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # `npm run build` lints first, so a lint failure stops the deploy before
+      # anything is published.
+      - name: Lint and build theme assets
+        run: npm run build
+
+      - name: Assemble the runtime theme
+        run: |
+          mkdir -p "$RUNNER_TEMP/theme"
+          rsync -a --delete --exclude-from=.deployignore ./ "$RUNNER_TEMP/theme/"
+          echo "Files to publish: $(find "$RUNNER_TEMP/theme" -type f | wc -l)"
+
+      - name: Publish to the deploy branch
+        run: |
+          set -euo pipefail
+
+          DEPLOY_DIR="$RUNNER_TEMP/deploy"
+
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # Reuse the existing branch when there is one so the server can keep
+          # fast-forwarding; create it empty on the very first run.
+          if git ls-remote --exit-code --heads origin deploy >/dev/null 2>&1; then
+            git fetch origin deploy
+            git worktree add "$DEPLOY_DIR" -B deploy FETCH_HEAD
+          else
+            git worktree add --detach "$DEPLOY_DIR" HEAD
+            git -C "$DEPLOY_DIR" checkout --orphan deploy
+            git -C "$DEPLOY_DIR" rm -rf --cached . >/dev/null
+          fi
+
+          # --delete so a file removed from master disappears from the server too.
+          rsync -a --delete --exclude='.git' "$RUNNER_TEMP/theme/" "$DEPLOY_DIR/"
+
+          cd "$DEPLOY_DIR"
+          git add -A
+
+          if git diff --cached --quiet; then
+            echo "Built theme is unchanged — nothing to publish."
+            exit 0
+          fi
+
+          git commit \
+            --message "build: theme from ${GITHUB_SHA:0:7}" \
+            --message "$(git -C "$GITHUB_WORKSPACE" log -1 --pretty=%s "$GITHUB_SHA")"
+          git push origin deploy
+
+          echo "Published $(git rev-parse --short HEAD) to deploy."
