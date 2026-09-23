@@ -87,3 +87,28 @@ jobs:
           git push origin deploy
 
           echo "Published $(git rev-parse --short HEAD) to deploy."
+
+      # Plain ssh rather than a third-party action: one less dependency with
+      # access to the deploy key. Host, user, port and path are secrets because
+      # this repository is public.
+      - name: Pull the new commit on stage
+        env:
+          SSH_KEY:     ${{ secrets.SSH_KEY }}
+          SSH_HOST:    ${{ secrets.SSH_HOST }}
+          SSH_USER:    ${{ secrets.SSH_USER }}
+          SSH_PORT:    ${{ secrets.SSH_PORT }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+        run: |
+          set -euo pipefail
+
+          KEY="$RUNNER_TEMP/deploy_key"
+          printf '%s\n' "$SSH_KEY" > "$KEY"
+          chmod 600 "$KEY"
+
+          # --ff-only so a stray local edit on the server surfaces as a failed
+          # run instead of being silently merged.
+          ssh -i "$KEY" -p "$SSH_PORT" \
+              -o StrictHostKeyChecking=accept-new \
+              -o ConnectTimeout=20 \
+              "$SSH_USER@$SSH_HOST" \
+              "cd '$DEPLOY_PATH' && git pull --ff-only && git rev-parse --short HEAD"
