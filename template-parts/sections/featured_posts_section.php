@@ -57,8 +57,6 @@ $class .= !empty($block['className']) ? ' ' . $block['className']  : '';
 $class .= !empty($block['align'])     ? ' align' . $block['align'] : '';
 $id     = !empty($block['anchor'])    ? ' id="' . esc_attr($block['anchor']) . '"' : '';
 
-$arrow_left_url  = esc_url(wheellab_asset_url('assets/img/icons/arrow-left.svg'));
-$arrow_right_url = esc_url(wheellab_asset_url('assets/img/icons/arrow-right.svg'));
 
 $chevron_left_url  = esc_url(wheellab_asset_url('assets/img/icons/chevron-left.svg'));
 $chevron_right_url = esc_url(wheellab_asset_url('assets/img/icons/chevron-right.svg'));
@@ -83,13 +81,11 @@ $chevron_right_url = esc_url(wheellab_asset_url('assets/img/icons/chevron-right.
             <?php if ($posts_query->post_count > 1) : ?>
                 <div class="featured-posts-section__nav-group">
                     <button type="button" class="featured-posts-section__nav featured-posts-section__nav--prev">
-                        <img class="svg featured-posts-section__nav-icon featured-posts-section__nav-icon--desktop" src="<?php echo $arrow_left_url; ?>" alt="">
-                        <img class="svg featured-posts-section__nav-icon featured-posts-section__nav-icon--mobile" src="<?php echo $chevron_left_url; ?>" alt="">
+                        <img class="svg" src="<?php echo $chevron_left_url; ?>" alt="">
                         <span class="visually-hidden"><?php esc_html_e('Previous post', 'wheellab'); ?></span>
                     </button>
                     <button type="button" class="featured-posts-section__nav featured-posts-section__nav--next">
-                        <img class="svg featured-posts-section__nav-icon featured-posts-section__nav-icon--desktop" src="<?php echo $arrow_right_url; ?>" alt="">
-                        <img class="svg featured-posts-section__nav-icon featured-posts-section__nav-icon--mobile" src="<?php echo $chevron_right_url; ?>" alt="">
+                        <img class="svg" src="<?php echo $chevron_right_url; ?>" alt="">
                         <span class="visually-hidden"><?php esc_html_e('Next post', 'wheellab'); ?></span>
                     </button>
                 </div>

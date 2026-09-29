@@ -30,8 +30,11 @@ $class .= !empty($block['align'])     ? ' align' . $block['align'] : '';
 $id     = !empty($block['anchor'])    ? ' id="' . esc_attr($block['anchor']) . '"' : '';
 
 $quote_icon_url = esc_url(wheellab_asset_url('assets/img/icons/quote.svg'));
-$arrow_left_url  = esc_url(wheellab_asset_url('assets/img/icons/arrow-left.svg'));
-$arrow_right_url = esc_url(wheellab_asset_url('assets/img/icons/arrow-right.svg'));
+// Chevrons, not arrows: arrow-*.svg carries a hardcoded fill="white", so it
+// cannot take the nav's colour or its disabled state. See case_study_section,
+// which this matches.
+$chevron_left_url  = esc_url(wheellab_asset_url('assets/img/icons/chevron-left.svg'));
+$chevron_right_url = esc_url(wheellab_asset_url('assets/img/icons/chevron-right.svg'));
 ?>
 
 <?php if ($reviews) : ?>
@@ -77,11 +80,11 @@ $arrow_right_url = esc_url(wheellab_asset_url('assets/img/icons/arrow-right.svg'
         <div class="container">
             <div class="reviews-section__pagination">
                 <button type="button" class="reviews-section__nav reviews-section__nav--prev">
-                    <img class="svg" src="<?php echo $arrow_left_url; ?>" alt="">
+                    <img class="svg" src="<?php echo $chevron_left_url; ?>" alt="">
                     <span class="visually-hidden"><?php esc_html_e('Previous review', 'wheellab'); ?></span>
                 </button>
                 <button type="button" class="reviews-section__nav reviews-section__nav--next">
-                    <img class="svg" src="<?php echo $arrow_right_url; ?>" alt="">
+                    <img class="svg" src="<?php echo $chevron_right_url; ?>" alt="">
                     <span class="visually-hidden"><?php esc_html_e('Next review', 'wheellab'); ?></span>
                 </button>
             </div>

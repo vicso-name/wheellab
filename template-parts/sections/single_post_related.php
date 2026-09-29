@@ -65,8 +65,6 @@ if (!$posts_query || !$posts_query->have_posts()) {
     return;
 }
 
-$arrow_left_url    = esc_url(wheellab_asset_url('assets/img/icons/arrow-left.svg'));
-$arrow_right_url   = esc_url(wheellab_asset_url('assets/img/icons/arrow-right.svg'));
 $chevron_left_url  = esc_url(wheellab_asset_url('assets/img/icons/chevron-left.svg'));
 $chevron_right_url = esc_url(wheellab_asset_url('assets/img/icons/chevron-right.svg'));
 ?>
@@ -78,13 +76,11 @@ $chevron_right_url = esc_url(wheellab_asset_url('assets/img/icons/chevron-right.
             <?php if ($posts_query->post_count > 1) : ?>
                 <div class="single-post-related__nav-group">
                     <button type="button" class="single-post-related__nav single-post-related__nav--prev">
-                        <img class="svg single-post-related__nav-icon single-post-related__nav-icon--desktop" src="<?php echo $arrow_left_url; ?>" alt="">
-                        <img class="svg single-post-related__nav-icon single-post-related__nav-icon--mobile" src="<?php echo $chevron_left_url; ?>" alt="">
+                        <img class="svg" src="<?php echo $chevron_left_url; ?>" alt="">
                         <span class="visually-hidden"><?php esc_html_e('Previous post', 'wheellab'); ?></span>
                     </button>
                     <button type="button" class="single-post-related__nav single-post-related__nav--next">
-                        <img class="svg single-post-related__nav-icon single-post-related__nav-icon--desktop" src="<?php echo $arrow_right_url; ?>" alt="">
-                        <img class="svg single-post-related__nav-icon single-post-related__nav-icon--mobile" src="<?php echo $chevron_right_url; ?>" alt="">
+                        <img class="svg" src="<?php echo $chevron_right_url; ?>" alt="">
                         <span class="visually-hidden"><?php esc_html_e('Next post', 'wheellab'); ?></span>
                     </button>
                 </div>
