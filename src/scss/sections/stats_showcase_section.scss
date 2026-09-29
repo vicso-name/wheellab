@@ -62,6 +62,11 @@
     overflow: hidden;
     opacity: 0.35;
     pointer-events: none;
+    // The columns scroll past the top edge, where overflow: hidden used to
+    // slice a logo mid-mark. The fade is a fixed 120px rather than a
+    // percentage so it always clears a logo's own 80px height, whatever the
+    // section ends up being.
+    mask-image: linear-gradient(to bottom, transparent 0, #000 120px, #000 100%);
 }
 
 .stats-showcase-section__logo-col {
