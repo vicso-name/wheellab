@@ -86,7 +86,9 @@
     gap: 40px;
     justify-content: flex-start;
     min-width: 0;
-    padding: 60px 90px 60px 0;
+    // No top padding: the column carries enough copy that the inset read as
+    // the text starting late against the form card beside it.
+    padding: 0 90px 60px 0;
 
     @media screen and (max-width: variables.$large) {
         width: 100%;
