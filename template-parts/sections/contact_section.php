@@ -1,7 +1,6 @@
 <?php
 
 $title           = get_field('title')       ?: get_field('title', 'option')       ?: '';
-$description     = get_field('description') ?: get_field('description', 'option') ?: '';
 $shortcode       = get_field('form_shortcode') ?: get_field('form_shortcode', 'option') ?: '';
 
 // Global, not per-block — one shared process/CTA across every page (see
@@ -36,15 +35,12 @@ $glow_url = esc_url(wheellab_asset_url('assets/img/contact/glow.jpg'));
         <div class="contact-section__row">
 
             <div class="contact-section__info">
-                <?php if ($title || $description) : ?>
+                <?php if ($title) : ?>
                     <div class="contact-section__header">
                         <?php if ($title) : ?>
                             <h2 class="contact-section__title"><?php echo esc_html($title); ?></h2>
                         <?php endif; ?>
 
-                        <?php if ($description) : ?>
-                            <p class="contact-section__description body-m"><?php echo nl2br(esc_html($description)); ?></p>
-                        <?php endif; ?>
                     </div>
                 <?php endif; ?>
 
