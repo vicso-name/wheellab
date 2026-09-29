@@ -78,18 +78,14 @@
 
 }
 
+// Shares the title's column: the 133px right inset already comes from
+// .about-section__content, so a second one here plus right-alignment pulled
+// the description into a narrow column offset from the title above it.
 .about-section__extra {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
     gap: 24px;
     width: 100%;
-    padding-right: 133px;
-
-    @media screen and (max-width: variables.$small) {
-        justify-content: flex-start;
-        padding-right: 0;
-    }
 }
 
 .about-section__extra-icon {
@@ -104,12 +100,10 @@
 }
 
 .about-section__extra-text {
-    max-width: 506px;
     margin: 0;
     color: var(--content-main-secondary);
 
     @media screen and (max-width: variables.$small) {
-        max-width: none;
         font-size: 14px;
         line-height: 22px;
     }
