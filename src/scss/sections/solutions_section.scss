@@ -94,6 +94,26 @@ $mobile: 1024px;
     padding: 0 $inset;
 }
 
+// On a phone the cards read as a plain vertical list instead of a carousel.
+// solutions_section.js switches Swiper off at the same width, so nothing is
+// left driving a wrapper that no longer scrolls sideways. Note this uses
+// variables.$medium deliberately: the file-local $mobile above is 1024px,
+// which is a different thing entirely.
+@media screen and (max-width: variables.$medium) {
+    .solutions-section__swiper .swiper-wrapper {
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    .solutions-section__slide {
+        width: 100%;
+    }
+
+    .solutions-section__nav-group {
+        display: none;
+    }
+}
+
 .solutions-section__slide {
     display: flex;
     width: 640px;

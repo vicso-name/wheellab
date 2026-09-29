@@ -21,6 +21,14 @@ function initSolutionsSwiper(el) {
     speed: 500,
     grabCursor: true,
     keyboard: { enabled: true },
+    // Below 768px the cards stack vertically (solutions_section.scss), so the
+    // carousel is switched off rather than left running behind a layout it no
+    // longer matches — otherwise touch dragging and the arrow keys would still
+    // be translating a wrapper that has nothing to scroll.
+    breakpoints: {
+      0: { enabled: false },
+      769: { enabled: true },
+    },
     navigation: section
       ? {
           nextEl: section.querySelector(".solutions-section__nav--next"),
