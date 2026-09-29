@@ -243,6 +243,7 @@
     min-width: 200px;
     padding: 16px;
     background: var(--bg-ghost-accent-2);
+    border: 1px solid var(--outline-accent-2);
     border-radius: 12px;
 
     @media screen and (max-width: variables.$small) {
@@ -258,6 +259,7 @@
     width: 52px;
     height: 52px;
     background: var(--bg-ghost-accent-2);
+    border: 1px solid var(--outline-accent-2);
     border-radius: 8px;
 }
 
