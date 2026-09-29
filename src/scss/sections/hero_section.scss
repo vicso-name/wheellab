@@ -5,8 +5,18 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    margin-top: -96px;
-    min-height: calc(100vh + 96px);
+    // The header is sticky, so it occupies flow space directly above the hero.
+    // Pulling back by exactly its height slides the background underneath it
+    // and leaves the content one full viewport to sit in. The old -96px/-72px
+    // missed the header's 1px borders and then added the same amount back onto
+    // min-height, which left the section a whole header taller than the screen
+    // — and since the content is bottom-aligned, that pushed the lower button
+    // off the bottom at every resolution.
+    margin-top: calc(-1 * var(--header-height));
+    min-height: 100vh;
+    // svh is the viewport as it stands with mobile browser chrome showing, so
+    // the buttons land above the address bar rather than behind it.
+    min-height: 100svh;
     padding: 24px 0 64px;
     overflow: hidden;
 
@@ -15,8 +25,6 @@
     }
 
     @media screen and (max-width: variables.$small) {
-        margin-top: -72px;
-        min-height: calc(100vh + 72px);
         padding: 0;
 
         .container {

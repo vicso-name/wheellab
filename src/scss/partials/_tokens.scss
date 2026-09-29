@@ -373,6 +373,17 @@
   --space-3:  12px;
   --space-4:  16px;
   --space-6:  24px;
+  // Full height of the sticky header, which sits in normal flow: the
+  // .header__bar-inner row (80px, 64px below $small) plus .header__bar's
+  // padding (8px, 4px below $small) and 1px border on each side. The hero
+  // pulls itself up by exactly this to sit underneath the header, so keep
+  // this in step with _header.scss if either of those changes.
+  --header-height: 98px;
+
+  @media screen and (max-width: variables.$small) {
+    --header-height: 74px;
+  }
+
   --container-max-width: 1568px;
   --container-padding:    24px;
   --section-padding-y:    60px;
