@@ -124,10 +124,15 @@
         .btn-gradient,
         .hero__btn-secondary {
             width: 100%;
+            height: 56px;
         }
 
-        .btn-gradient {
-            height: 56px;
+        // The secondary button's own 16px block padding, on top of its 4px
+        // bezel and the inner border, added up to 68px against the primary
+        // button's 56px. With the height fixed above, the inner fills it and
+        // the icon stays centred, so the padding has to go.
+        .hero__btn-secondary-inner {
+            padding-block: 0;
         }
 
         .btn-gradient__inner {
