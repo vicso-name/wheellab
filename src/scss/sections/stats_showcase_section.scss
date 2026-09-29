@@ -11,6 +11,18 @@
 
     --stats-stat-size: clamp(56px, 25.27px + 8.2vw, 140px);
     --stats-title-size: clamp(32px, 12.98px + 5.07vw, 84px);
+
+    // The 1152/720 ratio works out to 244px on a phone, and even the 480px
+    // floor left the section barely half the screen. It fills the viewport
+    // instead below $medium — the same breakpoint stats_showcase_section.js
+    // switches to its single-icon layout, and it positions the icon and the
+    // text as fractions of the section's height, so both follow along.
+    @media screen and (max-width: variables.$medium) {
+        aspect-ratio: auto;
+        min-height: 100vh;
+        min-height: 100svh;
+        max-height: none;
+    }
 }
 
 .stats-showcase-section__bg {
@@ -62,11 +74,19 @@
     overflow: hidden;
     opacity: 0.35;
     pointer-events: none;
-    // The columns scroll past the top edge, where overflow: hidden used to
-    // slice a logo mid-mark. The fade is a fixed 120px rather than a
-    // percentage so it always clears a logo's own 80px height, whatever the
-    // section ends up being.
-    mask-image: linear-gradient(to bottom, transparent 0, #000 120px, #000 100%);
+    // The columns scroll past the section's edges, where overflow: hidden
+    // used to slice a logo mid-mark. Both ends are faded: the top is what
+    // the crop was reported on, and the bottom starts cropping too once the
+    // section grows to full height on a phone. The fade is a fixed 120px
+    // rather than a percentage so it always clears a logo's own 80px height,
+    // whatever the section's is.
+    mask-image: linear-gradient(
+        to bottom,
+        transparent 0,
+        #000 120px,
+        #000 calc(100% - 120px),
+        transparent 100%
+    );
 }
 
 .stats-showcase-section__logo-col {
