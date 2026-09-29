@@ -165,7 +165,11 @@
     content: "";
     width: 16px;
     height: 16px;
-    background: var(--divider-main);
+    // The centre was white at 20%, which rendered grey inside a cyan ring.
+    // Sampling the design: the inner disc is the same cyan as the ring at
+    // roughly half strength (0.50 and 0.51 solving the green and blue
+    // channels against the frame's background), against 0.20 for the outer.
+    background: var(--bg-ghost-accent-2-strong);
     border-radius: 50%;
 }
 
