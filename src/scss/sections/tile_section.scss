@@ -95,6 +95,14 @@
     overflow: hidden;
     background: var(--bg-main-surface-2-light);
     border-radius: 16px;
+
+    // 32px on each side, on top of the card's 8px bezel and border, left a
+    // 358px card only 276px of usable width on a 390px screen. Phones only —
+    // by $small the cards are already full width, so 32px still reads fine
+    // on a tablet.
+    @media screen and (max-width: variables.$small) {
+        padding: 16px;
+    }
 }
 
 .tile-section__card-icon {
