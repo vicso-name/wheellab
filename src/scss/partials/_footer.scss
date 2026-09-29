@@ -4,27 +4,30 @@
 
 .footer {
   position: relative;
-  overflow: visible;
+  // Clipped. The design cuts the logomark off at the footer's own bottom edge
+  // instead of letting it hang past the end of the page, which also makes the
+  // margin that used to reserve room for that overhang unnecessary.
+  overflow: hidden;
   padding: 160px 0 220px;
-  // .footer__logomark bleeds min(588px, 45vw) * 0.2 below this element's own
-  // bottom edge (see below). Padding alone can't contain that — it just
-  // moves the reference edge the negative "bottom" offset is measured from
-  // — so margin (outside the containing block) reserves the page space the
-  // graphic actually needs, instead of it getting cut off by the page's end.
-  margin-bottom: calc(min(588px, 45vw) * 0.2);
 
   @media screen and (max-width: variables.$small) {
     padding: 120px 0;
-    margin-bottom: 0;
-    overflow: hidden;
   }
 }
 
 
 
+// Figma puts the glow in a box 117.9% of the footer wide, inset -9.6% left and
+// -8.3% right, anchored to the footer's top. Its height comes from the ratio,
+// not from the footer: at 2037x1124 the box matches the image's own 2269x1257,
+// so the streak is shown whole. Tying the height to the footer instead makes
+// the box taller than the image whenever the footer runs taller than the 842px
+// it is drawn at, and cover then crops the sides and drags the bright part of
+// the streak down out of frame.
 .footer__bg {
   position: absolute;
-  inset: 0 -9%;
+  inset: 0 -8.3% auto -9.6%;
+  aspect-ratio: 2037 / 1124;
   z-index: 0;
   pointer-events: none;
   overflow: visible;
@@ -37,7 +40,8 @@
   max-width: none;
   height: 100%;
   object-fit: cover;
-  object-position: 85% 75%;
+  // Figma fills the box with no transform, which centres the image.
+  object-position: center;
   filter: blur(128px);
 }
 
@@ -45,7 +49,8 @@
   position: absolute;
   z-index: 0;
   left: 50%;
-  bottom: calc(min(588px, 45vw) * -0.2);
+  // 16.1% of the mark's own height hangs below the footer in the design.
+  bottom: calc(min(588px, 45vw) * -0.16);
   width: min(588px, 45vw);
   max-width: none;
   transform: translateX(-50%);
