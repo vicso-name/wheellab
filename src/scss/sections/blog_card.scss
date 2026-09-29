@@ -85,8 +85,41 @@
   height: 40px;
   padding: 0 12px;
   color: var(--content-main-primary);
+  // Frosted. Figma gives the tag a white 10% fill at an 8px radius with no
+  // stroke at all, and a native Glass effect on top — the rim around the shape
+  // is part of that material, not a border. The REST API exposes the effect's
+  // type but none of its parameters, so it is approximated below. Insets
+  // throughout, so the tag keeps the 82x40 the component is drawn at.
   background: var(--bg-main-surface-2);
   border-radius: 8px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  // The bevel. Offset inset shadows would light a whole edge evenly, but the
+  // design runs the light around the shape: bright at the top left, gone by
+  // the top right corner, picked up again along the bottom right. That needs a
+  // gradient following the border, which only a masked ring can do — a
+  // gradient border-image ignores border-radius. The element paints its
+  // gradient, then a mask keeps the 1px padding band and cuts the middle out.
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    padding: 1px;
+    background: linear-gradient(
+      135deg,
+      var(--outline-glass-lit) 0%,
+      var(--outline-glass-fade) 42%,
+      var(--outline-glass-fade) 58%,
+      var(--outline-glass-shade) 100%
+    );
+    border-radius: inherit;
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
 
   @media screen and (max-width: variables.$small) {
     height: 32px;

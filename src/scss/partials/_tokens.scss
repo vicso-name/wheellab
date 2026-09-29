@@ -309,6 +309,14 @@
   --outline-accent-1: var(--color-primary-alpha-80);
   --outline-accent-2: var(--color-secondary-alpha-25);
   --outline-disabled: var(--color-white-alpha-5);
+  // The two sides of a frosted surface's bevel, lit from the top left.
+  // Measured off the design: the top and left edges sit ~64 luminance above
+  // the fill, the bottom and right ~46, which against a white-10% fill works
+  // out at roughly 33% and 23%.
+  --outline-glass-lit:   var(--color-white-alpha-35);
+  --outline-glass-shade: var(--color-white-alpha-25);
+  // Where the light runs out, at the top right and bottom left corners.
+  --outline-glass-fade:  var(--color-white-alpha-5);
   --outline-neutral:  var(--color-white-alpha-10);
   --overlay-primary: var(--color-alpha-dark-50);
   --font-family-display: 'Funnel Display', sans-serif;
