@@ -102,10 +102,15 @@
 
 .reviews-section__diamond {
     flex-shrink: 0;
-    width: 6px;
-    height: 6px;
+    // A 6px square rotated 45° spans 8.5px corner to corner while still only
+    // claiming a 6px box, so its points ate 1.24px off each side of the 8px
+    // gap and the divider sat 6.76px from the text. Same diamond at the same
+    // size, drawn with clip-path so the box matches what is on screen and the
+    // gap measures what the design asks for.
+    width: 8.5px;
+    height: 8.5px;
     background: var(--content-main-tertiary);
-    transform: rotate(45deg);
+    clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
 
     @media screen and (max-width: variables.$small) {
         display: none;
