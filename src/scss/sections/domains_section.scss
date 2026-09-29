@@ -174,9 +174,12 @@
     height: 40px;
     color: var(--content-solid-accent-2);
 
+    // Dropped from the compact layout, where it cost 40px of a 316px text row
+    // and only appeared on some cards: the featured card gives its info block
+    // flex: none and width: 100%, which pushes the arrow past the inner
+    // element's clipped edge, so that one never showed an arrow at all.
     @media screen and (max-width: variables.$medium) {
-        width: 24px;
-        height: 24px;
+        display: none;
     }
 }
 
