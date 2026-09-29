@@ -4,6 +4,26 @@ $use_custom     = (bool) get_field('use_custom_reviews');
 $custom_reviews = $use_custom ? (get_field('custom_reviews') ?: []) : [];
 $reviews        = $custom_reviews ?: (get_field('reviews', 'option') ?: []);
 
+$reviews = array_values(array_filter($reviews, static function ($review) {
+    return !empty($review['quote']);
+}));
+
+// Swiper 11's loop reorders the real slides instead of cloning them, so a
+// short list cannot fill a wide track: with three reviews the right-hand
+//336px of the section stayed empty at 1440 and new quotes slid in out of
+// nowhere. Repeating the set until there are enough slides gives the loop
+// something to work with — the viewer sees the same cycle either way.
+// Nine covers an ultra-wide track, where a 754px slide plus its 60px gap
+// leaves roughly four visible and the loop wants about twice that.
+// A local, not a const: the block can legitimately appear twice on one page,
+// and a file-scope const would warn on the second render.
+$min_slides = 9;
+
+$review_count  = count($reviews);
+$review_passes = ($review_count > 1 && $review_count < $min_slides)
+    ? (int) ceil($min_slides / $review_count)
+    : 1;
+
 $class  = 'reviews-section';
 $class .= !empty($block['className']) ? ' ' . $block['className']  : '';
 $class .= !empty($block['align'])     ? ' align' . $block['align'] : '';
@@ -21,11 +41,11 @@ $arrow_right_url = esc_url(wheellab_asset_url('assets/img/icons/arrow-right.svg'
     ?>
     <div class="reviews-section__swiper swiper">
         <div class="swiper-wrapper">
+            <?php for ($pass = 0; $pass < $review_passes; $pass++) : ?>
             <?php foreach ($reviews as $review) :
                 $quote       = $review['quote'] ?? '';
                 $author_name = $review['author_name'] ?? '';
                 $author_role = $review['author_role'] ?? '';
-                if (!$quote) continue;
             ?>
                 <div class="swiper-slide reviews-section__slide">
                     <img class="svg reviews-section__quote-icon" src="<?php echo $quote_icon_url; ?>" alt="">
@@ -49,6 +69,7 @@ $arrow_right_url = esc_url(wheellab_asset_url('assets/img/icons/arrow-right.svg'
                     <?php endif; ?>
                 </div>
             <?php endforeach; ?>
+            <?php endfor; ?>
         </div>
     </div>
 
