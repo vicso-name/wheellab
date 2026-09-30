@@ -13,15 +13,23 @@ $subscribe_enabled = (bool) get_field('subscribe_enabled', get_queried_object_id
 
         <?php if ($categories) : ?>
             <div class="blog-filter__chips" role="group" aria-label="<?php esc_attr_e('Filter articles by category', 'wheellab'); ?>">
-                <?php foreach ($categories as $category) : ?>
-                    <button
-                        type="button"
-                        class="blog-filter__chip body-s"
-                        aria-pressed="false"
-                        data-category="<?php echo esc_attr($category->slug); ?>"
-                    ><?php echo esc_html($category->name); ?></button>
-                <?php endforeach; ?>
-                <button type="button" class="blog-filter__clear body-s" hidden><?php esc_html_e('Clear All', 'wheellab'); ?></button>
+                <div class="blog-filter__chip-list">
+                    <?php foreach ($categories as $category) : ?>
+                        <button
+                            type="button"
+                            class="blog-filter__chip body-s"
+                            aria-pressed="false"
+                            data-category="<?php echo esc_attr($category->slug); ?>"
+                        ><?php echo esc_html($category->name); ?></button>
+                    <?php endforeach; ?>
+                </div>
+                <div class="blog-filter__reset" hidden>
+                    <span class="blog-filter__divider" aria-hidden="true"></span>
+                    <button type="button" class="blog-filter__clear body-s">
+                        <img src="<?php echo esc_url(wheellab_asset_url('assets/img/icons/reset-left-line.svg')); ?>" alt="" width="20" height="20">
+                        <span><?php esc_html_e('Reset filters', 'wheellab'); ?></span>
+                    </button>
+                </div>
             </div>
         <?php endif; ?>
 
