@@ -16,13 +16,11 @@ $footer_copyright    = get_field('copyright_text', 'option')     ?: '';
         <div class="footer__logomark" aria-hidden="true">
             <img class="svg" src="<?php echo esc_url(wheellab_asset_url('assets/img/footer/logomark.svg')); ?>" alt="">
         </div>
+        <a class="footer__wordmark" href="<?php echo esc_url(home_url('/')); ?>">
+            <img class="svg" src="<?php echo esc_url(wheellab_asset_url('assets/img/footer/wordmark.svg')); ?>" alt="<?php bloginfo('name'); ?>" width="406" height="59">
+        </a>
         <div class="container">
             <div class="footer-content">
-
-                <a class="footer__wordmark" href="<?php echo esc_url(home_url('/')); ?>">
-                    <img class="svg" src="<?php echo esc_url(wheellab_asset_url('assets/img/footer/wordmark.svg')); ?>" alt="<?php bloginfo('name'); ?>" width="406" height="59">
-                </a>
-
                 <div class="footer__card">
                     <div class="footer__card-inner">
 
