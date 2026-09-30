@@ -41,7 +41,24 @@ function initHeaderScrollHide(header) {
   const revealThreshold = 120;
   const scrollDelta = 5;
   let lastScrollY = window.scrollY;
+  let upwardDistance = 0;
   let ticking = false;
+
+  // The header floats over the article rather than pushing it down, so every
+  // reveal buries ~a header's worth of text. Revealing on the old 5px delta
+  // meant that nudging back a line to re-read it -- or a trackpad momentum
+  // bounce -- dropped the header straight onto that line. Require an upward
+  // scroll about as tall as the header itself, so the reveal reads as a
+  // deliberate "take me back to the nav" gesture instead of reading jitter.
+  let revealDistance = 90;
+  const measureRevealDistance = () => {
+    const token = parseFloat(
+      window.getComputedStyle(document.documentElement).getPropertyValue("--header-height")
+    );
+    if (token > 0) revealDistance = token;
+  };
+  measureRevealDistance();
+  window.addEventListener("resize", measureRevealDistance, { passive: true });
 
   const isHeaderInteractionOpen = () =>
     header.classList.contains("header--menu-open") ||
@@ -53,11 +70,16 @@ function initHeaderScrollHide(header) {
     const diff = currentScrollY - lastScrollY;
 
     if (isHeaderInteractionOpen() || currentScrollY <= revealThreshold) {
+      upwardDistance = 0;
       header.classList.remove("header--hidden");
     } else if (diff > scrollDelta) {
+      upwardDistance = 0;
       header.classList.add("header--hidden");
     } else if (diff < -scrollDelta) {
-      header.classList.remove("header--hidden");
+      upwardDistance -= diff;
+      if (upwardDistance >= revealDistance) {
+        header.classList.remove("header--hidden");
+      }
     }
 
     lastScrollY = currentScrollY;

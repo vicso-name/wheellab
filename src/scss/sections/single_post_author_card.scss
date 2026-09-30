@@ -1,5 +1,11 @@
 @use "../partials/variables";
 
+// Figma "Author card" component set (Device=Desktop / Device=Mobile):
+//   Center      vertical, gap 32 / 16, pad 40 / 16
+//     top       horizontal gap 32 (desktop) | vertical gap 16 (mobile)
+//     divider
+//     row       avatar 60 + content, gap 16
+//       content vertical, gap 12 / 16 -- name+role, short bio, socials
 .single-post-author {
   width: 100%;
   max-width: 1031px;
@@ -25,6 +31,19 @@
   @media screen and (max-width: variables.$small) {
     gap: 16px;
     padding: 16px;
+  }
+}
+
+// Post meta and taxonomy tags share the top row on desktop and stack on mobile.
+.single-post-author__top {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+
+  @media screen and (max-width: variables.$small) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
   }
 }
 
@@ -54,67 +73,6 @@
   border-top: 1px solid var(--divider-main);
 }
 
-.single-post-author__row {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-
-  @media screen and (max-width: variables.$small) {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-}
-
-.single-post-author__avatar {
-  flex-shrink: 0;
-  display: block;
-  width: 60px;
-  height: 60px;
-
-  img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 50%;
-  }
-}
-
-.single-post-author__content {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  min-width: 0;
-
-  @media screen and (max-width: variables.$small) {
-    width: 100%;
-  }
-}
-
-.single-post-author__details {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.single-post-author__name {
-  font-weight: var(--font-weight-bold);
-  font-size: 16px;
-  line-height: 24px;
-  color: var(--content-main-primary);
-  text-decoration: none;
-
-  &:hover {
-    color: var(--content-solid-accent-2);
-  }
-}
-
-.single-post-author__title {
-  font-size: 16px;
-  line-height: 24px;
-  color: var(--content-main-secondary);
-}
-
 .single-post-author__stats {
   display: flex;
   flex-wrap: wrap;
@@ -122,6 +80,9 @@
   gap: 8px 12px;
 
   @media screen and (max-width: variables.$small) {
+    gap: 8px 16px;
+
+    // The mobile variant sets the meta items apart by spacing alone.
     .single-post-author__diamond {
       display: none;
     }
@@ -151,15 +112,118 @@
   transform: rotate(45deg);
 }
 
-.single-post-author__socials {
+.single-post-author__row {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+
+  // A long job title used to squeeze the name into a narrow column beside it
+  // and leave the separator floating against three wrapped lines. On mobile the
+  // row becomes a grid instead: avatar next to name/position, then bio and
+  // socials full width underneath, so the title has the whole card to wrap in.
+  @media screen and (max-width: variables.$small) {
+    display: grid;
+    grid-template-columns: 60px minmax(0, 1fr);
+    align-items: center;
+    gap: 16px;
+  }
+}
+
+.single-post-author__avatar {
+  flex-shrink: 0;
+  display: block;
+  width: 60px;
+  height: 60px;
+
+  @media screen and (max-width: variables.$small) {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+}
+
+.single-post-author__content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+
+  // Dissolve the wrapper so __details, __bio and __socials become grid items of
+  // __row and can be placed on separate rows.
+  @media screen and (max-width: variables.$small) {
+    display: contents;
+  }
+}
+
+.single-post-author__details {
   display: flex;
   align-items: center;
   gap: 12px;
-  flex-shrink: 0;
-  margin-left: auto;
 
   @media screen and (max-width: variables.$small) {
-    margin-left: 0;
+    grid-column: 2;
+    grid-row: 1;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+
+    // Stacked name and position read as a pair on their own; the diamond only
+    // makes sense when they sit side by side.
+    .single-post-author__diamond {
+      display: none;
+    }
+  }
+}
+
+.single-post-author__name {
+  font-weight: var(--font-weight-bold);
+  font-size: 16px;
+  line-height: 24px;
+  color: var(--content-main-primary);
+  text-decoration: none;
+
+  &:hover {
+    color: var(--content-solid-accent-2);
+  }
+
+  // The mobile variant of the card specifies semibold for the name.
+  @media screen and (max-width: variables.$small) {
+    font-weight: var(--font-weight-semibold);
+  }
+}
+
+.single-post-author__title {
+  font-size: 16px;
+  line-height: 24px;
+  color: var(--content-main-secondary);
+}
+
+.single-post-author__bio {
+  margin: 0;
+  font-size: 16px;
+  line-height: 24px;
+  color: var(--content-main-secondary);
+
+  @media screen and (max-width: variables.$small) {
+    grid-column: 1 / -1;
+  }
+}
+
+.single-post-author__socials {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+
+  @media screen and (max-width: variables.$small) {
+    grid-column: 1 / -1;
   }
 }
 
@@ -167,8 +231,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   color: var(--content-solid-accent-2);
   transition: opacity var(--transition-fast);
 
@@ -178,6 +242,6 @@
 }
 
 .single-post-author__social-icon {
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
 }

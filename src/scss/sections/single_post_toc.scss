@@ -1,5 +1,17 @@
 @use "../partials/variables";
 
+// The shell holds the card's place in the flow. On desktop it is what sticks;
+// on mobile single_post_toc.js locks its height so the article below stays put
+// while the nav itself is pinned as a collapsed bar.
+.single-post-toc-shell {
+  position: sticky;
+  top: 24px;
+
+  @media screen and (max-width: variables.$medium) {
+    position: static;
+  }
+}
+
 .single-post-toc {
   display: flex;
   flex-direction: column;
@@ -7,12 +19,12 @@
   padding: 8px;
   background: var(--bg-main-surface-2);
   border-radius: 16px;
-  position: sticky;
-  top: 24px;
+}
 
-  @media screen and (max-width: variables.$medium) {
-    position: static;
-  }
+.single-post-toc__panel {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .single-post-toc__label {
@@ -51,5 +63,129 @@
     color: var(--content-main-primary);
     background: var(--bg-ghost-accent-2);
     border-radius: 8px;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Collapsed mobile bar
+// ---------------------------------------------------------------------------
+
+// Only ever shown while pinned, so desktop and no-JS mobile keep the plain card
+// as the single control.
+.single-post-toc__trigger {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-height: 56px;
+  padding: 8px 16px;
+  color: var(--content-main-primary);
+  text-align: left;
+  cursor: pointer;
+  background: none;
+  border: 0;
+  border-radius: 12px;
+
+  &:focus-visible {
+    outline: 2px solid var(--content-solid-accent-2);
+    outline-offset: 2px;
+  }
+}
+
+.single-post-toc__trigger-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.single-post-toc__trigger-label {
+  font-family: var(--font-family-body);
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--content-main-tertiary);
+}
+
+.single-post-toc__trigger-current {
+  overflow: hidden;
+  font-family: var(--font-family-body);
+  font-weight: var(--font-weight-bold);
+  font-size: 16px;
+  line-height: 24px;
+  color: var(--content-main-primary);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.single-post-toc__trigger-icon {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  // The icon set ships a right chevron only; point it down when closed.
+  transform: rotate(90deg);
+  transition: transform var(--transition-fast);
+}
+
+.single-post-toc.is-stuck {
+  position: fixed;
+  // Matches .single-post-body__container's 24px gutter.
+  right: 24px;
+  left: 24px;
+  // Under the header (999) -- the two never overlap, the bar moves out of its way.
+  z-index: 998;
+  padding: 0;
+  // The bar floats over body text, so it needs an opaque surface -- the card's
+  // 10% white let the paragraph behind it read straight through the bar.
+  background: var(--bg-main-surface-1);
+  border: 1px solid var(--outline-neutral);
+  box-shadow: 0 2px 24px 0 rgb(105 56 239 / 12%), 0 1px 2px 0 rgb(0 0 0 / 8%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  transition: top var(--transition-base) ease;
+
+  // Header hidden: sit in the gap it left behind.
+  top: var(--header-offset);
+
+  .single-post-toc__trigger {
+    display: flex;
+  }
+
+  .single-post-toc__panel {
+    display: none;
+  }
+}
+
+// Header on screen: ride just below it.
+.single-post-toc.is-stuck.is-below-header {
+  top: calc(var(--header-offset) + var(--header-height) + 8px);
+}
+
+.single-post-toc.is-stuck.is-open {
+  .single-post-toc__trigger-icon {
+    transform: rotate(-90deg);
+  }
+
+  .single-post-toc__panel {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    left: 0;
+    display: flex;
+    max-height: 60vh;
+    padding: 8px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    background: var(--bg-main-surface-1);
+    border: 1px solid var(--outline-neutral);
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgb(0 0 0 / 24%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .single-post-toc.is-stuck,
+  .single-post-toc__trigger-icon {
+    transition: none;
   }
 }

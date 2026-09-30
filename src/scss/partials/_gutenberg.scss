@@ -40,7 +40,6 @@ $text-blocks: 'p, h1, h2, h3, h4, h5, h6, ul, ol, blockquote, pre';
   margin-block: 40px 24px;
   color: var(--content-main-primary);
   font-family: var(--font-family-display);
-  scroll-margin-top: 140px;
 
   :where(a) {
     color: inherit;

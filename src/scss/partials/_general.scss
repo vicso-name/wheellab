@@ -11,6 +11,13 @@ html {
   line-height: var(--line-height-base);
   font-weight: var(--font-weight-regular);
   -webkit-tap-highlight-color: transparent;
+
+  // Keep every anchored scroll clear of the sticky header. This sits on the
+  // root scroller, so it covers native #hash jumps, the smooth scroll in
+  // general.js and focus-driven scrolling alike -- no per-target opt-in.
+  // Do not add `scroll-margin-top` to individual targets as well: the two
+  // offsets compound and the target lands twice as far down the page.
+  scroll-padding-top: var(--scroll-offset);
 }
 
 body {

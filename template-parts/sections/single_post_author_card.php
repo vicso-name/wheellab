@@ -21,6 +21,11 @@ $author_url   = $author_id ? get_author_posts_url($author_id) : '';
 $instagram    = $author_id ? get_field('social_instagram', 'user_' . $author_id) : null;
 $linkedin     = $author_id ? get_field('social_linkedin', 'user_' . $author_id) : null;
 
+// The card wants a short, two-line intro. Fall back to the account's built-in
+// Biographical Info, which the author page already renders, so a filled-in
+// profile shows something here without the editor writing a second copy.
+$author_bio = $author_id ? (get_field('short_bio', 'user_' . $author_id) ?: get_the_author_meta('description', $author_id)) : '';
+
 $photo_field = $author_id ? get_field('photo', 'user_' . $author_id) : null;
 $photo_url   = $photo_field['url'] ?? get_avatar_url($author_id, ['size' => 120]);
 $photo_alt   = $photo_field['alt'] ?? $author_name;
@@ -28,7 +33,7 @@ $photo_alt   = $photo_field['alt'] ?? $author_name;
 $reading_time = wheellab_reading_time($post_id);
 $views        = wheellab_get_post_views($post_id);
 
-$calendar_icon_url = esc_url(wheellab_asset_url('assets/img/icons/calendar.svg'));
+$calendar_icon_url  = esc_url(wheellab_asset_url('assets/img/icons/calendar.svg'));
 $clock_icon_url     = esc_url(wheellab_asset_url('assets/img/icons/clock.svg'));
 $eye_icon_url       = esc_url(wheellab_asset_url('assets/img/icons/eye.svg'));
 $instagram_icon_url = esc_url(wheellab_asset_url('assets/img/icons/instagram.svg'));
@@ -36,14 +41,44 @@ $linkedin_icon_url  = esc_url(wheellab_asset_url('assets/img/icons/linkedin.svg'
 ?>
 <div class="single-post-author">
     <div class="single-post-author__inner">
-        <?php if ($terms) : ?>
-            <div class="single-post-author__tags">
-                <?php foreach ($terms as $term) : ?>
-                    <a class="single-post-author__tag" href="<?php echo esc_url(get_term_link($term)); ?>"><?php echo esc_html($term->name); ?></a>
-                <?php endforeach; ?>
+        <div class="single-post-author__top">
+            <div class="single-post-author__stats">
+                <span class="single-post-author__stat">
+                    <img class="svg single-post-author__stat-icon" src="<?php echo $calendar_icon_url; ?>" alt="">
+                    <?php echo esc_html(get_the_date()); ?>
+                </span>
+                <span class="single-post-author__diamond" aria-hidden="true"></span>
+                <span class="single-post-author__stat">
+                    <img class="svg single-post-author__stat-icon" src="<?php echo $clock_icon_url; ?>" alt="">
+                    <?php
+                    printf(
+                        esc_html(_n('%d min', '%d min', $reading_time, 'wheellab')),
+                        (int) $reading_time
+                    );
+                    ?>
+                </span>
+                <span class="single-post-author__diamond" aria-hidden="true"></span>
+                <span class="single-post-author__stat">
+                    <img class="svg single-post-author__stat-icon" src="<?php echo $eye_icon_url; ?>" alt="">
+                    <?php
+                    printf(
+                        esc_html(_n('%s view', '%s views', $views, 'wheellab')),
+                        esc_html(number_format_i18n($views))
+                    );
+                    ?>
+                </span>
             </div>
-            <div class="single-post-author__divider"></div>
-        <?php endif; ?>
+
+            <?php if ($terms) : ?>
+                <div class="single-post-author__tags">
+                    <?php foreach ($terms as $term) : ?>
+                        <a class="single-post-author__tag" href="<?php echo esc_url(get_term_link($term)); ?>"><?php echo esc_html($term->name); ?></a>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
+        </div>
+
+        <div class="single-post-author__divider"></div>
 
         <div class="single-post-author__row">
             <?php if ($author_url) : ?>
@@ -70,61 +105,36 @@ $linkedin_icon_url  = esc_url(wheellab_asset_url('assets/img/icons/linkedin.svg'
                     <?php endif; ?>
                 </div>
 
-                <div class="single-post-author__stats">
-                    <span class="single-post-author__stat">
-                        <img class="svg single-post-author__stat-icon" src="<?php echo $calendar_icon_url; ?>" alt="">
-                        <?php echo esc_html(get_the_date()); ?>
-                    </span>
-                    <span class="single-post-author__diamond" aria-hidden="true"></span>
-                    <span class="single-post-author__stat">
-                        <img class="svg single-post-author__stat-icon" src="<?php echo $clock_icon_url; ?>" alt="">
-                        <?php
-                        printf(
+                <?php if ($author_bio) : ?>
+                    <p class="single-post-author__bio"><?php echo nl2br(esc_html($author_bio)); ?></p>
+                <?php endif; ?>
 
-                            esc_html(_n('%d min', '%d min', $reading_time, 'wheellab')),
-                            (int) $reading_time
-                        );
-                        ?>
-                    </span>
-                    <span class="single-post-author__diamond" aria-hidden="true"></span>
-                    <span class="single-post-author__stat">
-                        <img class="svg single-post-author__stat-icon" src="<?php echo $eye_icon_url; ?>" alt="">
-                        <?php
-                        printf(
+                <?php if (!empty($instagram['url']) || !empty($linkedin['url'])) : ?>
+                    <div class="single-post-author__socials">
+                        <?php if (!empty($instagram['url'])) : ?>
+                            <a
+                                class="single-post-author__social"
+                                href="<?php echo esc_url($instagram['url']); ?>"
+                                <?php echo !empty($instagram['target']) ? 'target="_blank" rel="noopener"' : ''; ?>
+                                aria-label="<?php echo esc_attr($instagram['title'] ?: __('Instagram', 'wheellab')); ?>"
+                            >
+                                <img class="svg single-post-author__social-icon" src="<?php echo $instagram_icon_url; ?>" alt="">
+                            </a>
+                        <?php endif; ?>
 
-                            esc_html(_n('%s view', '%s views', $views, 'wheellab')),
-                            esc_html(number_format_i18n($views))
-                        );
-                        ?>
-                    </span>
-                </div>
+                        <?php if (!empty($linkedin['url'])) : ?>
+                            <a
+                                class="single-post-author__social"
+                                href="<?php echo esc_url($linkedin['url']); ?>"
+                                <?php echo !empty($linkedin['target']) ? 'target="_blank" rel="noopener"' : ''; ?>
+                                aria-label="<?php echo esc_attr($linkedin['title'] ?: __('LinkedIn', 'wheellab')); ?>"
+                            >
+                                <img class="svg single-post-author__social-icon" src="<?php echo $linkedin_icon_url; ?>" alt="">
+                            </a>
+                        <?php endif; ?>
+                    </div>
+                <?php endif; ?>
             </div>
-
-            <?php if (!empty($instagram['url']) || !empty($linkedin['url'])) : ?>
-                <div class="single-post-author__socials">
-                    <?php if (!empty($instagram['url'])) : ?>
-                        <a
-                            class="single-post-author__social"
-                            href="<?php echo esc_url($instagram['url']); ?>"
-                            <?php echo !empty($instagram['target']) ? 'target="_blank" rel="noopener"' : ''; ?>
-                            aria-label="<?php echo esc_attr($instagram['title'] ?: __('Instagram', 'wheellab')); ?>"
-                        >
-                            <img class="svg single-post-author__social-icon" src="<?php echo $instagram_icon_url; ?>" alt="">
-                        </a>
-                    <?php endif; ?>
-
-                    <?php if (!empty($linkedin['url'])) : ?>
-                        <a
-                            class="single-post-author__social"
-                            href="<?php echo esc_url($linkedin['url']); ?>"
-                            <?php echo !empty($linkedin['target']) ? 'target="_blank" rel="noopener"' : ''; ?>
-                            aria-label="<?php echo esc_attr($linkedin['title'] ?: __('LinkedIn', 'wheellab')); ?>"
-                        >
-                            <img class="svg single-post-author__social-icon" src="<?php echo $linkedin_icon_url; ?>" alt="">
-                        </a>
-                    <?php endif; ?>
-                </div>
-            <?php endif; ?>
         </div>
     </div>
 </div>

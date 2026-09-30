@@ -2,7 +2,7 @@
 
 .header {
   position: sticky;
-  top: 16px;
+  top: var(--header-offset);
   z-index: 999;
   isolation: isolate;
   transition: transform var(--transition-base) ease;
@@ -10,10 +10,6 @@
   &.is-hidden-for-stats-showcase,
   &.header--hidden {
     transform: translateY(-120%);
-  }
-
-  @media screen and (max-width: variables.$small) {
-    top: 12px;
   }
 
   // Match the 1568px Figma header inside the 1728px desktop frame.

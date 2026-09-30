@@ -389,10 +389,25 @@
   // this in step with _header.scss if either of those changes.
   --header-height: 98px;
 
+  // The header's inset from the top of the viewport (its `top` in _header.scss).
+  // Kept here so the sticky offset and the scroll offset below cannot drift.
+  --header-offset: 16px;
+
   @media screen and (max-width: variables.$small) {
     --header-height: 74px;
+    --header-offset: 12px;
   }
 
+  // Where an anchored scroll should land: clear of the header, plus breathing
+  // room. Applied once as `scroll-padding-top` on the root scroller (see
+  // _general.scss) rather than as per-element `scroll-margin-top`, so every
+  // target is covered -- article headings, #contact, the skip link -- and the
+  // value stays tied to the header's real height.
+  // Height of the collapsed mobile TOC bar when it is pinned; set by
+  // single_post_toc.js and 0 the rest of the time, so anchored scrolls clear
+  // the bar as well as the header.
+  --toc-offset: 0px;
+  --scroll-offset: calc(var(--header-offset) + var(--header-height) + var(--toc-offset) + 24px);
   --container-max-width: 1568px;
   --container-padding:    24px;
   --section-padding-y:    60px;

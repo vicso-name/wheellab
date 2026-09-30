@@ -92,15 +92,12 @@
     margin-bottom: 0;
   }
 
+  // Clearance for the sticky header now comes from `scroll-padding-top` on
+  // the root scroller (_general.scss), which also covers h3s and #contact.
   :where(h2) {
     margin-top: 64px;
     margin-bottom: 24px;
     color: var(--content-main-primary);
-    scroll-margin-top: 140px;
-
-    @media screen and (max-width: variables.$small) {
-      scroll-margin-top: 110px;
-    }
   }
 
   > :where(h2:first-child) {
