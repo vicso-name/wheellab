@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Template Name: Blog
+ */
+
 get_header();
 
 get_template_part('template-parts/sections/blog_hero');
