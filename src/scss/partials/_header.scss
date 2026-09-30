@@ -16,12 +16,17 @@
     top: 12px;
   }
 
-  // Positioning context for .header__search, so it overlays page content
-  // below (as position: absolute) instead of growing the sticky header's
-  // own box and pushing everything below it down when toggled open.
+  // Match the 1568px Figma header inside the 1728px desktop frame.
   > .container {
     position: relative;
+    max-width: 1616px;
   }
+}
+
+.header--search-open .header__bar {
+  padding: 7px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .header__bar {
@@ -35,7 +40,7 @@
   border: 1px solid var(--outline-neutral);
   border-radius: 20px;
   box-shadow: 0 2px 24px 0 rgb(105 56 239 / 12%), 0 1px 2px 0 rgb(0 0 0 / 8%);
-  transition: background-color var(--transition-fast);
+  transition: background-color 300ms ease;
 
   .header--mega-open & {
     background: var(--bg-header-mega-open);
@@ -73,6 +78,10 @@
   img, svg {
     width: auto;
     height: 24px;
+
+    @media screen and (width >= calc(variables.$medium + 1px)) {
+      height: 30px;
+    }
   }
 }
 
@@ -118,6 +127,7 @@
 }
 
 .header__nav-link {
+  position: relative;
   display: flex;
   align-items: center;
   height: 80px;
@@ -131,6 +141,20 @@
 
   &:hover {
     color: var(--content-main-primary);
+  }
+}
+
+.header__nav-item.is-current .header__nav-link {
+  color: var(--content-main-primary);
+
+  &::after {
+    position: absolute;
+    top: 54px;
+    right: 0;
+    left: 0;
+    height: 2px;
+    background: var(--content-solid-accent);
+    content: "";
   }
 }
 
@@ -458,47 +482,8 @@
 }
 
 .header__search {
-  position: absolute;
-  top: 100%;
-  // Same reasoning as .header__mega above: offsets resolve against
-  // .container's padding edge, so inset by its own horizontal padding to
-  // match .header__bar's width instead of the wider container box.
-  left: 24px;
-  right: 24px;
-  margin-top: 12px;
-  padding: 16px 24px;
-  background: var(--bg-main-surface-2-light);
-  border: 1px solid var(--outline-neutral);
-  border-radius: 20px;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-
   &[hidden] {
     display: none;
-  }
-
-  .search-form {
-    display: flex;
-    gap: 8px;
-  }
-
-  input[type="search"] {
-    flex: 1 0 0;
-    min-width: 0;
-    padding: 12px 16px;
-    color: var(--content-main-primary);
-    background: var(--bg-main-surface-2);
-    border: 1px solid var(--outline-neutral);
-    border-radius: 12px;
-  }
-
-  button[type="submit"] {
-    padding: 12px 24px;
-    color: var(--label-main);
-    background: var(--bg-solid-accent);
-    border: 0;
-    border-radius: 12px;
-    cursor: pointer;
   }
 }
 
@@ -620,13 +605,18 @@
   padding: 8px 16px;
   color: var(--content-main-primary);
   text-align: left;
-  background: var(--mega-color);
+  background: none;
   border: 0;
   border-radius: 16px;
   cursor: pointer;
   font-family: var(--font-family-body);
   font-size: var(--text-body-s-size);
   line-height: var(--text-body-s-line-height);
+  transition: background-color var(--transition-fast);
+
+  &.is-active {
+    background: var(--mega-color);
+  }
 }
 
 .header__accordion-cards {

@@ -4,11 +4,10 @@ get_header();
 
 $search_query = get_search_query();
 ?>
-<main id="main" class="site-search-page">
+<div class="site-search-page">
     <section class="site-search-page__section">
         <div class="container">
             <div class="site-search-page__header">
-                <p class="site-search-page__eyebrow button-text-m"><?php esc_html_e('Search', 'wheellab'); ?></p>
                 <h1 class="site-search-page__title">
                     <?php
                     printf(
@@ -17,20 +16,21 @@ $search_query = get_search_query();
                     );
                     ?>
                 </h1>
-                <?php if (have_posts()) : ?>
-                    <p class="site-search-page__count body-m">
-                        <?php
-                        global $wp_query;
-                        printf(
-                            esc_html(_n('%s result found', '%s results found', (int) $wp_query->found_posts, 'wheellab')),
-                            number_format_i18n((int) $wp_query->found_posts)
-                        );
-                        ?>
-                    </p>
-                <?php endif; ?>
             </div>
 
             <?php if (have_posts()) : ?>
+                <p class="site-search-page__count">
+                    <strong>
+                        <?php
+                        global $wp_query;
+                        printf(
+                            esc_html(_n('%s result', '%s results', (int) $wp_query->found_posts, 'wheellab')),
+                            number_format_i18n((int) $wp_query->found_posts)
+                        );
+                        ?>
+                    </strong>
+                    <span><?php esc_html_e('found', 'wheellab'); ?></span>
+                </p>
                 <div class="site-search-page__grid">
                     <?php while (have_posts()) : the_post(); ?>
                         <?php get_template_part('template-parts/search/result-card', null, ['context' => 'page']); ?>
@@ -53,6 +53,6 @@ $search_query = get_search_query();
             <?php endif; ?>
         </div>
     </section>
-</main>
+</div>
 <?php
 get_footer();

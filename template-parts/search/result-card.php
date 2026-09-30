@@ -4,7 +4,6 @@ defined('ABSPATH') || exit;
 
 $post_id = get_the_ID();
 $context = isset($args['context']) ? sanitize_html_class((string) $args['context']) : 'page';
-$excerpt = wheellab_search_result_excerpt($post_id);
 $type    = wheellab_search_result_type_label($post_id);
 ?>
 <article class="site-search-card site-search-card--<?php echo esc_attr($context); ?>">
@@ -23,16 +22,11 @@ $type    = wheellab_search_result_type_label($post_id);
     </div>
 
     <div class="site-search-card__content">
-        <span class="site-search-card__type button-text-s"><?php echo esc_html($type); ?></span>
-        <h3 class="site-search-card__title h4"><?php the_title(); ?></h3>
-        <?php if ($excerpt) : ?>
-            <p class="site-search-card__excerpt body-s"><?php echo esc_html($excerpt); ?></p>
-        <?php endif; ?>
+        <span class="site-search-card__type button-text-m"><?php echo esc_html($type); ?></span>
+        <h3 class="site-search-card__title <?php echo $context === 'page' ? 'h3' : 'h4'; ?>"><?php the_title(); ?></h3>
     </div>
 
     <span class="site-search-card__arrow" aria-hidden="true">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M8 16L16 8M10 8H16V14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
+        <img src="<?php echo esc_url(wheellab_asset_url('assets/img/icons/search-result-arrow.svg')); ?>" alt="" width="24" height="24">
     </span>
 </article>

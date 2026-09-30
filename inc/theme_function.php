@@ -216,6 +216,10 @@ function wheellab_get_primary_menu_items(): array {
         return [];
     }
 
+    // wp_get_nav_menu_items() does not mark the current page by itself;
+    // wp_nav_menu() normally applies these classes before rendering.
+    _wp_menu_item_classes_by_context( $items );
+
     $items = array_filter( $items, static fn( $item ) => (int) $item->menu_item_parent === 0 );
     usort( $items, static fn( $a, $b ) => (int) $a->menu_order <=> (int) $b->menu_order );
 
@@ -228,6 +232,24 @@ function wheellab_get_menu_item_mega_menu( int $menu_item_id ): array {
     }
 
     return get_field( 'mega_menu_categories', $menu_item_id ) ?: [];
+}
+
+function wheellab_mega_menu_has_current_page( array $categories ): bool {
+    if ( ! is_singular() ) {
+        return false;
+    }
+
+    $current_path = untrailingslashit( (string) wp_parse_url( get_permalink( get_queried_object_id() ), PHP_URL_PATH ) );
+    foreach ( $categories as $category ) {
+        foreach ( $category['cards'] ?? [] as $card ) {
+            $url = $card['link']['url'] ?? '';
+            if ( $url && untrailingslashit( (string) wp_parse_url( $url, PHP_URL_PATH ) ) === $current_path ) {
+                return true;
+            }
+        }
+    }
+
+    return false;
 }
 
 function wheellab_inline_svg( int $attachment_id, string $class = '' ): string {

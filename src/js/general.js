@@ -45,7 +45,8 @@ function initHeaderScrollHide(header) {
 
   const isHeaderInteractionOpen = () =>
     header.classList.contains("header--menu-open") ||
-    header.classList.contains("header--mega-open");
+    header.classList.contains("header--mega-open") ||
+    header.classList.contains("header--search-open");
 
   const update = () => {
     const currentScrollY = window.scrollY;
@@ -120,6 +121,7 @@ function initSearchToggle(header) {
   if (!toggle || !panel) return;
 
   toggle.addEventListener("click", () => {
+    if (panel.hidden) closeAllMegaMenus(header);
     setSearchOpen(toggle, panel, panel.hidden);
   });
 }
@@ -127,6 +129,7 @@ function initSearchToggle(header) {
 function setSearchOpen(toggle, panel, open) {
   panel.hidden = !open;
   toggle.setAttribute("aria-expanded", String(open));
+  panel.closest(".header")?.classList.toggle("header--search-open", open);
 
   if (open) {
     const input = panel.querySelector('input[type="search"]');
@@ -147,7 +150,7 @@ function initLiveSearch(header) {
   if (!input || !results || !items || !status || !allLink) return;
 
   const minLength = Number(config.minLength) || 2;
-  const resultLimit = Number(config.resultLimit) || 8;
+  const resultLimit = Number(config.resultLimit) || 6;
   let timer = null;
   let controller = null;
   let requestSequence = 0;
