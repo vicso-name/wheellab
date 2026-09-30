@@ -5,5 +5,16 @@
 
     @media screen and (max-width: variables.$small) {
         padding-bottom: 40px;
+
+        // "View more" spans the section on a narrow screen. The button is the
+        // shared .btn-gradient, whose gradient lives on the inner span, so the
+        // span has to stretch too or only the 4px frame would widen.
+        .blog-filter__load-more .btn-gradient {
+            width: 100%;
+
+            .btn-gradient__inner {
+                flex: 1;
+            }
+        }
     }
 }

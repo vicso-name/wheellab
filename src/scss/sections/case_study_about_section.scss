@@ -37,16 +37,21 @@
     }
 }
 
+// Figma puts a 1000px text column next to the logo inside a 1568px row, i.e.
+// roughly a 65/35 split. Pinned at 1000px with shrink disabled, the text ate
+// the whole row below ~1100px and the logo collapsed to zero width and slid
+// past the row's edge. The share keeps the same proportion and leaves the
+// logo its space at every width.
 .case-study-about-section__text {
     display: flex;
     flex-direction: column;
     gap: 16px;
-    width: 1000px;
-    max-width: 100%;
-    flex-shrink: 0;
+    flex: 0 1 65%;
+    min-width: 0;
 
     @media screen and (max-width: variables.$medium) {
         order: 2;
+        flex: 1 1 auto;
     }
 }
 
@@ -68,7 +73,7 @@
 
 .case-study-about-section__logo {
     display: flex;
-    flex: 1 0 0;
+    flex: 1 1 0;
     align-self: stretch;
     align-items: center;
     justify-content: center;
@@ -116,28 +121,31 @@
         gap: 16px;
     }
 
+    // These held the design's 905/638px widths out of a 1568px row, but with
+    // `flex: none` they could not give any of it back. Between 577px and
+    // ~1400px the sibling card was squeezed to a few dozen pixels and its
+    // contents spilled out. Stated as a share of the row, the same proportions
+    // hold on a wide screen and both cards shrink together on a narrow one.
     &:nth-child(1) > .case-study-about-section__challenge:first-child:not(:only-child) {
-        flex: none;
-        width: 905px;
+        flex: 0 1 58%;
 
         @media screen and (max-width: variables.$small) {
-            width: auto;
+            flex: 1 1 auto;
         }
     }
 
     &:nth-child(2) > .case-study-about-section__challenge:first-child:not(:only-child) {
-        flex: none;
-        width: 638px;
+        flex: 0 1 41%;
 
         @media screen and (max-width: variables.$small) {
-            width: auto;
+            flex: 1 1 auto;
         }
     }
 }
 
 .case-study-about-section__challenge {
     display: flex;
-    flex: 1 0 0;
+    flex: 1 1 0;
     min-width: 0;
     padding: 8px;
     background: var(--bg-main-surface-2);

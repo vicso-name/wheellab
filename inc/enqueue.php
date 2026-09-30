@@ -196,6 +196,14 @@ add_action('wp_enqueue_scripts', function () {
             ['btf-main-styles', 'btf-blog-card-styles'],
             wheellab_asset_ver('build/css/sections/blog_filter.min.css')
         );
+        // The author listing reuses the blog filter's grid and load-more markup
+        // but has its own section styles on top, so it loads after that file.
+        wp_enqueue_style(
+            'btf-author-posts-styles',
+            wheellab_asset_url('build/css/sections/author_posts.min.css'),
+            ['btf-main-styles', 'btf-blog-filter-styles'],
+            wheellab_asset_ver('build/css/sections/author_posts.min.css')
+        );
         wp_enqueue_style(
             'btf-reviews-section-styles',
             wheellab_asset_url('build/css/sections/reviews_section.min.css'),
