@@ -83,9 +83,15 @@ $clarity_project_id = get_field('clarity_project_id', 'option') ?: '';
                                 <?php foreach ($primary_items as $item) :
                                     $categories  = wheellab_get_menu_item_mega_menu($item->ID);
                                     $has_mega    = (bool) $categories;
+                                    $is_current  = (bool) array_intersect(
+                                        ['current-menu-item', 'current-menu-parent', 'current-menu-ancestor', 'current_page_item', 'current_page_parent', 'current_page_ancestor'],
+                                        (array) $item->classes
+                                    ) || ($has_mega && wheellab_mega_menu_has_current_page($categories));
+                                    $is_current_page = in_array('current-menu-item', (array) $item->classes, true)
+                                        || in_array('current_page_item', (array) $item->classes, true);
                                     $item_target = $item->target ? ' target="' . esc_attr($item->target) . '" rel="noopener"' : '';
                                 ?>
-                                    <li class="header__nav-item<?php echo $has_mega ? ' header__nav-item--mega' : ''; ?>">
+                                    <li class="header__nav-item<?php echo $has_mega ? ' header__nav-item--mega' : ''; ?><?php echo $is_current ? ' is-current' : ''; ?>">
                                         <?php if ($has_mega) : ?>
                                             <button
                                                 type="button"
@@ -95,7 +101,7 @@ $clarity_project_id = get_field('clarity_project_id', 'option') ?: '';
                                                 aria-controls="<?php echo esc_attr('mega-' . $item->ID); ?>"
                                             ><?php echo esc_html($item->title); ?></button>
                                         <?php else : ?>
-                                            <a class="header__nav-link header-item" href="<?php echo esc_url($item->url); ?>"<?php echo $item_target; ?>>
+                                            <a class="header__nav-link header-item" href="<?php echo esc_url($item->url); ?>"<?php echo $item_target; ?><?php echo $is_current_page ? ' aria-current="page"' : ''; ?>>
                                                 <?php echo esc_html($item->title); ?>
                                             </a>
                                         <?php endif; ?>
@@ -200,10 +206,9 @@ $clarity_project_id = get_field('clarity_project_id', 'option') ?: '';
                         </div>
                     </div>
                 <?php endforeach; ?>
-                </div>
-
                 <div class="header__search" id="header-search" hidden>
                     <?php get_search_form(); ?>
+                </div>
                 </div>
             </div>
 

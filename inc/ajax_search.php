@@ -2,8 +2,9 @@
 
 defined('ABSPATH') || exit;
 
-const WHEELLAB_SEARCH_AJAX_LIMIT = 8;
-const WHEELLAB_SEARCH_PAGE_LIMIT = 12;
+const WHEELLAB_SEARCH_AJAX_LIMIT = 6;
+const WHEELLAB_SEARCH_PAGE_LIMIT = 18;
+const WHEELLAB_SEARCH_MOBILE_PAGE_LIMIT = 10;
 const WHEELLAB_SEARCH_MIN_LENGTH = 2;
 
 /**
@@ -34,31 +35,6 @@ function wheellab_search_result_type_label(int $post_id): string {
 }
 
 /**
- * Prefer the editorial short description on Service and Case Study items,
- * then fall back to the native excerpt/content for other searchable content.
- */
-function wheellab_search_result_excerpt(int $post_id): string {
-    $post_type = get_post_type($post_id);
-    $text      = '';
-
-    if (in_array($post_type, ['service', 'case_study'], true) && function_exists('get_field')) {
-        $text = (string) (get_field('description', $post_id) ?: '');
-    }
-
-    if ($text === '') {
-        $post = get_post($post_id);
-        if ($post) {
-            $text = $post->post_excerpt ?: $post->post_content;
-        }
-    }
-
-    $text = wp_strip_all_tags(strip_shortcodes($text));
-    $text = preg_replace('/\s+/', ' ', $text) ?: '';
-
-    return wp_trim_words(trim($text), 24, '…');
-}
-
-/**
  * Keep the non-JS search results page site-wide too, not posts-only.
  */
 add_action('pre_get_posts', function (WP_Query $query): void {
@@ -68,7 +44,9 @@ add_action('pre_get_posts', function (WP_Query $query): void {
 
     $query->set('post_type', wheellab_search_post_types());
     $query->set('post_status', 'publish');
-    $query->set('posts_per_page', WHEELLAB_SEARCH_PAGE_LIMIT);
+    $query->set('posts_per_page', wp_is_mobile()
+        ? WHEELLAB_SEARCH_MOBILE_PAGE_LIMIT
+        : WHEELLAB_SEARCH_PAGE_LIMIT);
     $query->set('ignore_sticky_posts', true);
 });
 
