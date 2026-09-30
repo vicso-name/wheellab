@@ -105,10 +105,6 @@ $mobile: 1024px;
         gap: 24px;
     }
 
-    .solutions-section__slide {
-        width: 100%;
-    }
-
     .solutions-section__nav-group {
         display: none;
     }
@@ -120,6 +116,10 @@ $mobile: 1024px;
 
     @media screen and (max-width: $mobile) {
         width: calc(100vw - 88px);
+    }
+
+    @media screen and (max-width: variables.$medium) {
+        width: 100%;
     }
 }
 

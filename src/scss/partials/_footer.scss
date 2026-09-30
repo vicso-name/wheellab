@@ -4,9 +4,6 @@
 
 .footer {
   position: relative;
-  // Clipped. The design cuts the logomark off at the footer's own bottom edge
-  // instead of letting it hang past the end of the page, which also makes the
-  // margin that used to reserve room for that overhang unnecessary.
   overflow: hidden;
   padding: 160px 0 220px;
 
@@ -15,15 +12,35 @@
   }
 }
 
+.footer::before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 1;
+  height: 100px;
+  background: linear-gradient(
+    to bottom,
+    var(--bg-main-background) 0%,
+    rgb(4 5 36 / 85%) 12%,
+    rgb(4 5 36 / 0%) 100%
+  );
+  pointer-events: none;
+  content: "";
+}
+
+.footer > .container {
+  max-width: 1728px;
+  padding-inline: clamp(24px, 4.63vw, 80px);
+
+  @media screen and (max-width: variables.$small) {
+    padding-inline: 16px;
+  }
+}
 
 
-// Figma puts the glow in a box 117.9% of the footer wide, inset -9.6% left and
-// -8.3% right, anchored to the footer's top. Its height comes from the ratio,
-// not from the footer: at 2037x1124 the box matches the image's own 2269x1257,
-// so the streak is shown whole. Tying the height to the footer instead makes
-// the box taller than the image whenever the footer runs taller than the 842px
-// it is drawn at, and cover then crops the sides and drags the bright part of
-// the streak down out of frame.
+
+// The image is anchored to the footer's top; the footer clips its lower overhang.
 .footer__bg {
   position: absolute;
   inset: 0 -8.3% auto -9.6%;
@@ -42,30 +59,35 @@
   object-fit: cover;
   // Figma fills the box with no transform, which centres the image.
   object-position: center;
-  filter: blur(128px);
+  filter: blur(64px);
 }
 
 .footer__logomark {
   position: absolute;
   z-index: 0;
+  top: 351.24px;
   left: 50%;
-  // 16.1% of the mark's own height hangs below the footer in the design.
-  bottom: calc(min(588px, 45vw) * -0.16);
   width: min(588px, 45vw);
+  aspect-ratio: 588 / 585;
   max-width: none;
   transform: translateX(-50%);
   pointer-events: none;
 
-  img {
+  img, svg {
+    position: absolute;
     display: block;
-    width: 100%;
-    height: auto;
+    top: -0.2564%;
+    left: 0.2551%;
+    width: 99.4898%;
+    max-width: none;
+    height: 100.5128%;
+    transform: rotate(90deg);
   }
 
   @media screen and (max-width: variables.$small) {
+    top: auto;
     bottom: calc(min(313px, 82vw) * -0.2);
     width: min(313px, 82vw);
-    transform: translateX(-50%);
   }
 }
 
@@ -74,41 +96,40 @@
 .footer-content {
   position: relative;
   z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 80px;
 }
 
 .footer__wordmark {
+  position: absolute;
+  z-index: 2;
+  top: 160px;
+  left: calc(50% + 8.21px);
   display: block;
+  transform: translate(-50%, -100%);
 
-  // Fallback for browsers without flexbox gap support, so the wordmark
-  // never ends up flush against .footer__card below it.
-  @supports not (gap: 1px) {
-    margin-bottom: 80px;
-  }
-
-  img {
+  img, svg {
     display: block;
     width: min(406px, 55vw);
     height: auto;
-    margin: 0 auto;
 
     @media screen and (max-width: variables.$small) {
       width: min(248px, 63vw);
     }
   }
+
+  @media screen and (max-width: variables.$small) {
+    top: 120px;
+    left: 50%;
+  }
 }
 
 .footer__card {
   width: 100%;
-  padding: 8px;
+  padding: 7px;
   background: var(--bg-main-surface-2);
   border: 1px solid var(--outline-neutral);
   border-radius: 20px;
-  backdrop-filter: blur(200px);
-  -webkit-backdrop-filter: blur(200px);
+  backdrop-filter: blur(100px);
+  -webkit-backdrop-filter: blur(100px);
 
   @media screen and (max-width: variables.$small) {
     padding: 4px;
@@ -163,9 +184,19 @@
 }
 
 .footer__divider {
+  position: relative;
   width: 100%;
-  height: 1px;
-  background: var(--color-white-alpha-10);
+  height: 0;
+
+  &::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--color-white-alpha-10);
+    content: "";
+  }
 }
 
 .footer__bottom {
@@ -229,14 +260,14 @@
 
 .footer__clutch {
   display: inline-flex;
-  padding: 12px 14px;
-  background: var(--bg-main-surface-2);
-  border-radius: 12px;
+  width: 166px;
+  height: 54px;
+  flex-shrink: 0;
 
   img {
     display: block;
-    width: auto;
-    height: 30px;
+    width: 100%;
+    height: 100%;
   }
 }
 

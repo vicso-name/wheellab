@@ -26,7 +26,7 @@ function initSolutionsSwiper(el) {
     // longer matches — otherwise touch dragging and the arrow keys would still
     // be translating a wrapper that has nothing to scroll.
     breakpoints: {
-      0: { enabled: false },
+      0: { enabled: false, spaceBetween: 0 },
       769: { enabled: true },
     },
     navigation: section
