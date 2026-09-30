@@ -21,6 +21,7 @@ function initBlogFilter() {
   const loadMoreBtn = loadMoreWrap ? loadMoreWrap.querySelector("button") : null;
   const chips = section.querySelectorAll(".blog-filter__chip");
   const clearBtn = section.querySelector(".blog-filter__clear");
+  const resetGroup = section.querySelector(".blog-filter__reset");
   if (!grid) return;
 
   // Guards against out-of-order responses: if the user clicks two chips in
@@ -34,7 +35,7 @@ function initBlogFilter() {
       .map((chip) => chip.dataset.category);
 
   const updateClearVisibility = () => {
-    if (clearBtn) clearBtn.hidden = getActiveCategories().length === 0;
+    if (resetGroup) resetGroup.hidden = getActiveCategories().length === 0;
   };
 
   const runFilterQuery = () => {
@@ -58,7 +59,7 @@ function initBlogFilter() {
         chip.classList.remove("is-active");
         chip.setAttribute("aria-pressed", "false");
       });
-      clearBtn.hidden = true;
+      if (resetGroup) resetGroup.hidden = true;
 
       runFilterQuery();
     });
