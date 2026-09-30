@@ -173,8 +173,35 @@ $text-blocks: 'p, h1, h2, h3, h4, h5, h6, ul, ol, blockquote, pre';
   }
 }
 
+#{$content-root} > figure.wp-block-gallery {
+  margin-block: 24px;
+
+  img {
+    border-radius: 16px;
+  }
+
+  figcaption {
+    margin-block-start: 12px;
+    color: var(--content-main-secondary);
+    font-size: var(--text-body-s-size);
+    line-height: var(--text-body-s-line-height);
+    text-align: center;
+  }
+
+  &.alignfull {
+    margin-block: 0;
+
+    img {
+      border-radius: 0;
+    }
+  }
+}
+
 // Match the section container gutters without constraining dynamic sections.
-main > :is(#{$text-blocks}, .wp-block-table, .wp-block-group, .wp-block-columns, .wp-block-image) {
+// Media blocks belong here too: a gallery, embed or video dropped straight
+// into a page has no container of its own, so leaving it out of this list
+// let it run edge to edge while the paragraph above it kept its gutters.
+main > :is(#{$text-blocks}, .wp-block-table, .wp-block-group, .wp-block-columns, .wp-block-image, .wp-block-gallery, .wp-block-embed, .wp-block-video) {
   width: calc(100% - 48px);
   max-width: calc(var(--container-max-width) - 48px);
   margin-inline: auto;
