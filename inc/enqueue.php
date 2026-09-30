@@ -301,6 +301,10 @@ add_action('wp_enqueue_scripts', function () {
             'nonce'          => wp_create_nonce('wheellab_rate_post'),
             'personSingular' => __('%s person rated', 'wheellab'),
             'personPlural'   => __('%s people rated', 'wheellab'),
+            'feedbackAdded'  => __('Thank you for rating!', 'wheellab'),
+            'feedbackChanged'=> __('Your rating was changed.', 'wheellab'),
+            'feedbackCancelled' => __('Rating was cancelled.', 'wheellab'),
+            'feedbackError'  => __('Could not save your rating. Please try again.', 'wheellab'),
         ]);
         wp_enqueue_script(
             'btf-single-post-related-script',
@@ -355,4 +359,3 @@ add_action('wp_default_scripts', function ($scripts) {
         $scripts->registered['jquery']->deps = array_diff($deps, ['jquery-migrate']);
     }
 });
-

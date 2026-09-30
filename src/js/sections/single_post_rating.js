@@ -12,92 +12,110 @@ document.addEventListener('DOMContentLoaded', () => {
         const stars = Array.from(widget.querySelectorAll('.single-post-rating__star'));
         const averageEl = widget.querySelector('[data-role="average"]');
         const countEl = widget.querySelector('[data-role="count-text"]');
+        const feedbackEl = widget.querySelector('.single-post-rating__feedback');
+        let currentRating = Number(widget.dataset.userRating) || 0;
+        let feedbackTimer;
 
-        if (widget.dataset.rated === '1') {
-            return;
-        }
-
+        // Fills every star up to `rating` while leaving `aria-pressed` and the
+        // labels tied to the rating that is actually saved, so hovering never
+        // tells assistive tech that a different value is selected.
         const highlightUpTo = (rating) => {
             stars.forEach((star) => {
-                star.classList.toggle('is-active', Number(star.dataset.rating) <= rating);
+                const value = Number(star.dataset.rating);
+                const isCurrent = value === currentRating;
+                const setLabel = star.dataset.labelSet || '';
+                const clearLabel = star.dataset.labelClear || '';
+
+                star.classList.toggle('is-active', value <= rating);
+                star.setAttribute('aria-pressed', String(isCurrent));
+                star.title = isCurrent ? clearLabel : setLabel;
+                star.setAttribute('aria-label', isCurrent ? `${setLabel}. ${clearLabel}` : setLabel);
             });
         };
 
-        const lock = (rating) => {
-            widget.classList.add('is-rated');
-            widget.dataset.rated = '1';
-            stars.forEach((star) => {
-                star.disabled = true;
-            });
-            highlightUpTo(rating);
+        const showFeedback = (message, isError = false) => {
+            if (!feedbackEl) return;
+
+            window.clearTimeout(feedbackTimer);
+            feedbackEl.textContent = message;
+            feedbackEl.classList.toggle('is-error', isError);
+            feedbackEl.classList.add('is-visible');
+            feedbackTimer = window.setTimeout(() => {
+                feedbackEl.classList.remove('is-visible');
+            }, 2600);
         };
 
-        stars.forEach((star) => {
-            star.addEventListener('mouseenter', () => {
-                if (widget.dataset.rated !== '1') {
-                    highlightUpTo(Number(star.dataset.rating));
-                }
+        const updateSummary = (data) => {
+            if (averageEl) {
+                averageEl.textContent = Number(data.average).toFixed(1);
+            }
+            if (countEl) {
+                const count = Number(data.count);
+                const template = count === 1 ? wheellabRating.personSingular : wheellabRating.personPlural;
+                countEl.textContent = template.replace('%s', String(count));
+            }
+        };
+
+        const submitRating = async (nextRating) => {
+            widget.classList.add('is-submitting');
+            stars.forEach((button) => { button.disabled = true; });
+
+            const body = new URLSearchParams({
+                action: 'wheellab_rate_post',
+                nonce: wheellabRating.nonce,
+                post_id: postId,
+                rating: String(nextRating),
             });
 
-            star.addEventListener('mouseleave', () => {
-                if (widget.dataset.rated !== '1') {
-                    highlightUpTo(0);
-                }
-            });
-
-            star.addEventListener('click', () => {
-                if (widget.dataset.rated === '1' || widget.classList.contains('is-submitting')) {
-                    return;
-                }
-
-                const rating = Number(star.dataset.rating);
-                widget.classList.add('is-submitting');
-
-                const body = new URLSearchParams({
-                    action: 'wheellab_rate_post',
-                    nonce: wheellabRating.nonce,
-                    post_id: postId,
-                    rating: String(rating),
-                });
-
-                fetch(wheellabRating.ajaxUrl, {
+            try {
+                const response = await fetch(wheellabRating.ajaxUrl, {
                     method: 'POST',
                     credentials: 'same-origin',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     body,
-                })
-                    .then((response) => response.json())
-                    .then((json) => {
-                        const data = json.data || {};
+                });
+                const json = await response.json();
+                const data = json.data || {};
+                if (!response.ok || !json.success) throw new Error(data.message || wheellabRating.feedbackError);
 
-                        if (json.success) {
-                            if (averageEl) {
-                                averageEl.textContent = Number(data.average).toFixed(1);
-                            }
-                            if (countEl) {
-                                const template = data.count === 1 ? wheellabRating.personSingular : wheellabRating.personPlural;
-                                countEl.textContent = template.replace('%s', data.count);
-                            }
-                            lock(rating);
-                        } else if (data.already_rated) {
-                            if (averageEl && typeof data.average !== 'undefined') {
-                                averageEl.textContent = Number(data.average).toFixed(1);
-                            }
-                            if (countEl && typeof data.count !== 'undefined') {
-                                const template = data.count === 1 ? wheellabRating.personSingular : wheellabRating.personPlural;
-                                countEl.textContent = template.replace('%s', data.count);
-                            }
-                            lock(data.rating || rating);
-                        }
-                    })
-                    .catch(() => {
-                        // Network/server error: leave the widget interactive so the
-                        // visitor can simply try again, rather than getting stuck.
-                    })
-                    .finally(() => {
-                        widget.classList.remove('is-submitting');
-                    });
+                currentRating = Number(data.rating) || 0;
+                widget.dataset.userRating = String(currentRating);
+                widget.classList.toggle('is-rated', currentRating > 0);
+                highlightUpTo(currentRating);
+                updateSummary(data);
+
+                const messages = {
+                    added: wheellabRating.feedbackAdded,
+                    changed: wheellabRating.feedbackChanged,
+                    cancelled: wheellabRating.feedbackCancelled,
+                };
+                showFeedback(messages[data.action] || wheellabRating.feedbackAdded);
+            } catch (error) {
+                highlightUpTo(currentRating);
+                showFeedback(error.message || wheellabRating.feedbackError, true);
+            } finally {
+                widget.classList.remove('is-submitting');
+                stars.forEach((button) => { button.disabled = false; });
+            }
+        };
+
+        stars.forEach((star) => {
+            const value = Number(star.dataset.rating);
+
+            star.addEventListener('mouseenter', () => highlightUpTo(value));
+            star.addEventListener('mouseleave', () => highlightUpTo(currentRating));
+            star.addEventListener('focus', () => highlightUpTo(value));
+            star.addEventListener('blur', () => highlightUpTo(currentRating));
+
+            star.addEventListener('click', () => {
+                if (widget.classList.contains('is-submitting')) return;
+
+                // Clicking the star that is already selected clears the rating;
+                // any other star changes it.
+                submitRating(value === currentRating ? 0 : value);
             });
         });
+
+        highlightUpTo(currentRating);
     });
 });

@@ -64,35 +64,33 @@ $eye_icon_url       = esc_url(wheellab_asset_url('assets/img/icons/eye.svg'));
                             <span class="single-post-hero__author-title"><?php echo esc_html($author_title); ?></span>
                         <?php endif; ?>
                     </div>
+                </div>
 
-                    <div class="single-post-hero__meta">
-                        <span class="single-post-hero__meta-item">
-                            <img class="svg single-post-hero__meta-icon" src="<?php echo $calendar_icon_url; ?>" alt="">
-                            <?php echo esc_html(get_the_date()); ?>
-                        </span>
-                        <span class="single-post-hero__diamond" aria-hidden="true"></span>
-                        <span class="single-post-hero__meta-item">
-                            <img class="svg single-post-hero__meta-icon" src="<?php echo $clock_icon_url; ?>" alt="">
-                            <?php
-                            printf(
-
-                                esc_html(_n('%d min', '%d min', $reading_time, 'wheellab')),
-                                (int) $reading_time
-                            );
-                            ?>
-                        </span>
-                        <span class="single-post-hero__diamond" aria-hidden="true"></span>
-                        <span class="single-post-hero__meta-item">
-                            <img class="svg single-post-hero__meta-icon" src="<?php echo $eye_icon_url; ?>" alt="">
-                            <?php
-                            printf(
-
-                                esc_html(_n('%s view', '%s views', $views, 'wheellab')),
-                                esc_html(number_format_i18n($views))
-                            );
-                            ?>
-                        </span>
-                    </div>
+                <div class="single-post-hero__meta">
+                    <span class="single-post-hero__meta-item">
+                        <img class="svg single-post-hero__meta-icon" src="<?php echo $calendar_icon_url; ?>" alt="">
+                        <?php echo esc_html(get_the_date()); ?>
+                    </span>
+                    <span class="single-post-hero__diamond" aria-hidden="true"></span>
+                    <span class="single-post-hero__meta-item">
+                        <img class="svg single-post-hero__meta-icon" src="<?php echo $clock_icon_url; ?>" alt="">
+                        <?php
+                        printf(
+                            esc_html(_n('%d min', '%d min', $reading_time, 'wheellab')),
+                            (int) $reading_time
+                        );
+                        ?>
+                    </span>
+                    <span class="single-post-hero__diamond" aria-hidden="true"></span>
+                    <span class="single-post-hero__meta-item">
+                        <img class="svg single-post-hero__meta-icon" src="<?php echo $eye_icon_url; ?>" alt="">
+                        <?php
+                        printf(
+                            esc_html(_n('%s view', '%s views', $views, 'wheellab')),
+                            esc_html(number_format_i18n($views))
+                        );
+                        ?>
+                    </span>
                 </div>
             </div>
         </div>

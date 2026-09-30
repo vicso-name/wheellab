@@ -114,9 +114,12 @@ function wheellab_ajax_rate_post(): void {
     check_ajax_referer('wheellab_rate_post', 'nonce');
 
     $post_id = isset($_POST['post_id']) ? absint($_POST['post_id']) : 0;
-    $rating  = isset($_POST['rating']) ? absint($_POST['rating']) : 0;
+    $rating_input = isset($_POST['rating']) ? wp_unslash($_POST['rating']) : null;
+    $rating = is_scalar($rating_input)
+        ? filter_var($rating_input, FILTER_VALIDATE_INT, ['options' => ['min_range' => 0, 'max_range' => 5]])
+        : false;
 
-    if (!$post_id || get_post_type($post_id) !== 'post' || $rating < 1 || $rating > 5) {
+    if (!$post_id || get_post_type($post_id) !== 'post' || $rating === false) {
         wp_send_json_error(['message' => __('Invalid rating request.', 'wheellab')], 400);
     }
 
@@ -130,37 +133,34 @@ function wheellab_ajax_rate_post(): void {
         $rater_key
     ));
 
-    if ($existing !== null) {
-        $stats = wheellab_get_post_rating_stats($post_id);
-        wp_send_json_error([
-            'message'       => __('You have already rated this article.', 'wheellab'),
-            'already_rated' => true,
-            'rating'        => (int) $existing,
-            'average'       => $stats['average'],
-            'count'         => $stats['count'],
-        ], 409);
+    if ($rating === 0) {
+        $saved = $wpdb->delete($table, [
+            'post_id'   => $post_id,
+            'rater_key' => $rater_key,
+        ], ['%d', '%s']);
+        $action = 'cancelled';
+    } else {
+        $saved = $wpdb->query($wpdb->prepare(
+            "INSERT INTO {$table} (post_id, rater_key, rating, created_at)
+             VALUES (%d, %s, %d, %s)
+             ON DUPLICATE KEY UPDATE rating = %d",
+            $post_id,
+            $rater_key,
+            $rating,
+            current_time('mysql'),
+            $rating
+        ));
+        $action = $existing === null ? 'added' : 'changed';
     }
 
-    $inserted = $wpdb->insert($table, [
-        'post_id'    => $post_id,
-        'rater_key'  => $rater_key,
-        'rating'     => $rating,
-        'created_at' => current_time('mysql'),
-    ], ['%d', '%s', '%d', '%s']);
-
-    if (!$inserted) {
-        $stats = wheellab_get_post_rating_stats($post_id);
-        wp_send_json_error([
-            'message'       => __('You have already rated this article.', 'wheellab'),
-            'already_rated' => true,
-            'average'       => $stats['average'],
-            'count'         => $stats['count'],
-        ], 409);
+    if ($saved === false) {
+        wp_send_json_error(['message' => __('Could not save your rating. Please try again.', 'wheellab')], 500);
     }
 
     $stats = wheellab_refresh_post_rating_stats($post_id);
 
     wp_send_json_success([
+        'action'  => $action,
         'rating'  => $rating,
         'average' => $stats['average'],
         'count'   => $stats['count'],

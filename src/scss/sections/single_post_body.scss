@@ -79,6 +79,11 @@
 .single-post-content {
   color: var(--content-main-secondary);
 
+  .cta-banner-section__container {
+    max-width: none;
+    padding-inline: 0;
+  }
+
   > * {
     margin: 0 0 12px;
   }
