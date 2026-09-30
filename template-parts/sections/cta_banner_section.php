@@ -14,7 +14,7 @@ $class .= !empty($block['className']) ? ' ' . $block['className']  : '';
 $class .= !empty($block['align'])     ? ' align' . $block['align'] : '';
 $id     = !empty($block['anchor'])    ? ' id="' . esc_attr($block['anchor']) . '"' : '';
 ?>
-<div class="container">
+<div class="container cta-banner-section__container">
     <div class="<?php echo esc_attr($class); ?>"<?php echo $id; ?>>
         <div class="cta-banner-section__inner">
             <div class="cta-banner-section__content<?php echo !empty($secondary_link['url']) ? ' cta-banner-section__content--split' : ''; ?>">

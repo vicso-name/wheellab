@@ -10,24 +10,29 @@ $star_icon_url = esc_url(wheellab_asset_url('assets/img/icons/star.svg'));
 <div
     class="single-post-rating<?php echo $already_rated ? ' is-rated' : ''; ?>"
     data-post-id="<?php echo esc_attr($post_id); ?>"
-    data-rated="<?php echo $already_rated ? '1' : '0'; ?>"
+    data-user-rating="<?php echo $already_rated ? (int) $user_rating : 0; ?>"
 >
     <div class="single-post-rating__inner">
         <div class="single-post-rating__header">
             <p class="single-post-rating__title"><?php esc_html_e('Rate this article', 'wheellab'); ?></p>
 
             <div class="single-post-rating__stars" role="group" aria-label="<?php esc_attr_e('Rate this article from 1 to 5 stars', 'wheellab'); ?>">
-                <?php for ($i = 1; $i <= 5; $i++) : ?>
+                <span class="single-post-rating__feedback" role="status" aria-live="polite"></span>
+                <?php
+                for ($i = 1; $i <= 5; $i++) :
+                    $is_current = $user_rating === $i;
+                    $set_label  = sprintf(_n('%d star', '%d stars', $i, 'wheellab'), $i);
+                    $clear_hint = __('Click again to remove your rating', 'wheellab');
+                    ?>
                     <button
                         type="button"
                         class="single-post-rating__star<?php echo $already_rated && $i <= $user_rating ? ' is-active' : ''; ?>"
                         data-rating="<?php echo (int) $i; ?>"
-                        <?php echo $already_rated ? 'disabled' : ''; ?>
-                        aria-label="<?php echo esc_attr(sprintf(
-
-                            _n('%d star', '%d stars', $i, 'wheellab'),
-                            $i
-                        )); ?>"
+                        data-label-set="<?php echo esc_attr($set_label); ?>"
+                        data-label-clear="<?php echo esc_attr($clear_hint); ?>"
+                        aria-pressed="<?php echo $is_current ? 'true' : 'false'; ?>"
+                        title="<?php echo esc_attr($is_current ? $clear_hint : $set_label); ?>"
+                        aria-label="<?php echo esc_attr($is_current ? $set_label . '. ' . $clear_hint : $set_label); ?>"
                     >
                         <img class="svg single-post-rating__star-icon" src="<?php echo $star_icon_url; ?>" alt="">
                     </button>

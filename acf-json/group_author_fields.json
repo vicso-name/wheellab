@@ -11,6 +11,16 @@
             "placeholder": "CEO of WheelLab"
         },
         {
+            "key": "field_auth_short_bio",
+            "label": "Short Bio",
+            "name": "short_bio",
+            "type": "textarea",
+            "rows": 3,
+            "new_lines": "",
+            "instructions": "Two-line intro shown in the author card under a blog post. Leave empty to reuse the account's built-in Biographical Info, which the author page already shows.",
+            "placeholder": "Jane is leading our tech growth and encouraging innovation."
+        },
+        {
             "key": "field_auth_photo",
             "label": "Photo",
             "name": "photo",
