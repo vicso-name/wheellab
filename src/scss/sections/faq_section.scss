@@ -8,6 +8,16 @@
   }
 }
 
+// The post variant has no .container wrapper, so give it the same side
+// gutters, otherwise the card runs edge to edge below its max-width.
+.faq-section--post {
+  padding-inline: 24px;
+
+  @media screen and (max-width: variables.$small) {
+    padding-inline: 16px;
+  }
+}
+
 .faq-section--post .faq-section__card {
   max-width: 1031px;
   margin: 0 auto;
