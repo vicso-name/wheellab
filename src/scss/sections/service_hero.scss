@@ -5,8 +5,18 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    margin-top: -96px;
-    min-height: calc(100vh + 96px);
+    // Same correction as .hero on the front page: the header is sticky and
+    // takes flow space directly above, so pull back by exactly its height
+    // (--header-height already counts its 1px borders) and leave the content
+    // one full viewport. The old -96px/-72px added the same amount back onto
+    // min-height, which left the section a whole header taller than the screen
+    // — and since the content is bottom-aligned, that pushed the buttons past
+    // the bottom edge and shifted the background image's centre down with it.
+    margin-top: calc(-1 * var(--header-height));
+    min-height: 100vh;
+    // svh is the viewport as it stands with mobile browser chrome showing, so
+    // the buttons land above the address bar rather than behind it.
+    min-height: 100svh;
     padding: 24px 0 64px;
 
     @media screen and (max-width: variables.$medium) {
@@ -14,8 +24,6 @@
     }
 
     @media screen and (max-width: variables.$small) {
-        margin-top: -72px;
-        min-height: calc(100vh + 72px);
         padding: 0;
 
         .container {
@@ -23,8 +31,8 @@
         }
     }
 
+    // Short desktop viewports keep the tighter bottom padding they had before.
     @media screen and (min-width: variables.$small + 1px) and (height <= 1440px) {
-        min-height: 100vh;
         padding-bottom: 40px;
     }
 }
@@ -97,7 +105,7 @@
 }
 
 .service-hero__description {
-    max-width: 673px;
+    max-width: 800px;
     margin: 0;
     color: var(--content-main-secondary);
 }
