@@ -17,21 +17,22 @@ $class .= !empty($block['align'])     ? ' align' . $block['align'] : '';
 $id     = !empty($block['anchor'])    ? ' id="' . esc_attr($block['anchor']) . '"' : '';
 ?>
 
-<section class="<?php echo esc_attr($class); ?>"<?php echo $id; ?>>
+<section class="<?php echo esc_attr($class); ?>"<?php echo $id; ?> style="--deck-steps: <?php echo (int) count($steps); ?>;">
+  <div class="service-process-deck__track">
+    <div class="service-process-deck__sticky">
     <div class="container">
         <h2 class="service-process-deck__title"><?php echo esc_html($title); ?></h2>
     </div>
 
     <div class="container">
         <div class="service-process-deck__stage">
-            <div class="service-process-deck__deck" style="--deck-count: <?php echo (int) count($steps); ?>;">
+            <div class="service-process-deck__deck">
                 <?php foreach ($steps as $i => $step) :
                     $number = str_pad((string) ($i + 1), 2, '0', STR_PAD_LEFT);
                 ?>
-                    <button
-                        type="button"
-                        class="service-process-deck__card<?php echo $i === 0 ? ' is-active' : ''; ?>"
-                        style="--deck-offset: <?php echo (int) $i; ?>;"
+                    <div
+                        role="group"
+                        class="service-process-deck__card<?php echo $i === 0 ? ' is-active' : ' is-queued'; ?>"
                         data-index="<?php echo (int) $i; ?>"
                         aria-label="<?php echo esc_attr(sprintf( __('Step %1$d: %2$s', 'wheellab'), $i + 1, $step['title'])); ?>"
                     >
@@ -54,7 +55,7 @@ $id     = !empty($block['anchor'])    ? ' id="' . esc_attr($block['anchor']) . '
                                 <span class="service-process-deck__card-number service-process-deck__card-number--ghost h3"><?php echo esc_html($number); ?></span>
                             </span>
                         </span>
-                    </button>
+                    </div>
                 <?php endforeach; ?>
             </div>
         </div>
@@ -73,4 +74,6 @@ $id     = !empty($block['anchor'])    ? ' id="' . esc_attr($block['anchor']) . '
             <?php endforeach; ?>
         </ul>
     </div>
+    </div>
+  </div>
 </section>
