@@ -95,6 +95,7 @@
 }
 
 .service-hero__title {
+    max-width: 800px;
     color: var(--content-main-primary);
 
     @media screen and (max-width: variables.$small) {
