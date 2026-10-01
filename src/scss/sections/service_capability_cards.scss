@@ -141,6 +141,13 @@
     flex: 1 0 0;
     min-width: 0;
     color: var(--content-solid-accent-2);
+
+    // H1 has no phone size in the type scale (56px held, overflowing the
+    // card on longer words), so step down to the H2 phone size.
+    @media screen and (max-width: variables.$small) {
+        font-size: var(--text-h2-size);
+        line-height: var(--text-h2-line-height);
+    }
 }
 
 .service-capability-cards__card-description {
