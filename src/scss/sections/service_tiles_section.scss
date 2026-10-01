@@ -198,6 +198,10 @@
     overflow: hidden;
     background: var(--bg-main-surface-2-light);
     border-radius: 16px;
+
+    @media screen and (max-width: variables.$medium) {
+        padding: 16px;
+    }
 }
 
 .service-tiles-section__tile-title {
