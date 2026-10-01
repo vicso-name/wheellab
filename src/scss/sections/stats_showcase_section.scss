@@ -173,11 +173,11 @@
     will-change: transform;
 
     @media screen and (max-width: variables.$medium) {
-        width: 130px;
+        width: 190px;
     }
 
     @media screen and (max-width: variables.$small) {
-        width: 92px;
+        width: 160px;
     }
 }
 

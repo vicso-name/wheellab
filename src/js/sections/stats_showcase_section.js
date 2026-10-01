@@ -76,24 +76,18 @@ const ORBIT_RADIUS_RATIO = 0.84; // × section height
 const TEXT_CENTER_Y_RATIO = 0.67; // × section height
 const STATE_ROTATION_DEG = 90;
 
-// --- Mobile (≤ MOBILE_BREAKPOINT_PX): single centered icon, not the
-// left/right orbit pair — matches the Figma mobile frame (node 758:61539),
-// which shows one icon sitting directly above the text, not two flanking
-// it. No mobile motion reference exists (Animation.mp4 is desktop-only),
-// so this is a plain crossfade + small vertical shift rather than
-// reusing the desktop's circular arc — see initStatsShowcase's mode
-// branch in runIntro()/advanceTo().
+// --- Mobile (≤ MOBILE_BREAKPOINT_PX): the same orbit as desktop, but
+// shifted so the icon sitting at the dome's top-centre is the only one on
+// screen. The orbit radius is wider than the viewport, so the other three
+// (and the icon on its way in or out) sit past the screen edges and each
+// turn reads as one icon riding the dome off to the right while the next
+// arcs in from the left.
 const MOBILE_BREAKPOINT_PX = 768; // keep in sync with src/scss/partials/_variables.scss's $medium
-const MOBILE_ICON_Y_RATIO = 0.28; // × section height
 const MOBILE_TEXT_CENTER_Y_RATIO = 0.64; // × section height — lower than desktop's, to leave room for the icon above
-const MOBILE_ICON_SHIFT_PX = 20;
-const MOBILE_ICON_DURATION_MS = 420;
-const MOBILE_ICON_EASING_CSS = 'cubic-bezier(0.65, 0, 0.35, 1)';
-// The slot angle state 0 puts arrow in on desktop — reused here as "the
-// one visible slot" so mobile shows the exact same icon-per-state as
-// desktop's left position (arrow → coins → chart → …), just without the
-// right-side partner.
-const MOBILE_SLOT_ANGLE_DEG = ICON_BASE_ANGLES.arrow;
+// Rotates the whole ring so the arrow (state 0's desktop-left icon, 225°)
+// lands at 270° — straight up.
+const MOBILE_ORBIT_OFFSET_DEG = 45;
+const MOBILE_ICON_INTRO_SHIFT_PX = 20;
 // Loop forever by default (matches the live reference) — set to false
 // to stop advancing after the last slide instead.
 const LOOP = true;
@@ -130,18 +124,6 @@ function isMobile() {
   return window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT_PX}px)`).matches;
 }
 
-// Which icon occupies the (desktop) left / (mobile) single slot for a
-// given state index — derived from the same base-angle math the desktop
-// orbit uses, rather than a separate hardcoded sequence, so it always
-// agrees with what desktop actually shows in that slot.
-function iconKeyForState(stateIndex) {
-  const rotated = (((stateIndex * STATE_ROTATION_DEG) % 360) + 360) % 360;
-  return Object.keys(ICON_BASE_ANGLES).find((key) => {
-    const angle = ((ICON_BASE_ANGLES[key] + rotated) % 360 + 360) % 360;
-    return Math.abs(angle - MOBILE_SLOT_ANGLE_DEG) < 0.01;
-  });
-}
-
 function initStatsShowcase(section) {
   const orbitIcons = Array.from(section.querySelectorAll('.stats-showcase-section__orbit-icon'));
   const circleImg = section.querySelector('.stats-showcase-section__circle img');
@@ -155,7 +137,7 @@ function initStatsShowcase(section) {
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const metrics = { cx: 0, cy: 0, radius: 0 };
-  const iconState = { orbitAngle: 0, extra: {}, mobileCurrentKey: null };
+  const iconState = { orbitAngle: 0, extra: {} };
   let currentIndex = 0;
   let started = false;
   let destroyed = false;
@@ -177,7 +159,6 @@ function initStatsShowcase(section) {
     metrics.cx = rect.width / 2;
     metrics.cy = rect.height * ORBIT_CENTER_Y_RATIO;
     metrics.radius = rect.height * ORBIT_RADIUS_RATIO;
-    metrics.mobileIconY = rect.height * MOBILE_ICON_Y_RATIO;
 
     section.style.setProperty('--stats-orbit-cy', `${metrics.cy}px`);
     section.style.setProperty('--stats-orbit-diameter', `${metrics.radius * 2}px`);
@@ -195,22 +176,16 @@ function initStatsShowcase(section) {
     icon.style.transform = `translate3d(${(x - halfW).toFixed(2)}px, ${(y - halfH).toFixed(2)}px, 0)`;
   }
 
-  // Single shared layout pass, mode-aware — called on init and on every
-  // resize (including one that crosses the mobile breakpoint). Desktop
-  // computes all 4 icons' orbit positions from the shared orbitAngle;
-  // mobile just re-centers every icon at the one fixed slot (harmless
-  // for the 3 that are currently opacity: 0 — see runIntro()/advanceTo()'s
-  // mobile branch for why only one icon is ever visible there).
+  // Single shared layout pass — called on init and on every resize. All 4
+  // icons' orbit positions come from the shared orbitAngle; mobile just adds
+  // a fixed angular offset (see MOBILE_ORBIT_OFFSET_DEG).
   function updateIconTransforms() {
-    if (isMobile()) {
-      orbitIcons.forEach((icon) => positionIcon(icon, metrics.cx, metrics.mobileIconY));
-      return;
-    }
+    const offset = isMobile() ? MOBILE_ORBIT_OFFSET_DEG : 0;
     orbitIcons.forEach((icon) => {
       const key = icon.dataset.icon;
       const baseAngle = ICON_BASE_ANGLES[key] || 0;
       const extra = iconState.extra[key] || 0;
-      const angleRad = (baseAngle + iconState.orbitAngle + extra) * DEG2RAD;
+      const angleRad = (baseAngle + offset + iconState.orbitAngle + extra) * DEG2RAD;
       const x = metrics.cx + Math.cos(angleRad) * metrics.radius;
       const y = metrics.cy + Math.sin(angleRad) * metrics.radius;
       positionIcon(icon, x, y);
@@ -255,20 +230,9 @@ function initStatsShowcase(section) {
   if (prefersReducedMotion) {
     cacheIconSizes();
     measure();
-    if (isMobile()) {
-      // Unlike desktop's pair (where the 2 icons NOT in play sit
-      // naturally off-screen via the orbit math, even at opacity: 1),
-      // every mobile icon shares the exact same centered spot — turning
-      // all 4 on here would stack them visibly on top of each other.
-      const key = iconKeyForState(0);
-      orbitIcons.forEach((icon) => {
-        icon.style.opacity = icon.dataset.icon === key ? '1' : '0';
-      });
-    } else {
-      orbitIcons.forEach((icon) => {
-        icon.style.opacity = '1';
-      });
-    }
+    orbitIcons.forEach((icon) => {
+      icon.style.opacity = '1';
+    });
     lineRoleGroups.forEach((lines) => {
       lines.forEach((line, index) => {
         line.style.transform = index === 0 ? 'translateY(0)' : 'translateY(120%)';
@@ -397,19 +361,23 @@ function initStatsShowcase(section) {
   }
 
   function runIntroMobile() {
-    const key = iconKeyForState(0);
-    iconState.mobileCurrentKey = key;
     updateIconTransforms();
 
-    const icon = orbitIcons.find((i) => i.dataset.icon === key);
+    // Only the arrow is on screen at state 0; the rest sit past the edges,
+    // so they can be switched on straight away.
+    const icon = orbitIcons.find((i) => i.dataset.icon === 'arrow');
     const introPromises = [];
+
+    orbitIcons.forEach((i) => {
+      if (i !== icon) i.style.opacity = '1';
+    });
 
     if (icon) {
       icon.style.opacity = '0';
       const restTransform = icon.style.transform;
       const anim = icon.animate(
         [
-          { transform: `${restTransform} translateY(${MOBILE_ICON_SHIFT_PX}px)`, opacity: 0 },
+          { transform: `${restTransform} translateY(${MOBILE_ICON_INTRO_SHIFT_PX}px)`, opacity: 0 },
           { transform: restTransform, opacity: 1 },
         ],
         { duration: ICON_INTRO_DURATION_MS, delay: ARROW_INTRO_START_DELAY_MS, easing: ICON_INTRO_EASING_CSS, fill: 'forwards' }
@@ -514,67 +482,11 @@ function initStatsShowcase(section) {
     if (!LOOP && fromIndex >= slideCount - 1) return; // stop on the last state
     // scheduleNext runs once the preceding transition has finished, so take
     // that off the period to keep the gap between changes at STATE_PERIOD_MS.
-    const transitionMs = isMobile() ? MOBILE_ICON_DURATION_MS : STATE_ROTATION_MS;
-    const holdMs = Math.max(0, STATE_PERIOD_MS - transitionMs);
+    const holdMs = Math.max(0, STATE_PERIOD_MS - STATE_ROTATION_MS);
     setTimeoutTracked(() => advanceTo((fromIndex + 1) % slideCount), holdMs);
   }
 
   function advanceTo(nextIndex) {
-    if (isMobile()) {
-      advanceToMobile(nextIndex);
-      return;
-    }
-    advanceToDesktop(nextIndex);
-  }
-
-  function advanceToMobile(nextIndex) {
-    const prevIndex = currentIndex;
-    currentIndex = nextIndex;
-
-    const prevKey = iconState.mobileCurrentKey;
-    const nextKey = iconKeyForState(nextIndex);
-    iconState.mobileCurrentKey = nextKey;
-
-    const prevIcon = orbitIcons.find((i) => i.dataset.icon === prevKey);
-    const nextIcon = orbitIcons.find((i) => i.dataset.icon === nextKey);
-
-    if (prevIcon && prevIcon !== nextIcon) {
-      const restTransform = prevIcon.style.transform;
-      const anim = prevIcon.animate(
-        [
-          { transform: restTransform, opacity: 1 },
-          { transform: `${restTransform} translateY(-${MOBILE_ICON_SHIFT_PX}px)`, opacity: 0 },
-        ],
-        { duration: MOBILE_ICON_DURATION_MS, easing: MOBILE_ICON_EASING_CSS, fill: 'forwards' }
-      );
-      releaseAnimation(anim).then(() => {
-        prevIcon.style.opacity = '0';
-      });
-    }
-
-    if (nextIcon && nextIcon !== prevIcon) {
-      positionIcon(nextIcon, metrics.cx, metrics.mobileIconY);
-      const restTransform = nextIcon.style.transform;
-      const anim = nextIcon.animate(
-        [
-          { transform: `${restTransform} translateY(${MOBILE_ICON_SHIFT_PX}px)`, opacity: 0 },
-          { transform: restTransform, opacity: 1 },
-        ],
-        { duration: MOBILE_ICON_DURATION_MS, easing: MOBILE_ICON_EASING_CSS, fill: 'forwards' }
-      );
-      releaseAnimation(anim).then(() => {
-        nextIcon.style.opacity = '1';
-      });
-    }
-
-    lineRoleGroups.forEach((lines, roleIndex) => {
-      transitionLine(lines[prevIndex], lines[nextIndex], roleIndex * TEXT_LINE_STAGGER_MS);
-    });
-
-    setTimeoutTracked(() => scheduleNext(nextIndex), MOBILE_ICON_DURATION_MS);
-  }
-
-  function advanceToDesktop(nextIndex) {
     const prevIndex = currentIndex;
     currentIndex = nextIndex;
 
