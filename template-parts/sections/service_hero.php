@@ -43,7 +43,7 @@ $bg_alt = $bg_image['alt'] ?? '';
                         <a class="service-hero__btn-secondary" href="<?php echo esc_url($secondary_button['url']); ?>"
                             <?php echo !empty($secondary_button['target']) ? 'target="_blank" rel="noopener"' : ''; ?>>
                             <span class="service-hero__btn-secondary-inner">
-                                <span class="button-text-m"><?php echo esc_html($secondary_button['title'] ?: __('See the animation reel', 'wheellab')); ?></span>
+                                <span class="button-text-m"><?php echo esc_html($secondary_button['title'] ?: __('Learn more', 'wheellab')); ?></span>
                                 <svg class="service-hero__btn-secondary-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                                     <path d="M13.0001 16.1716L18.3641 10.8076L19.7783 12.2218L12.0001 20L4.22192 12.2218L5.63614 10.8076L11.0001 16.1716V4H13.0001V16.1716Z" fill="currentColor"/>
                                 </svg>
