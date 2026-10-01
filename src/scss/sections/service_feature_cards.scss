@@ -48,89 +48,21 @@
     color: var(--content-main-secondary);
 }
 
-.service-feature-cards__nav-group {
-    display: flex;
-    flex-shrink: 0;
-    align-items: center;
-    gap: 12px;
+.service-feature-cards__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
 
-    @media screen and (max-width: variables.$medium) {
-        margin-left: auto;
-    }
-
-    @media screen and (max-width: variables.$small) {
-        display: none;
-    }
-}
-
-.service-feature-cards__nav {
-    display: flex;
-    flex-shrink: 0;
-    align-items: center;
-    justify-content: center;
-    width: 44px;
-    height: 44px;
-    padding: 4px;
-    color: var(--content-main-secondary);
-    background: none;
-    border: 0;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: color var(--transition-fast), background var(--transition-fast);
-
-    &:hover {
-        background: var(--bg-main-surface-2);
-    }
-
-    &.swiper-button-disabled {
-        color: var(--content-main-disabled);
-        cursor: default;
-        pointer-events: none;
-        background: none;
-    }
-
-    img {
-        display: block;
-        width: 100%;
-        height: 100%;
-    }
-}
-
-.service-feature-cards__swiper {
-    $inset: max(var(--container-padding), calc((100% - var(--container-max-width)) / 2 + var(--container-padding)));
-
-    padding: 0 $inset;
-
-    @media screen and (max-width: variables.$small) {
-        padding: 0 16px;
-    }
-}
-
-.service-feature-cards__swiper .swiper-wrapper {
-    align-items: stretch;
-
-    @media screen and (max-width: variables.$small) {
-        display: grid;
+    @media screen and (max-width: variables.$large) {
         grid-template-columns: minmax(0, 1fr);
-        grid-auto-rows: 1fr;
         gap: 16px;
-    }
-}
-
-.service-feature-cards__slide.swiper-slide {
-    display: flex;
-    width: 506.667px;
-    // Let the wrapper stretch every slide to the tallest card.
-    height: auto;
-
-    @media screen and (max-width: variables.$small) {
-        width: 100%;
     }
 }
 
 .service-feature-cards__card {
     display: flex;
     width: 100%;
+    height: 100%;
     padding: 8px;
     background: var(--bg-main-surface-2);
     border: 1px solid var(--outline-neutral);
