@@ -1,85 +1,67 @@
 /**
- * Service Process Deck — fanned card stack, click a peeking card to
- * bring it to front. Auto-advances through the steps in order every
- * 3.5s, pausing while the pointer is over the deck or a card holds
- * keyboard focus, and restarting its hold on every manual bring-to-front
- * so a click doesn't get immediately undone by the next auto tick.
+ * Service Process Deck — scroll-driven card stack. The section is a tall
+ * track with a pinned (sticky) stage; every step of scroll through the track
+ * brings in the next card from the right, and the cards already shown recede
+ * to the left (rotate/blur — see service_process_deck.scss).
  *
- * Maintains one front-to-back order array per deck (DOM elements, not
- * indices) and re-derives every card's --deck-offset (0 = active) from
- * its position in that array on every change — a plain "move item to
- * the front" reorder, same idea as a most-recently-used list. The CSS
- * custom property alone drives the whole recession look (rotate/blur/
- * z-index — see service_process_deck.scss), so this file never touches
- * transform/filter directly.
+ * This file only works out which step the scroll position is on and writes
+ * it onto the cards: --deck-offset (0 = front, 1..MAX_OFFSET = how far back)
+ * for cards already shown, and .is-queued for cards still waiting off-screen
+ * to the right. The CSS owns all the motion, so one scroll step = one card
+ * transition, whatever the scroll speed.
  */
 
 document.addEventListener("DOMContentLoaded", () => {
-  document.querySelectorAll(".service-process-deck__deck").forEach(initDeck);
+  document.querySelectorAll(".service-process-deck").forEach(initDeck);
 });
 
 const MAX_OFFSET = 4;
-const AUTOPLAY_MS = 3500;
+// Share of the viewport height the first card appears ahead of the stage pinning.
+const LEAD = 0.3;
 
-function initDeck(deck) {
-  const cards = Array.from(deck.querySelectorAll(".service-process-deck__card"));
-  if (cards.length < 2) return;
+function initDeck(section) {
+  const track = section.querySelector(".service-process-deck__track");
+  const cards = Array.from(section.querySelectorAll(".service-process-deck__card"));
+  if (!track || cards.length < 2) return;
 
-  let order = cards;
-  let timer = null;
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const mobile = window.matchMedia("(max-width: 576px)");
+  let current = -1;
+  let ticking = false;
 
-  function render() {
-    order.forEach((card, position) => {
-      const offset = Math.min(position, MAX_OFFSET);
-      card.style.setProperty("--deck-offset", String(offset));
-      card.classList.toggle("is-active", position === 0);
-      card.setAttribute("aria-current", position === 0 ? "true" : "false");
+  function getStep() {
+    const vh = window.innerHeight;
+    const scrolled = -track.getBoundingClientRect().top;
+    const stepPx = (track.offsetHeight - vh) / cards.length;
+    const raw = (scrolled + vh * LEAD) / stepPx;
+    return raw < 0 ? 0 : Math.min(cards.length, Math.floor(raw) + 1);
+  }
+
+  function render(step) {
+    if (step === current) return;
+    current = step;
+    cards.forEach((card, i) => {
+      const active = i === step - 1;
+      card.classList.toggle("is-queued", i >= step);
+      card.classList.toggle("is-active", active);
+      card.style.setProperty("--deck-offset", String(i < step ? Math.min(step - 1 - i, MAX_OFFSET) : 0));
+      if (active) card.setAttribute("aria-current", "true");
+      else card.removeAttribute("aria-current");
     });
   }
 
-  function bringToFront(card) {
-    if (order[0] === card) return;
-    order = [card, ...order.filter((c) => c !== card)];
-    render();
+  function update() {
+    ticking = false;
+    if (mobile.matches) return;
+    render(getStep());
   }
 
-  function advance() {
-    const currentIndex = Number(order[0].dataset.index);
-    const nextIndex = (currentIndex + 1) % cards.length;
-    const next = cards.find((card) => Number(card.dataset.index) === nextIndex);
-    if (next) bringToFront(next);
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    window.requestAnimationFrame(update);
   }
 
-  function stop() {
-    if (timer) {
-      window.clearInterval(timer);
-      timer = null;
-    }
-  }
-
-  function start() {
-    if (reduceMotion || timer) return;
-    timer = window.setInterval(advance, AUTOPLAY_MS);
-  }
-
-  function restart() {
-    stop();
-    start();
-  }
-
-  cards.forEach((card) => {
-    card.addEventListener("click", () => {
-      bringToFront(card);
-      restart();
-    });
-  });
-
-  deck.addEventListener("pointerenter", stop);
-  deck.addEventListener("pointerleave", start);
-  deck.addEventListener("focusin", stop);
-  deck.addEventListener("focusout", start);
-
-  render();
-  start();
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll);
+  update();
 }

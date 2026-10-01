@@ -2,25 +2,39 @@
 
 .service-process-deck {
     position: relative;
-    padding: 96px 0;
+}
 
-    @media screen and (max-width: variables.$medium) {
-        padding: 60px 0;
-    }
+// Tall track: every 60vh of scroll through it is one card step (see the JS).
+.service-process-deck__track {
+    height: calc(100vh + var(--deck-steps, 5) * 60vh);
 
     @media screen and (max-width: variables.$small) {
+        height: auto;
+    }
+}
+
+.service-process-deck__sticky {
+    position: sticky;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100vh;
+    padding: calc(var(--header-height) + var(--header-offset) + 16px) 0 24px;
+    overflow: clip;
+
+    @media screen and (max-width: variables.$small) {
+        position: static;
+        height: auto;
         padding: 48px 0;
+        overflow: visible;
     }
 }
 
 .service-process-deck__title {
     max-width: 1000px;
-    margin: 0 0 120px;
+    margin: 0 0 112px;
     color: var(--content-main-primary);
-
-    @media screen and (max-width: variables.$medium) {
-        margin-bottom: 64px;
-    }
 
     @media screen and (max-width: variables.$small) {
         margin-bottom: 32px;
@@ -37,11 +51,17 @@
     }
 }
 
+// Sized by height so the pinned stage always fits the viewport; 563 / 792 is
+// the Figma card. The front card sits 120px right of centre (21.3% of its
+// width) to fill the space the receding cards leave on the right.
 .service-process-deck__deck {
     position: relative;
-    width: 100%;
-    max-width: 563px;
+    height: clamp(520px, calc(100vh - 370px), 792px);
     aspect-ratio: 563 / 792;
+
+    @media screen and (min-width: variables.$large) {
+        transform: translateX(21.3%);
+    }
 }
 
 .service-process-deck__card {
@@ -53,25 +73,32 @@
     padding: 8px;
     color: inherit;
     text-align: left;
-    background: var(--bg-main-surface-2);
+    background: var(--color-white-alpha-8);
     backdrop-filter: blur(40px);
     -webkit-backdrop-filter: blur(40px);
     border: 1px solid var(--outline-neutral);
     border-radius: 20px;
     box-shadow: 0 2px 24px 0 rgb(105 56 239 / 12%), 0 1px 2px -0.5px rgb(0 0 0 / 8%);
-    cursor: pointer;
+    // Each step back: 80px left (14.2% of the card), 4deg more tilt, 2px more blur.
     transform:
-        translateX(calc(var(--deck-offset, 0) * -18%))
+        translateX(calc(var(--deck-offset, 0) * -14.2%))
         rotate(calc(var(--deck-offset, 0) * -4deg));
-    filter: blur(calc(max(0, var(--deck-offset, 0) - 1) * 1.5px));
-    opacity: calc(1 - var(--deck-offset, 0) * 0.08);
+    filter: blur(calc(var(--deck-offset, 0) * 2px));
     z-index: calc(100 - var(--deck-offset, 0));
-    transition: transform 0.5s cubic-bezier(0.65, 0, 0.35, 1), filter 0.5s cubic-bezier(0.65, 0, 0.35, 1),
-        opacity 0.5s cubic-bezier(0.65, 0, 0.35, 1), background 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+    transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1), filter 0.6s cubic-bezier(0.65, 0, 0.35, 1),
+        background 0.6s cubic-bezier(0.65, 0, 0.35, 1);
 
     &.is-active {
-        cursor: default;
         background: var(--bg-ghost-accent-2);
+    }
+
+    // Waiting to be scrolled in: parked fully off-screen to the right.
+    &.is-queued {
+        transform: translateX(calc(50vw + 100%));
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
     }
 }
 
@@ -85,41 +112,40 @@
     height: 100%;
     padding: 32px;
     overflow: hidden;
-    background: rgb(29 30 57 / 85%);
+    background: #1d1e39;
     backdrop-filter: blur(100px);
     -webkit-backdrop-filter: blur(100px);
     border-radius: 16px;
 }
 
+// Figma "Mask group": the full illustration (3:2) rotated a quarter turn and
+// overflowing the card, so only the corner of it shows through card-inner's
+// overflow clip. Sizes/offsets are % of the 547 x 776 card-inner.
 .service-process-deck__card-texture {
     position: absolute;
     z-index: 0;
-    width: 300px;
-    height: 300px;
+    width: 185.4%;
+    aspect-ratio: 3 / 2;
     background: var(--content-solid-accent-2);
     opacity: 0.2;
     mask-image: url("../../../assets/img/services/process-deck-texture.png");
     mask-repeat: no-repeat;
-    mask-size: 900px auto;
+    mask-size: 100% 100%;
     -webkit-mask-image: url("../../../assets/img/services/process-deck-texture.png");
     -webkit-mask-repeat: no-repeat;
-    -webkit-mask-size: 900px auto;
+    -webkit-mask-size: 100% 100%;
     pointer-events: none;
 
     &--top {
-        top: -20px;
-        right: -20px;
-        mask-position: -560px -60px;
-        -webkit-mask-position: -560px -60px;
-        transform: rotate(8deg);
+        top: -73.2%;
+        left: -21.4%;
+        transform: rotate(-90deg);
     }
 
     &--bottom {
-        bottom: -20px;
-        left: -20px;
-        mask-position: -560px -60px;
-        -webkit-mask-position: -560px -60px;
-        transform: rotate(188deg);
+        top: 88%;
+        left: -88.3%;
+        transform: rotate(90deg);
     }
 }
 
