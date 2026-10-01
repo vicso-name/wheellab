@@ -42,7 +42,7 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
-  max-width: 575px;
+  max-width: 711px;
 
   &--split {
     flex-direction: row;
@@ -67,12 +67,7 @@
 
   .cta-banner-section__content--split & {
     flex: 1 0 0;
-    max-width: 711px;
     min-width: 0;
-
-    @media screen and (max-width: variables.$medium) {
-      max-width: none;
-    }
   }
 }
 
