@@ -87,6 +87,8 @@ const MOBILE_TEXT_CENTER_Y_RATIO = 0.64; // × section height — lower than des
 // Rotates the whole ring so the arrow (state 0's desktop-left icon, 225°)
 // lands at 270° — straight up.
 const MOBILE_ORBIT_OFFSET_DEG = 45;
+// Drops the icons below the dome's edge so they sit on it, not above it.
+const MOBILE_ICON_Y_SHIFT_RATIO = 0.05; // × section height
 const MOBILE_ICON_INTRO_SHIFT_PX = 20;
 // Loop forever by default (matches the live reference) — set to false
 // to stop advancing after the last slide instead.
@@ -180,14 +182,16 @@ function initStatsShowcase(section) {
   // icons' orbit positions come from the shared orbitAngle; mobile just adds
   // a fixed angular offset (see MOBILE_ORBIT_OFFSET_DEG).
   function updateIconTransforms() {
-    const offset = isMobile() ? MOBILE_ORBIT_OFFSET_DEG : 0;
+    const mobile = isMobile();
+    const offset = mobile ? MOBILE_ORBIT_OFFSET_DEG : 0;
+    const yShift = mobile ? metrics.radius / ORBIT_RADIUS_RATIO * MOBILE_ICON_Y_SHIFT_RATIO : 0;
     orbitIcons.forEach((icon) => {
       const key = icon.dataset.icon;
       const baseAngle = ICON_BASE_ANGLES[key] || 0;
       const extra = iconState.extra[key] || 0;
       const angleRad = (baseAngle + offset + iconState.orbitAngle + extra) * DEG2RAD;
       const x = metrics.cx + Math.cos(angleRad) * metrics.radius;
-      const y = metrics.cy + Math.sin(angleRad) * metrics.radius;
+      const y = metrics.cy + Math.sin(angleRad) * metrics.radius + yShift;
       positionIcon(icon, x, y);
     });
   }
