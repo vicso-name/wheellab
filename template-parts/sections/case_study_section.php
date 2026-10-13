@@ -3,7 +3,6 @@
 $title       = get_field('title')        ?: '';
 $description = get_field('description')  ?: '';
 $source      = get_field('cases_source') ?: 'latest';
-$cta_button  = get_field('cta_button')   ?: null;
 
 if ($source === 'manual') {
     $case_ids   = get_field('manual_cases') ?: [];
@@ -34,8 +33,6 @@ $id     = !empty($block['anchor'])    ? ' id="' . esc_attr($block['anchor']) . '
 $glow_url          = esc_url(wheellab_asset_url('assets/img/domains/card-glow.png'));
 $chevron_left_url  = esc_url(wheellab_asset_url('assets/img/icons/chevron-left.svg'));
 $chevron_right_url = esc_url(wheellab_asset_url('assets/img/icons/chevron-right.svg'));
-
-$cta_url = !empty($cta_button['url']) ? $cta_button['url'] : get_post_type_archive_link('case_study');
 
 if (!$cases_query || !$cases_query->have_posts()) {
     return;
@@ -135,14 +132,5 @@ if (!$cases_query || !$cases_query->have_posts()) {
             <?php endwhile; ?>
         </div>
     </div>
-
-    <?php if ($cta_url) : ?>
-        <div class="container">
-            <a class="case-study-section__cta btn-gradient" href="<?php echo esc_url($cta_url); ?>"
-                <?php echo !empty($cta_button['target']) ? 'target="_blank" rel="noopener"' : ''; ?>>
-                <span class="btn-gradient__inner button-text-m"><?php echo esc_html($cta_button['title'] ?? '' ?: 'View all cases'); ?></span>
-            </a>
-        </div>
-    <?php endif; ?>
 </section>
 <?php wp_reset_postdata(); ?>

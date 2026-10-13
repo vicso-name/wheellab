@@ -91,17 +91,6 @@
             "wrapper": {
                 "width": "100"
             }
-        },
-        {
-            "key": "field_css_cta_button",
-            "label": "CTA Button",
-            "name": "cta_button",
-            "type": "link",
-            "return_format": "array",
-            "instructions": "\"View all cases\" — shown below the slider.",
-            "wrapper": {
-                "width": "100"
-            }
         }
     ],
     "location": [
