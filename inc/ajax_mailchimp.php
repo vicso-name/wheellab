@@ -130,9 +130,11 @@ function wheellab_mailchimp_subscribe(string $api_key, string $audience_id, stri
 }
 
 function wheellab_subscribe_webhook(string $webhook_url, string $email, string $page_url): array {
+    // Apps Script answers the POST with a 302 after it has already run; following it re-requests the result URL and fails.
     $response = wp_remote_post($webhook_url, [
-        'timeout' => 15,
-        'headers' => ['Content-Type' => 'application/json'],
+        'timeout'     => 15,
+        'redirection' => 0,
+        'headers'     => ['Content-Type' => 'application/json'],
         'body'    => wp_json_encode([
             'Email' => $email,
             'Date'  => current_time('mysql'),
