@@ -1,10 +1,5 @@
 <?php
 
-$cta = get_field( 'book_a_call', 'option' ) ?: null;
-if ( empty( $cta['url'] ) ) {
-    return;
-}
-
 $glow_url   = esc_url( wheellab_asset_url( 'assets/img/single-post/cta-glow.jpg' ) );
 $sphere_url = esc_url( wheellab_asset_url( 'assets/img/single-post/cta-sphere.png' ) );
 ?>
@@ -19,11 +14,7 @@ $sphere_url = esc_url( wheellab_asset_url( 'assets/img/single-post/cta-sphere.pn
                 <p class="single-post-cta__description"><?php esc_html_e( 'Connect with us to explore innovative ideas, gain valuable insights, and receive expert guidance tailored to your needs.', 'wheellab' ); ?></p>
             </div>
 
-            <a
-                class="btn-gradient single-post-cta__button"
-                href="<?php echo esc_url( $cta['url'] ); ?>"
-                <?php echo ! empty( $cta['target'] ) ? 'target="_blank" rel="noopener"' : ''; ?>
-            >
+            <a class="btn-gradient single-post-cta__button" href="#contact">
                 <span class="btn-gradient__inner button-text-m"><?php esc_html_e( 'Contact us', 'wheellab' ); ?></span>
             </a>
         </div>
