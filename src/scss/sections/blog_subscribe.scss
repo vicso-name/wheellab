@@ -107,6 +107,7 @@
 }
 
 .blog-subscribe__field {
+  position: relative;
   width: 340px;
 
   @media screen and (max-width: variables.$medium) {
@@ -161,9 +162,17 @@
 }
 
 .blog-subscribe__status {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
   width: 100%;
   margin: 0;
   color: var(--content-main-secondary);
+
+  @media screen and (max-width: variables.$medium) {
+    position: static;
+    margin-top: 8px;
+  }
 
   &[hidden] {
     display: none;
