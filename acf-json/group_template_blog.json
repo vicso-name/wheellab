@@ -77,6 +77,22 @@
             ]
         },
         {
+            "key": "field_blog_subscribe_webhook_url",
+            "label": "Webhook URL",
+            "name": "subscribe_webhook_url",
+            "type": "url",
+            "instructions": "Google Apps Script Web App URL (or any webhook). When filled, each sign-up is sent there as JSON (Email, Date, Page) and Mailchimp below is ignored. Leave empty to use Mailchimp.",
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_blog_subscribe_enabled",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ]
+        },
+        {
             "key": "field_blog_subscribe_mailchimp_api_key",
             "label": "Mailchimp API Key",
             "name": "subscribe_mailchimp_api_key",

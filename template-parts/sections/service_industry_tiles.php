@@ -25,7 +25,7 @@ $fallback_icon_url = wheellab_asset_url('assets/img/services/industry-icon-fallb
 
         <div class="service-industry-tiles__grid">
             <?php foreach ($cards as $card) :
-                $icon_url = !empty($card['icon']['url']) ? $card['icon']['url'] : $fallback_icon_url;
+                $icon_url = wheellab_card_icon_url($card, $fallback_icon_url);
             ?>
                 <div class="service-industry-tiles__card">
                     <div class="service-industry-tiles__card-inner">

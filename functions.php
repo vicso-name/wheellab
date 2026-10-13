@@ -70,4 +70,5 @@ require_once get_template_directory() . '/inc/ajax_contact_webhook.php';
 require_once get_template_directory() . '/inc/post_ratings.php';
 require_once get_template_directory() . '/inc/post_toc.php';
 require_once get_template_directory() . '/inc/theme_function.php';
+require_once get_template_directory() . '/inc/iconsans.php';
 require_once get_template_directory() . '/inc/theme_settings.php';
