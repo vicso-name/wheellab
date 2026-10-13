@@ -42,6 +42,7 @@ if (!$title && !$description) {
                             autocomplete="email"
                             required
                         >
+                        <input type="text" name="company_website" class="blog-subscribe__hp" tabindex="-1" autocomplete="off" aria-hidden="true">
                         <p class="blog-subscribe__status body-s" role="status" aria-live="polite" hidden></p>
                     </div>
 

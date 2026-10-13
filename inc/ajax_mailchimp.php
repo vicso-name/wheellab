@@ -8,6 +8,15 @@ add_action('wp_ajax_nopriv_wheellab_mailchimp_subscribe', 'wheellab_ajax_mailchi
 function wheellab_ajax_mailchimp_subscribe(): void {
     check_ajax_referer('wheellab_mailchimp_subscribe', 'nonce');
 
+    // Honeypot: hidden from people, filled in by bots. Answer "success" so they don't adapt.
+    if (!empty($_POST['company_website'])) {
+        wp_send_json_success(['message' => __('Thanks for subscribing!', 'wheellab')]);
+    }
+
+    if (wheellab_subscribe_rate_limited()) {
+        wp_send_json_error(['message' => __('Too many attempts. Please try again later.', 'wheellab')], 429);
+    }
+
     $email = isset($_POST['email']) ? sanitize_email(wp_unslash($_POST['email'])) : '';
 
     if (!$email || !is_email($email)) {
@@ -19,10 +28,16 @@ function wheellab_ajax_mailchimp_subscribe(): void {
     $webhook_url = $page_id ? (string) get_field('subscribe_webhook_url', $page_id) : '';
 
     if ($webhook_url) {
+        $dupe_key = 'wl_sub_' . md5(strtolower($email));
+        if (get_transient($dupe_key)) {
+            wp_send_json_success(['message' => __('Thanks for subscribing!', 'wheellab')]);
+        }
+
         $page_url = isset($_POST['page']) ? esc_url_raw(wp_unslash($_POST['page'])) : '';
         $result   = wheellab_subscribe_webhook($webhook_url, $email, $page_url);
 
         if ($result['success']) {
+            set_transient($dupe_key, 1, DAY_IN_SECONDS);
             wp_send_json_success(['message' => $result['message']]);
         }
 
@@ -154,4 +169,25 @@ function wheellab_subscribe_webhook(string $webhook_url, string $email, string $
         'success' => true,
         'message' => __('Thanks for subscribing!', 'wheellab'),
     ];
+}
+
+/**
+ * Max 5 sign-up attempts per IP per hour. Behind Cloudflare the real client IP
+ * arrives in CF-Connecting-IP; REMOTE_ADDR is the fallback.
+ */
+function wheellab_subscribe_rate_limited(): bool {
+    $ip = isset($_SERVER['HTTP_CF_CONNECTING_IP'])
+        ? (string) $_SERVER['HTTP_CF_CONNECTING_IP']
+        : (string) ($_SERVER['REMOTE_ADDR'] ?? '');
+
+    $key   = 'wl_sub_rl_' . md5($ip);
+    $count = (int) get_transient($key);
+
+    if ($count >= 5) {
+        return true;
+    }
+
+    set_transient($key, $count + 1, HOUR_IN_SECONDS);
+
+    return false;
 }

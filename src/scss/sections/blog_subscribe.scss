@@ -115,6 +115,15 @@
   }
 }
 
+.blog-subscribe__hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
 .blog-subscribe__input {
   display: block;
   width: 100%;

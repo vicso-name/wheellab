@@ -34,6 +34,7 @@ function initBlogSubscribe() {
       nonce: wheellabMailchimp.nonce,
       email: input.value.trim(),
       page: window.location.href,
+      company_website: form.querySelector(".blog-subscribe__hp")?.value || "",
     });
 
     fetch(wheellabMailchimp.ajaxUrl, {
