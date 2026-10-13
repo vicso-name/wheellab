@@ -34,15 +34,15 @@ if (!$cards) {
 
         <div class="tile-section__grid">
             <?php foreach ($cards as $card) :
-                $card_icon        = $card['icon'] ?? null;
+                $card_icon_url    = wheellab_card_icon_url($card);
                 $card_title       = $card['title'] ?? '';
                 $card_description = $card['description'] ?? '';
                 if (!$card_title) continue;
             ?>
                 <div class="tile-section__card">
                     <div class="tile-section__card-inner">
-                        <?php if (!empty($card_icon['url'])) :
-                            $icon_url = esc_url($card_icon['url']);
+                        <?php if ($card_icon_url) :
+                            $icon_url = esc_url($card_icon_url);
                         ?>
                             <div class="tile-section__card-icon">
                                 <span class="tile-section__card-icon-glyph" style="mask-image:url('<?php echo $icon_url; ?>');-webkit-mask-image:url('<?php echo $icon_url; ?>');" aria-hidden="true"></span>

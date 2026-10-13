@@ -176,13 +176,15 @@ $clarity_project_id = get_field('clarity_project_id', 'option') ?: '';
                                             <?php echo $card_url ? 'href="' . esc_url($card_url) . '"' : ''; ?>
                                             <?php echo !empty($card_link['target']) ? 'target="' . esc_attr($card_link['target']) . '" rel="noopener"' : ''; ?>
                                         >
-                                            <?php if (!empty($card['icon']['url'])) :
-                                                $icon_svg = wheellab_inline_svg((int) ($card['icon']['ID'] ?? 0));
+                                            <?php if (!empty($card['iconsans']) || !empty($card['icon']['url'])) :
+                                                $icon_svg = !empty($card['iconsans'])
+                                                    ? wheellab_iconsans_svg((string) $card['iconsans'])
+                                                    : wheellab_inline_svg((int) ($card['icon']['ID'] ?? 0));
                                             ?>
                                                 <span class="header__mega-card-icon">
                                                     <?php if ($icon_svg) : ?>
                                                         <?php echo $icon_svg; ?>
-                                                    <?php else : ?>
+                                                    <?php elseif (!empty($card['icon']['url'])) : ?>
                                                         <img
                                                             src="<?php echo esc_url($card['icon']['url']); ?>"
                                                             alt=""
@@ -259,13 +261,15 @@ $clarity_project_id = get_field('clarity_project_id', 'option') ?: '';
                                                                         <?php echo $card_url ? 'href="' . esc_url($card_url) . '"' : ''; ?>
                                                                         <?php echo !empty($card_link['target']) ? 'target="' . esc_attr($card_link['target']) . '" rel="noopener"' : ''; ?>
                                                                     >
-                                                                        <?php if (!empty($card['icon']['url'])) :
-                                                                            $icon_svg = wheellab_inline_svg((int) ($card['icon']['ID'] ?? 0));
+                                                                        <?php if (!empty($card['iconsans']) || !empty($card['icon']['url'])) :
+                                                                            $icon_svg = !empty($card['iconsans'])
+                                                                                ? wheellab_iconsans_svg((string) $card['iconsans'])
+                                                                                : wheellab_inline_svg((int) ($card['icon']['ID'] ?? 0));
                                                                         ?>
                                                                             <span class="header__mega-card-icon">
                                                                                 <?php if ($icon_svg) : ?>
                                                                                     <?php echo $icon_svg; ?>
-                                                                                <?php else : ?>
+                                                                                <?php elseif (!empty($card['icon']['url'])) : ?>
                                                                                     <img
                                                                                         src="<?php echo esc_url($card['icon']['url']); ?>"
                                                                                         alt=""
