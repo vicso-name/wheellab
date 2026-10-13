@@ -33,6 +33,7 @@ function initBlogSubscribe() {
       action: "wheellab_mailchimp_subscribe",
       nonce: wheellabMailchimp.nonce,
       email: input.value.trim(),
+      page: window.location.href,
     });
 
     fetch(wheellabMailchimp.ajaxUrl, {

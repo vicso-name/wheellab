@@ -16,6 +16,19 @@ function wheellab_ajax_mailchimp_subscribe(): void {
 
     $page_id = wheellab_get_blog_template_page_id();
 
+    $webhook_url = $page_id ? (string) get_field('subscribe_webhook_url', $page_id) : '';
+
+    if ($webhook_url) {
+        $page_url = isset($_POST['page']) ? esc_url_raw(wp_unslash($_POST['page'])) : '';
+        $result   = wheellab_subscribe_webhook($webhook_url, $email, $page_url);
+
+        if ($result['success']) {
+            wp_send_json_success(['message' => $result['message']]);
+        }
+
+        wp_send_json_error(['message' => $result['message']], $result['status']);
+    }
+
     $api_key      = $page_id ? (string) get_field('subscribe_mailchimp_api_key', $page_id) : '';
     $audience_id  = $page_id ? (string) get_field('subscribe_mailchimp_audience_id', $page_id) : '';
     $double_optin = $page_id ? (bool) get_field('subscribe_mailchimp_double_optin', $page_id) : true;
@@ -113,5 +126,30 @@ function wheellab_mailchimp_subscribe(string $api_key, string $audience_id, stri
         'success' => false,
         'message' => __('Something went wrong. Please try again later.', 'wheellab'),
         'status'  => 400,
+    ];
+}
+
+function wheellab_subscribe_webhook(string $webhook_url, string $email, string $page_url): array {
+    $response = wp_remote_post($webhook_url, [
+        'timeout' => 15,
+        'headers' => ['Content-Type' => 'application/json'],
+        'body'    => wp_json_encode([
+            'Email' => $email,
+            'Date'  => current_time('mysql'),
+            'Page'  => $page_url,
+        ]),
+    ]);
+
+    if (is_wp_error($response) || (int) wp_remote_retrieve_response_code($response) >= 400) {
+        return [
+            'success' => false,
+            'message' => __('Something went wrong. Please try again later.', 'wheellab'),
+            'status'  => 502,
+        ];
+    }
+
+    return [
+        'success' => true,
+        'message' => __('Thanks for subscribing!', 'wheellab'),
     ];
 }
