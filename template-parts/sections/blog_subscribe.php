@@ -42,14 +42,13 @@ if (!$title && !$description) {
                             autocomplete="email"
                             required
                         >
+                        <p class="blog-subscribe__status body-s" role="status" aria-live="polite" hidden></p>
                     </div>
 
                     <button type="submit" class="blog-subscribe__submit btn-gradient">
                         <span class="btn-gradient__inner button-text-m"><?php echo esc_html($button_text); ?></span>
                     </button>
                 </form>
-
-                <p class="blog-subscribe__status" role="status" aria-live="polite" hidden></p>
             </div>
         </div>
     </div>
