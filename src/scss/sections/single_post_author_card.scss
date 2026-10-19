@@ -206,7 +206,9 @@
 }
 
 .single-post-author__bio {
-  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   font-size: 16px;
   line-height: 24px;
   color: var(--content-main-secondary);
@@ -214,25 +216,54 @@
   @media screen and (max-width: variables.$small) {
     grid-column: 1 / -1;
   }
+
+  p {
+    margin: 0;
+  }
+}
+
+.single-post-author__more {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  // The toggle is the <summary>; once open it stays above the extra paragraphs
+  // and swaps its label.
+  &[open] .single-post-author__more-open,
+  &:not([open]) .single-post-author__more-close {
+    display: none;
+  }
+}
+
+.single-post-author__more-toggle {
+  width: fit-content;
+  font-weight: var(--font-weight-semibold);
+  color: var(--content-solid-accent-2);
+  cursor: pointer;
+  list-style: none;
+
+  &::-webkit-details-marker {
+    display: none;
+  }
+
+  &:hover {
+    opacity: 0.8;
+  }
 }
 
 .single-post-author__socials {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
   flex-shrink: 0;
-
-  @media screen and (max-width: variables.$small) {
-    grid-column: 1 / -1;
-  }
 }
 
 .single-post-author__social {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
   color: var(--content-solid-accent-2);
   transition: opacity var(--transition-fast);
 
@@ -242,6 +273,6 @@
 }
 
 .single-post-author__social-icon {
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
 }

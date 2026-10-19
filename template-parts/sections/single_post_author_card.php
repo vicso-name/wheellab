@@ -26,6 +26,11 @@ $linkedin     = $author_id ? get_field('social_linkedin', 'user_' . $author_id) 
 // profile shows something here without the editor writing a second copy.
 $author_bio = $author_id ? (get_field('short_bio', 'user_' . $author_id) ?: get_the_author_meta('description', $author_id)) : '';
 
+// Show only the first paragraph; the rest sits behind a "Read more" toggle.
+$bio_parts = $author_bio ? preg_split('/\R\s*\R/', trim($author_bio)) : [];
+$bio_intro = $bio_parts ? array_shift($bio_parts) : '';
+$bio_rest  = implode("\n\n", $bio_parts);
+
 $photo_field = $author_id ? get_field('photo', 'user_' . $author_id) : null;
 $photo_url   = $photo_field['url'] ?? get_avatar_url($author_id, ['size' => 120]);
 $photo_alt   = $photo_field['alt'] ?? $author_name;
@@ -103,34 +108,48 @@ $linkedin_icon_url  = esc_url(wheellab_asset_url('assets/img/icons/linkedin.svg'
                         <span class="single-post-author__diamond" aria-hidden="true"></span>
                         <span class="single-post-author__title"><?php echo esc_html($author_title); ?></span>
                     <?php endif; ?>
+
+                    <?php if (!empty($instagram['url']) || !empty($linkedin['url'])) : ?>
+                        <div class="single-post-author__socials">
+                            <?php if (!empty($instagram['url'])) : ?>
+                                <a
+                                    class="single-post-author__social"
+                                    href="<?php echo esc_url($instagram['url']); ?>"
+                                    <?php echo !empty($instagram['target']) ? 'target="_blank" rel="noopener"' : ''; ?>
+                                    aria-label="<?php echo esc_attr($instagram['title'] ?: __('Instagram', 'wheellab')); ?>"
+                                >
+                                    <img class="svg single-post-author__social-icon" src="<?php echo $instagram_icon_url; ?>" alt="">
+                                </a>
+                            <?php endif; ?>
+
+                            <?php if (!empty($linkedin['url'])) : ?>
+                                <a
+                                    class="single-post-author__social"
+                                    href="<?php echo esc_url($linkedin['url']); ?>"
+                                    <?php echo !empty($linkedin['target']) ? 'target="_blank" rel="noopener"' : ''; ?>
+                                    aria-label="<?php echo esc_attr($linkedin['title'] ?: __('LinkedIn', 'wheellab')); ?>"
+                                >
+                                    <img class="svg single-post-author__social-icon" src="<?php echo $linkedin_icon_url; ?>" alt="">
+                                </a>
+                            <?php endif; ?>
+                        </div>
+                    <?php endif; ?>
                 </div>
 
-                <?php if ($author_bio) : ?>
-                    <p class="single-post-author__bio"><?php echo nl2br(esc_html($author_bio)); ?></p>
-                <?php endif; ?>
+                <?php if ($bio_intro) : ?>
+                    <div class="single-post-author__bio">
+                        <p><?php echo nl2br(esc_html($bio_intro)); ?></p>
 
-                <?php if (!empty($instagram['url']) || !empty($linkedin['url'])) : ?>
-                    <div class="single-post-author__socials">
-                        <?php if (!empty($instagram['url'])) : ?>
-                            <a
-                                class="single-post-author__social"
-                                href="<?php echo esc_url($instagram['url']); ?>"
-                                <?php echo !empty($instagram['target']) ? 'target="_blank" rel="noopener"' : ''; ?>
-                                aria-label="<?php echo esc_attr($instagram['title'] ?: __('Instagram', 'wheellab')); ?>"
-                            >
-                                <img class="svg single-post-author__social-icon" src="<?php echo $instagram_icon_url; ?>" alt="">
-                            </a>
-                        <?php endif; ?>
-
-                        <?php if (!empty($linkedin['url'])) : ?>
-                            <a
-                                class="single-post-author__social"
-                                href="<?php echo esc_url($linkedin['url']); ?>"
-                                <?php echo !empty($linkedin['target']) ? 'target="_blank" rel="noopener"' : ''; ?>
-                                aria-label="<?php echo esc_attr($linkedin['title'] ?: __('LinkedIn', 'wheellab')); ?>"
-                            >
-                                <img class="svg single-post-author__social-icon" src="<?php echo $linkedin_icon_url; ?>" alt="">
-                            </a>
+                        <?php if ($bio_rest) : ?>
+                            <details class="single-post-author__more">
+                                <summary class="single-post-author__more-toggle">
+                                    <span class="single-post-author__more-open"><?php esc_html_e('Read more', 'wheellab'); ?></span>
+                                    <span class="single-post-author__more-close"><?php esc_html_e('Read less', 'wheellab'); ?></span>
+                                </summary>
+                                <?php foreach (preg_split('/\R\s*\R/', $bio_rest) as $paragraph) : ?>
+                                    <p><?php echo nl2br(esc_html($paragraph)); ?></p>
+                                <?php endforeach; ?>
+                            </details>
                         <?php endif; ?>
                     </div>
                 <?php endif; ?>
