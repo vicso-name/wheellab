@@ -539,3 +539,32 @@ function wheellab_render_stats_banner($stats) {
     </div>
     <?php
 }
+
+/**
+ * Contact Form 7 emits "<label>Text</label>" followed by the field with no
+ * for/id link, so screen readers announce the fields without a name. Tie each
+ * field to the label printed right before it; a radio group has no single
+ * control to point at, so it is labelled via aria-labelledby instead.
+ */
+function wheellab_cf7_link_labels($html) {
+    static $form_index = 0;
+    $form_index++;
+
+    return preg_replace_callback(
+        '#<label>(.*?)</label>(\s*)<span class="wpcf7-form-control-wrap" data-name="([^"]+)">(.*?)</span>(?=\s*</p>)#s',
+        static function ($m) use ($form_index) {
+            $base  = 'cf7-' . $form_index . '-' . sanitize_html_class($m[3]);
+            $inner = $m[4];
+
+            if (strpos($inner, 'wpcf7-radio') !== false) {
+                $inner = preg_replace('#<span class="wpcf7-form-control wpcf7-radio"#', '<span role="radiogroup" aria-labelledby="' . $base . '-label" class="wpcf7-form-control wpcf7-radio"', $inner, 1);
+                return '<label id="' . $base . '-label">' . $m[1] . '</label>' . $m[2] . '<span class="wpcf7-form-control-wrap" data-name="' . $m[3] . '">' . $inner . '</span>';
+            }
+
+            $inner = preg_replace('#<(input|textarea|select)\b#', '<$1 id="' . $base . '"', $inner, 1);
+            return '<label for="' . $base . '">' . $m[1] . '</label>' . $m[2] . '<span class="wpcf7-form-control-wrap" data-name="' . $m[3] . '">' . $inner . '</span>';
+        },
+        $html
+    );
+}
+add_filter('wpcf7_form_elements', 'wheellab_cf7_link_labels');
