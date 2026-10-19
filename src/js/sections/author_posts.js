@@ -1,5 +1,5 @@
 /**
- * Author page — "load more" pagination only (no category chips, unlike
+ * Author and tag/category archive pages — "load more" pagination only (no category chips, unlike
  * the Blog page). Posts through the same `wheellab_blog_query` AJAX
  * action as blog_filter.js (see inc/ajax_blog.php), with an `author` id
  * instead of a `category` slug. Requires `wheellabBlog` (ajaxUrl + nonce),
@@ -24,16 +24,18 @@ function initAuthorPosts() {
   if (!grid || !loadMoreBtn) return;
 
   const authorId = grid.dataset.author || "";
+  const taxonomy = grid.dataset.taxonomy || "";
+  const termId = grid.dataset.term || "";
   let requestToken = 0;
 
   loadMoreBtn.addEventListener("click", () => {
     const nextPage = (parseInt(grid.dataset.page, 10) || 1) + 1;
     requestToken += 1;
-    fetchAuthorPage({ grid, countNumber, loadMoreWrap, loadMoreBtn, authorId, page: nextPage, token: requestToken, getToken: () => requestToken });
+    fetchAuthorPage({ grid, countNumber, loadMoreWrap, loadMoreBtn, authorId, taxonomy, termId, page: nextPage, token: requestToken, getToken: () => requestToken });
   });
 }
 
-function fetchAuthorPage({ grid, countNumber, loadMoreWrap, loadMoreBtn, authorId, page, token, getToken }) {
+function fetchAuthorPage({ grid, countNumber, loadMoreWrap, loadMoreBtn, authorId, taxonomy, termId, page, token, getToken }) {
   grid.classList.add("is-loading");
   grid.setAttribute("aria-busy", "true");
   loadMoreBtn.disabled = true;
@@ -42,6 +44,8 @@ function fetchAuthorPage({ grid, countNumber, loadMoreWrap, loadMoreBtn, authorI
     action: "wheellab_blog_query",
     nonce: wheellabBlog.nonce,
     author: authorId,
+    taxonomy,
+    term: termId,
     page: String(page),
   });
 
@@ -61,7 +65,7 @@ function fetchAuthorPage({ grid, countNumber, loadMoreWrap, loadMoreBtn, authorI
       grid.dataset.page = String(currentPage);
       grid.dataset.maxPages = String(maxPages);
 
-      if (countNumber) countNumber.textContent = `${foundPosts} articles`;
+      if (countNumber && !taxonomy) countNumber.textContent = `${foundPosts} articles`;
       if (loadMoreWrap) loadMoreWrap.hidden = currentPage >= maxPages;
     })
     .catch((error) => {

@@ -177,6 +177,33 @@ add_action('wp_enqueue_scripts', function () {
         );
     }
 
+    if (is_category() || is_tag()) {
+        wp_enqueue_style(
+            'btf-blog-hero-styles',
+            wheellab_asset_url('build/css/sections/blog_hero.min.css'),
+            ['btf-main-styles'],
+            wheellab_asset_ver('build/css/sections/blog_hero.min.css')
+        );
+        wp_enqueue_style(
+            'btf-blog-card-styles',
+            wheellab_asset_url('build/css/sections/blog_card.min.css'),
+            ['btf-main-styles'],
+            wheellab_asset_ver('build/css/sections/blog_card.min.css')
+        );
+        wp_enqueue_style(
+            'btf-blog-filter-styles',
+            wheellab_asset_url('build/css/sections/blog_filter.min.css'),
+            ['btf-main-styles', 'btf-blog-card-styles'],
+            wheellab_asset_ver('build/css/sections/blog_filter.min.css')
+        );
+        wp_enqueue_style(
+            'btf-author-posts-styles',
+            wheellab_asset_url('build/css/sections/author_posts.min.css'),
+            ['btf-main-styles', 'btf-blog-filter-styles'],
+            wheellab_asset_ver('build/css/sections/author_posts.min.css')
+        );
+    }
+
     if (is_author()) {
         wp_enqueue_style(
             'btf-author-hero-styles',
@@ -328,6 +355,20 @@ add_action('wp_enqueue_scripts', function () {
             wheellab_asset_ver('build/js/sections/contact_section.min.js'),
             true
         );
+    }
+
+    if (is_category() || is_tag()) {
+        wp_enqueue_script(
+            'btf-author-posts-script',
+            wheellab_asset_url('build/js/sections/author_posts.min.js'),
+            [],
+            wheellab_asset_ver('build/js/sections/author_posts.min.js'),
+            true
+        );
+        wp_localize_script('btf-author-posts-script', 'wheellabBlog', [
+            'ajaxUrl' => admin_url('admin-ajax.php'),
+            'nonce'   => wp_create_nonce('wheellab_blog_query'),
+        ]);
     }
 
     if (is_author()) {
