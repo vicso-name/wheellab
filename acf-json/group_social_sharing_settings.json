@@ -1,0 +1,35 @@
+{
+    "key": "group_social_sharing_settings",
+    "title": "Social Sharing Settings",
+    "fields": [
+        {
+            "key": "field_ss_og_image",
+            "label": "Default share image (Open Graph)",
+            "name": "og_default_image",
+            "type": "image",
+            "instructions": "Shown when a link to the site is shared (Facebook, LinkedIn, Slack, X, Telegram…) and the page has no image of its own. Recommended 1200×630 px, JPG or PNG. Posts use their featured image first.",
+            "return_format": "array",
+            "preview_size": "medium",
+            "library": "all",
+            "mime_types": "jpg, jpeg, png, webp",
+            "wrapper": {
+                "width": "100"
+            }
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "options_page",
+                "operator": "==",
+                "value": "social-sharing"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "active": true
+}
