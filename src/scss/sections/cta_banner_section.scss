@@ -14,26 +14,16 @@
   align-items: center;
   overflow: hidden;
   background-color: var(--bg-main-surface-1);
+  background-image: url("../../../assets/img/single-post/cta-banner-bg.jpg");
+  background-repeat: no-repeat;
+  background-position: right center;
+  background-size: cover;
   border-radius: 16px;
   padding: 40px;
 
   @media screen and (max-width: variables.$small) {
     padding: 16px;
   }
-}
-
-.cta-banner-section__inner::before {
-  content: "";
-  position: absolute;
-  inset: -20% -10%;
-  background-image: url("../../../assets/img/single-post/cta-banner-glow.jpg");
-  background-repeat: no-repeat;
-  background-position: right center;
-  background-size: cover;
-  mix-blend-mode: lighten;
-  opacity: 0.5;
-  filter: blur(50px);
-  pointer-events: none;
 }
 
 .cta-banner-section__content {
