@@ -25,15 +25,32 @@ Running the workflow again on the same commit only re-pulls and re-purges stage;
 
 ## Production
 
-> **TODO — fill in.** The workflow does not deploy production, and nothing in this repo describes how it is done (FTPS was mentioned). Write down here, once confirmed:
->
-> - what triggers it (tool / repo / hosting panel / manual FTP client) and where it is started;
-> - what it uploads: it must be the `deploy` branch (a built theme), never `master`;
-> - the post-deploy steps below.
+Production is **not** touched by the workflow; it is updated by hand over SSH.
+It lives on the same SiteGround account as stage and is a git checkout of the
+`deploy` branch (`origin` = this repo), so releasing is a fast-forward pull:
+
+```bash
+ssh -p <port> <user>@<host>        # credentials: SiteGround > Devs > SSH Keys Manager
+cd ~/www/wheellab.io/public_html/wp-content/themes/wheellab-1.1.13
+git status                         # should be clean; manual edits on the server would block the pull
+git pull --ff-only
+git log --oneline -1               # "build: theme from <sha>" of the master commit you released
+cd ../../..
+wp eval 'do_action("breeze_clear_all_cache");'
+```
+
+Then purge Cloudflare (Purge Everything). Without both purges, cached page HTML
+keeps serving the previous version even though the files on disk are new.
+
+Wait until the "Publish deploy branch" run for your commit is green before pulling:
+the pull only sees what has already been published to `deploy`.
+
+Do not put the SSH host, user or key in this repo (it is public); they live in the
+repository secrets (stage) and in SiteGround.
 
 ## After every production release
 
-- Purge the Breeze cache and Cloudflare, otherwise browsers keep the previous build (the `?ver=` stamp is shared and cached for a year).
+- Purge the Breeze cache (`wp eval` above) and Cloudflare, otherwise browsers keep the previous build (the `?ver=` stamp is shared and cached for a year).
 - If a change added or edited an ACF field group in `acf-json/`: Custom Fields → **Sync available** → sync.
 - Spot-check the changed pages on production, not only on stage.
 
