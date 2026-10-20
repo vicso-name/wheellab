@@ -4,7 +4,7 @@ defined('ABSPATH') || exit;
 
 const WHEELLAB_BLOG_POSTS_PER_PAGE = 12;
 
-function wheellab_blog_query_args(array $category_slugs, int $paged, int $author_id = 0): array {
+function wheellab_blog_query_args(array $category_slugs, int $paged, int $author_id = 0, string $taxonomy = '', int $term_id = 0): array {
     $args = [
         'post_type'      => 'post',
         'post_status'    => 'publish',
@@ -34,6 +34,14 @@ function wheellab_blog_query_args(array $category_slugs, int $paged, int $author
         $args['author'] = $author_id;
     }
 
+    if ($term_id > 0 && in_array($taxonomy, ['category', 'post_tag'], true)) {
+        $args['tax_query'] = [[
+            'taxonomy' => $taxonomy,
+            'field'    => 'term_id',
+            'terms'    => $term_id,
+        ]];
+    }
+
     return $args;
 }
 
@@ -49,8 +57,10 @@ function wheellab_ajax_blog_query(): void {
         : [];
     $paged     = isset($_POST['page']) ? absint($_POST['page']) : 1;
     $author_id = isset($_POST['author']) ? absint($_POST['author']) : 0;
+    $taxonomy  = isset($_POST['taxonomy']) ? sanitize_key(wp_unslash($_POST['taxonomy'])) : '';
+    $term_id   = isset($_POST['term']) ? absint($_POST['term']) : 0;
 
-    $query = new WP_Query(wheellab_blog_query_args($category_slugs, $paged, $author_id));
+    $query = new WP_Query(wheellab_blog_query_args($category_slugs, $paged, $author_id, $taxonomy, $term_id));
 
     ob_start();
     if ($query->have_posts()) {

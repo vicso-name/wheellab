@@ -41,4 +41,11 @@ if (function_exists('acf_add_options_page')) {
         'menu_title'  => __('Integrations', 'wheellab'),
         'parent_slug' => 'theme-options',
     ]);
+
+    acf_add_options_sub_page([
+        'page_title'  => __('Social Sharing', 'wheellab'),
+        'menu_title'  => __('Social Sharing', 'wheellab'),
+        'menu_slug'   => 'social-sharing',
+        'parent_slug' => 'theme-options',
+    ]);
 }
