@@ -268,3 +268,37 @@
     margin: 0;
     color: var(--content-main-primary);
 }
+
+// On laptop-height viewports (about 900px and under, i.e. 100% zoom) the pinned
+// stage leaves the deck only ~520-600px, and the full-size type no longer fits
+// the card: the description runs into the ghost number at the bottom. Win back
+// height from the title gap, then size type, spacing and number tiles down.
+@media screen and (width >= 577px) and (height <= 1000px) {
+    .service-process-deck__title {
+        margin-bottom: 48px;
+    }
+
+    .service-process-deck__deck {
+        height: clamp(520px, calc(100vh - 306px), 792px);
+    }
+
+    .service-process-deck__card {
+        --text-h3-size: 24px;
+        --text-h3-line-height: 1.3;
+        --text-body-m-size: 16px;
+        --text-body-m-line-height: 1.5;
+    }
+
+    .service-process-deck__card-inner {
+        padding: 24px;
+    }
+
+    .service-process-deck__card-head {
+        gap: 24px;
+    }
+
+    .service-process-deck__card-number {
+        width: 56px;
+        height: 56px;
+    }
+}
