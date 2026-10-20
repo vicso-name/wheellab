@@ -51,17 +51,28 @@ function wheellab_opengraph_namespace( $output ) {
 add_filter('language_attributes', 'wheellab_opengraph_namespace');
 
 function wheellab_opengraph_meta_tags() {
-    $post = is_singular() ? get_queried_object() : null;
+    if (!is_singular()) {
+        return;
+    }
+
+    global $post;
+    if (!$post) {
+        return;
+    }
 
     $img_src = $img_width = $img_height = '';
 
-    $image_share = ($post && function_exists('get_field')) ? get_field('image_share', $post->ID) : null;
+    if (function_exists('get_field')) {
+        $image_share = get_field('image_share', $post->ID);
+    } else {
+        $image_share = null;
+    }
 
     if (!empty($image_share['url'])) {
         $img_src    = $image_share['url'];
         $img_width  = isset($image_share['width'])  ? (int)$image_share['width']  : '';
         $img_height = isset($image_share['height']) ? (int)$image_share['height'] : '';
-    } elseif ($post && has_post_thumbnail($post->ID)) {
+    } elseif (has_post_thumbnail($post->ID)) {
         $img_data = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), 'full');
         if ($img_data) {
             $img_src    = $img_data[0];
@@ -70,30 +81,18 @@ function wheellab_opengraph_meta_tags() {
         }
     }
 
-    // Site-wide fallback: Theme Options > Social Sharing.
-    if (!$img_src && function_exists('get_field')) {
-        $default_image = get_field('og_default_image', 'option');
-        if (!empty($default_image['url'])) {
-            $img_src    = $default_image['url'];
-            $img_width  = (int) ($default_image['width']  ?? 0);
-            $img_height = (int) ($default_image['height'] ?? 0);
-        }
-    }
-
-    $is_post = $post && $post->post_type === 'post';
-    $title   = $post ? get_the_title($post) : wp_get_document_title();
-    $url     = $post ? get_permalink($post) : (is_front_page() ? home_url('/') : get_pagenum_link(1));
-
-    $excerpt = $post && $post->post_content
+    $excerpt = $post->post_content
         ? wp_trim_words( wp_strip_all_tags( strip_shortcodes( $post->post_content ) ), 55 )
         : get_bloginfo('description');
 
+    $published = get_gmt_from_date( $post->post_date_gmt ? $post->post_date_gmt : $post->post_date, 'c' );
+    $modified  = get_gmt_from_date( $post->post_modified_gmt ? $post->post_modified_gmt : $post->post_modified, 'c' );
 
     echo "\n<!-- Open Graph -->\n";
-    echo '<meta property="og:type" content="' . ($is_post ? 'article' : 'website') . '" />' . "\n";
-    echo '<meta property="og:title" content="' . esc_attr( $title ) . "\" />\n";
+    echo '<meta property="og:type" content="article" />' . "\n";
+    echo '<meta property="og:title" content="' . esc_attr( get_the_title($post) ) . "\" />\n";
     echo '<meta property="og:description" content="' . esc_attr( $excerpt ) . "\" />\n";
-    echo '<meta property="og:url" content="' . esc_url( $url ) . "\" />\n";
+    echo '<meta property="og:url" content="' . esc_url( get_permalink($post) ) . "\" />\n";
     echo '<meta property="og:site_name" content="' . esc_attr( get_bloginfo('name') ) . "\" />\n";
     echo '<meta property="og:locale" content="' . esc_attr( get_locale() ) . "\" />\n";
     if ($img_src) {
@@ -101,18 +100,14 @@ function wheellab_opengraph_meta_tags() {
         if ($img_width)  echo '<meta property="og:image:width" content="' . esc_attr( $img_width ) . "\" />\n";
         if ($img_height) echo '<meta property="og:image:height" content="' . esc_attr( $img_height ) . "\" />\n";
     }
-    if ($is_post) {
-        $published = get_gmt_from_date( $post->post_date_gmt ? $post->post_date_gmt : $post->post_date, 'c' );
-        $modified  = get_gmt_from_date( $post->post_modified_gmt ? $post->post_modified_gmt : $post->post_modified, 'c' );
-        echo '<meta property="article:published_time" content="' . esc_attr( $published ) . "\" />\n";
-        echo '<meta property="article:modified_time" content="' . esc_attr( $modified ) . "\" />\n";
-    }
+    echo '<meta property="article:published_time" content="' . esc_attr( $published ) . "\" />\n";
+    echo '<meta property="article:modified_time" content="' . esc_attr( $modified ) . "\" />\n";
 
     echo "\n<!-- Twitter -->\n";
     echo '<meta name="twitter:card" content="summary_large_image" />' . "\n";
-    echo '<meta name="twitter:title" content="' . esc_attr( $title ) . "\" />\n";
+    echo '<meta name="twitter:title" content="' . esc_attr( get_the_title($post) ) . "\" />\n";
     echo '<meta name="twitter:description" content="' . esc_attr( $excerpt ) . "\" />\n";
-    echo '<meta name="twitter:url" content="' . esc_url( $url ) . "\" />\n";
+    echo '<meta name="twitter:url" content="' . esc_url( get_permalink($post) ) . "\" />\n";
     if ($img_src) {
         echo '<meta name="twitter:image" content="' . esc_url( $img_src ) . "\" />\n";
     }
