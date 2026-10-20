@@ -51,6 +51,13 @@ function wheellab_opengraph_namespace( $output ) {
 add_filter('language_attributes', 'wheellab_opengraph_namespace');
 
 function wheellab_opengraph_meta_tags() {
+    // Rank Math already prints Open Graph and Twitter tags (and has its own
+    // default share image under Titles & Meta > Global Meta); printing a second
+    // set would leave crawlers with two conflicting og:title/og:description.
+    if (class_exists('RankMath')) {
+        return;
+    }
+
     if (!is_singular()) {
         return;
     }
